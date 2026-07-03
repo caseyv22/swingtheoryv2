@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /book
+
+Sitemap: https://swingtheory.golf/sitemap.xml

@@ -1,0 +1,79 @@
+import SEO from "@/components/SEO";
+import JsonLd from "@/components/JsonLd";
+import Hero from "@/components/Hero";
+import SectionHead from "@/components/SectionHead";
+import PlanCard from "@/components/PlanCard";
+import MembershipInterestForm from "@/components/forms/MembershipInterestForm";
+import Button from "@/components/Button";
+import { site } from "@/data/site-config";
+import { membershipPlans } from "@/data/memberships";
+import { serviceSchema } from "@/schema";
+import { useRef } from "react";
+
+export default function Memberships() {
+  const formRef = useRef<HTMLDivElement | null>(null);
+  const scrollToForm = () =>
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  return (
+    <>
+      <SEO
+        title="Indoor Golf Memberships in Pasadena | Swing Theory"
+        description="Join the Swing Theory indoor golf membership program in Old Town Pasadena. Monthly bay hours, priority booking, member pricing, and league play options."
+        path="/memberships"
+      />
+      <JsonLd
+        data={serviceSchema({
+          name: "Indoor golf membership",
+          description:
+            "Membership program with monthly simulator hours, priority booking, and member pricing at Swing Theory Indoor Golf in Old Town Pasadena.",
+          url: `${site.url}/memberships`,
+          serviceType: "Membership",
+        })}
+      />
+
+      <Hero
+        kicker="Memberships"
+        title={
+          <>
+            Play more. <em className="not-italic text-gold">Dial in year-round.</em>
+          </>
+        }
+        sub="Priority booking, monthly bay hours, and member perks — built for regulars who want their swing sharp all year, indoors, no matter the weather."
+        ctas={
+          <>
+            <Button onClick={scrollToForm} variant="gold">
+              Request membership info
+            </Button>
+            <Button href={site.bookingUrl} external variant="ghost">
+              Just book a bay
+            </Button>
+          </>
+        }
+        poster="https://swingtheory.golf/wp-content/uploads/2025/05/Swing-Theory-Memberships-1024x602.jpg"
+      />
+
+      <section className="py-24 bg-green-900">
+        <div className="wrap">
+          <SectionHead dark kicker="Plans" title="Choose your fit." />
+          <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))" }}>
+            {membershipPlans.map((p) => (
+              <PlanCard key={p.slug} plan={p} onInterest={scrollToForm} onLeague={scrollToForm} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24" ref={formRef} id="interest">
+        <div className="wrap max-w-3xl">
+          <SectionHead
+            kicker="Membership Interest"
+            title="Tell us a bit about you."
+            intro="Membership onboarding is handled personally. Send this over and a team member will walk you through options, pricing, and next steps."
+          />
+          <MembershipInterestForm />
+        </div>
+      </section>
+    </>
+  );
+}

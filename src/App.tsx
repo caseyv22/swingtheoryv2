@@ -1,0 +1,53 @@
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import Layout from "@/components/Layout";
+import Home from "@/pages/Home";
+import Simulators from "@/pages/Simulators";
+import Lessons from "@/pages/Lessons";
+import Memberships from "@/pages/Memberships";
+import Programs from "@/pages/Programs";
+import Events from "@/pages/Events";
+import Visit from "@/pages/Visit";
+import FAQ from "@/pages/FAQ";
+import Contact from "@/pages/Contact";
+import NotFound from "@/pages/NotFound";
+import LeagueNight from "@/pages/programs/LeagueNight";
+import MiniMulligans from "@/pages/programs/MiniMulligans";
+import SummerWomens from "@/pages/programs/SummerWomens";
+import SummerSeniors from "@/pages/programs/SummerSeniors";
+import Book from "@/pages/Book";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [pathname]);
+  return null;
+}
+
+export default function App() {
+  return (
+    <>
+      <ScrollToTop />
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/simulators" element={<Simulators />} />
+          <Route path="/lessons" element={<Lessons />} />
+          <Route path="/memberships" element={<Memberships />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/programs/league-night" element={<LeagueNight />} />
+          <Route path="/programs/mini-mulligans" element={<MiniMulligans />} />
+          <Route path="/programs/summer-womens" element={<SummerWomens />} />
+          <Route path="/programs/summer-seniors" element={<SummerSeniors />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/visit" element={<Visit />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/book" element={<Book />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Layout>
+    </>
+  );
+}

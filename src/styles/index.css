@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --line: rgba(6, 64, 41, 0.14);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-body text-ink bg-cream antialiased;
+    line-height: 1.65;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-disp font-bold;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+  img {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  .wrap {
+    width: min(1180px, 92vw);
+    @apply mx-auto;
+  }
+  .kicker {
+    @apply font-disp uppercase font-semibold text-[12px] tracking-[0.28em] text-gold-dk;
+  }
+  .btn {
+    @apply inline-flex items-center gap-2 font-disp font-semibold text-[14px] uppercase
+      tracking-[0.04em] px-6 py-3 rounded-full transition duration-200
+      border-[1.5px] border-transparent cursor-pointer;
+  }
+  .btn-gold {
+    @apply bg-gold text-[#241c05] hover:bg-[#d8b25c] hover:-translate-y-0.5;
+  }
+  .btn-ghost {
+    @apply border-white/50 text-white hover:bg-white/10 hover:border-white;
+  }
+  .btn-ghost-gold {
+    @apply border-gold text-gold hover:bg-gold/10;
+  }
+  .btn-dk {
+    @apply bg-green-700 text-white hover:bg-green-600 hover:-translate-y-0.5;
+  }
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}

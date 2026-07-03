@@ -1,0 +1,6 @@
+name = "swingtheoryv2"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "dist"
+
+# Environment variables are configured in the Cloudflare Pages dashboard
+# under Project settings > Environment variables. Do not commit secrets here.

@@ -11,7 +11,7 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"              # env.DB
 database_name = "swingtheory"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "0f458049-0afd-4cff-8d0f-5e5b4c67f164"
 
 [[r2_buckets]]
 binding = "MEDIA"           # env.MEDIA

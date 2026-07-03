@@ -1,5 +1,5 @@
 import { json, readJson } from "../lib/http";
-import { sendEmail, renderKv, verifyTurnstile } from "../lib/email";
+import { sendEmail, renderKv, verifyTurnstile, wrapBrandedEmail } from "../lib/email";
 import { logSubmission } from "../lib/submissions";
 import { contactSchema } from "../../src/lib/validation";
 import type { Env } from "../lib/db";
@@ -20,7 +20,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       env,
       subject: `[Contact] ${data.name}`,
       replyTo: data.email,
-      html: `<h2>New contact form submission</h2>${renderKv(data as unknown as Record<string, unknown>)}`,
+      html: wrapBrandedEmail({
+        title: "New contact form submission",
+        intro: "Someone submitted the contact form on swingtheory.golf.",
+        bodyHtml: renderKv(data as unknown as Record<string, unknown>),
+      }),
     });
   } catch {
     return json({ error: "Send failed. Try again in a moment." }, 500);

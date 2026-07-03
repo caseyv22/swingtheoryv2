@@ -30,11 +30,70 @@ export function renderKv(pairs: Record<string, unknown>): string {
   const rows = Object.entries(pairs)
     .filter(([k, v]) => k !== "honeypot" && k !== "turnstileToken" && v !== "" && v != null)
     .map(
-      ([k, v]) =>
-        `<tr><td style="padding:6px 12px;background:#f6f2e9;font-weight:600;font-family:system-ui">${escapeHtml(k)}</td><td style="padding:6px 12px;font-family:system-ui">${escapeHtml(String(v))}</td></tr>`,
+      ([k, v]) => `<tr>
+    <td style="padding:10px 0;border-bottom:1px solid #eaf3ec">
+      <span style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888888">${escapeHtml(k)}</span>
+      <span style="font-size:14px;color:#1a1a1a;font-weight:600;margin-left:12px">${escapeHtml(String(v))}</span>
+    </td>
+  </tr>`,
     )
     .join("");
-  return `<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:1px solid #e2ded3">${rows}</table>`;
+  return `<div style="background:#f7faf8;border:1px solid #d8e8dc;border-radius:12px;padding:4px 24px">
+        <table width="100%" cellpadding="0" cellspacing="0">${rows}</table>
+      </div>`;
+}
+
+/**
+ * Wraps inner content (e.g. renderKv output) in the branded Swing Theory
+ * email shell — dark green header with logo, white card body, NAP footer.
+ * Matches the look used for Swing Sync account emails.
+ */
+export function wrapBrandedEmail(args: {
+  title: string;
+  intro?: string;
+  bodyHtml: string;
+  preheader?: string;
+}): string {
+  const { title, intro = "", bodyHtml, preheader = title } = args;
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+</head>
+<body style="margin:0;padding:0;background:#f0f4f1;font-family:Arial,sans-serif">
+<div style="display:none;max-height:0;overflow:hidden;color:#f0f4f1">${escapeHtml(preheader)}</div>
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f4f1;padding:32px 16px">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden">
+  <tr>
+    <td style="background:#064029;padding:24px 32px">
+      <img src="https://swingtheory.golf/wp-content/uploads/2025/03/Wide-Asset-3-copy.png" alt="Swing Theory" height="36" style="display:block;height:36px;">
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:32px 32px 8px">
+      <div style="font-size:22px;font-weight:700;color:#064029;margin-bottom:8px">${escapeHtml(title)}</div>
+      ${intro ? `<p style="font-size:14px;color:#555555;line-height:1.6;margin:0">${escapeHtml(intro)}</p>` : ""}
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:16px 32px 32px">
+      ${bodyHtml}
+    </td>
+  </tr>
+  <tr>
+    <td style="background:#f7faf8;border-top:1px solid #eaf3ec;padding:20px 32px;text-align:center">
+      <p style="font-size:11px;color:#999999;margin:0">Swing Theory — 50 S De Lacey Ave, Pasadena, CA 91105</p>
+      <p style="font-size:11px;color:#999999;margin:6px 0 0">626-879-5513 &nbsp;•&nbsp; info@swingtheory.golf &nbsp;•&nbsp; swingtheory.golf</p>
+    </td>
+  </tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
 }
 
 export async function verifyTurnstile(

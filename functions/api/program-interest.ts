@@ -1,5 +1,5 @@
 import { json, readJson } from "../lib/http";
-import { sendEmail, renderKv, verifyTurnstile } from "../lib/email";
+import { sendEmail, renderKv, verifyTurnstile, wrapBrandedEmail } from "../lib/email";
 import { logSubmission } from "../lib/submissions";
 import { programInterestSchema } from "../../src/lib/validation";
 import type { Env } from "../lib/db";
@@ -20,7 +20,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       env,
       subject: `[PROGRAM · ${data.program}] ${data.name}`,
       replyTo: data.email,
-      html: `<h2>Program interest — ${data.program}</h2>${renderKv(data as unknown as Record<string, unknown>)}`,
+      html: wrapBrandedEmail({
+        title: `Program interest — ${data.program}`,
+        intro: "Someone requested info about a Swing Theory program.",
+        bodyHtml: renderKv(data as unknown as Record<string, unknown>),
+      }),
     });
   } catch {
     return json({ error: "Send failed." }, 500);

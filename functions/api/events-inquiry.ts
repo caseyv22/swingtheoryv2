@@ -1,5 +1,5 @@
 import { json, readJson } from "../lib/http";
-import { sendEmail, renderKv, verifyTurnstile } from "../lib/email";
+import { sendEmail, renderKv, verifyTurnstile, wrapBrandedEmail } from "../lib/email";
 import { logSubmission } from "../lib/submissions";
 import { eventsInquirySchema } from "../../src/lib/validation";
 import type { Env } from "../lib/db";
@@ -20,7 +20,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       env,
       subject: `[EVENT] ${data.name} — ${data.eventType || "general"} · ${data.groupSize || "?"} guests`,
       replyTo: data.email,
-      html: `<h2>New event inquiry</h2>${renderKv(data as unknown as Record<string, unknown>)}`,
+      html: wrapBrandedEmail({
+        title: "New event inquiry",
+        intro: "Someone submitted the private events form on swingtheory.golf.",
+        bodyHtml: renderKv(data as unknown as Record<string, unknown>),
+      }),
     });
   } catch {
     return json({ error: "Send failed." }, 500);

@@ -15,7 +15,7 @@ export default function Simulators() {
     <>
       <SEO
         title="Golf Simulator Rental in Pasadena | Swing Theory Indoor Golf"
-        description="Rent a golf simulator bay in Old Town Pasadena. Four wide bays, TrackMan-level launch monitors, 100+ world courses, up to 6 players per bay. Open 7 days a week."
+        description="Rent a golf simulator bay in Old Town Pasadena. Four wide bays running Uneekor launch monitors and GSPro simulation, 100+ world courses, up to 6 players per bay. Open 7 days a week."
         path="/simulators"
       />
       <JsonLd
@@ -62,9 +62,10 @@ export default function Simulators() {
             Real numbers on every shot.
           </h2>
           <p className="text-muted text-[1.08rem]">
-            The bays run tour-grade launch monitors — the same class of tech
-            used on Tour. That means ball speed, spin, launch angle, carry, and
-            club-face data on every swing, plus slow-motion video replay.
+            The bays run tour-grade Uneekor launch monitors and GSPro
+            simulation — the same class of tech used on Tour. That means ball
+            speed, spin, launch angle, carry, and club-face data on every
+            swing, plus slow-motion video replay.
           </p>
           <FeatList
             items={[

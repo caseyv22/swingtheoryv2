@@ -10,8 +10,8 @@ export type MembershipPlan = {
   ctaTarget: "book" | "interest" | "league";
 };
 
-// Placeholder tiers — swap final pricing/perks in one place.
-// Booking uses registrygolf.com deep link; membership + league use interest forms.
+// Real pricing carried over from swingtheory.golf (Green Jacket tiers).
+// Membership onboarding is manual — every CTA opens the interest form.
 export const membershipPlans: MembershipPlan[] = [
   {
     slug: "casual",
@@ -29,35 +29,36 @@ export const membershipPlans: MembershipPlan[] = [
     ctaTarget: "book",
   },
   {
-    slug: "founder",
-    name: "Founder",
-    headline: "For regulars",
-    priceLabel: "6 hrs",
+    slug: "green-jacket-solo",
+    name: "Green Jacket Solo",
+    headline: "Individual membership",
+    priceLabel: "$239",
     priceSub: "/ month",
     featured: true,
     perks: [
-      "6 bay hours every month",
+      "Unlimited days at Swing Theory",
+      "1 hour per day of bay time",
+      "Bring up to 3 guests",
       "Priority booking windows",
-      "Member pricing on extra time",
-      "Guest and event discounts",
-      "Founding-member perks",
+      "Member pricing on extras",
     ],
     ctaLabel: "Request membership info",
     ctaTarget: "interest",
   },
   {
-    slug: "league",
-    name: "League",
-    headline: "Play weekly",
-    priceLabel: "Weekly",
-    priceSub: "/ league play",
+    slug: "green-jacket-group",
+    name: "Green Jacket Group",
+    headline: "Two-member household or partner plan",
+    priceLabel: "$349",
+    priceSub: "/ month",
     perks: [
-      "Swing Theory Golf League",
-      "Weekly matches and standings",
-      "Community events",
-      "Season prizes",
+      "Two Green Jacket memberships",
+      "Unlimited days for both members",
+      "1 hour per day of bay time each",
+      "Bring up to 3 guests per member",
+      "Priority booking + member pricing",
     ],
-    ctaLabel: "Join the league",
-    ctaTarget: "league",
+    ctaLabel: "Request membership info",
+    ctaTarget: "interest",
   },
 ];

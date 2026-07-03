@@ -38,12 +38,12 @@ export const faqs: FAQ[] = [
   },
   {
     q: "What launch monitors do you use?",
-    a: "Every bay runs a tour-grade launch monitor that tracks ball speed, spin, launch angle, carry distance, and club-face data on every shot, with slow-motion swing and impact replay.",
+    a: "Every bay runs a tour-grade Uneekor launch monitor with GSPro simulation. That means ball speed, spin, launch angle, carry distance, and club-face data on every shot, plus slow-motion swing and impact replay.",
     categories: ["simulators", "lessons"],
   },
   {
     q: "How many bays are there?",
-    a: "Swing Theory has four wide simulator bays, including a private suite for events and group play.",
+    a: "Swing Theory has four wide simulator bays. One can be closed off to become a private suite for events and group play — bringing the total to three open bays and one dedicated private bay when needed.",
     categories: ["simulators", "events"],
   },
   {

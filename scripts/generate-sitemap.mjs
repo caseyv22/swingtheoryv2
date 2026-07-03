@@ -11,7 +11,7 @@ const routes = [
   { path: "/lessons", priority: 0.8, changefreq: "monthly" },
   { path: "/memberships", priority: 0.8, changefreq: "monthly" },
   { path: "/programs", priority: 0.7, changefreq: "monthly" },
-  { path: "/programs/league-night", priority: 0.7, changefreq: "monthly" },
+  { path: "/league", priority: 0.8, changefreq: "weekly" },
   { path: "/programs/mini-mulligans", priority: 0.7, changefreq: "monthly" },
   { path: "/programs/summer-womens", priority: 0.7, changefreq: "monthly" },
   { path: "/programs/summer-seniors", priority: 0.7, changefreq: "monthly" },

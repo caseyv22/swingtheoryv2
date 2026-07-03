@@ -2,5 +2,37 @@ name = "swingtheoryv2"
 compatibility_date = "2025-01-01"
 pages_build_output_dir = "dist"
 
-# Environment variables are configured in the Cloudflare Pages dashboard
-# under Project settings > Environment variables. Do not commit secrets here.
+# --- Bindings ---
+# Configure the actual resources in the Cloudflare dashboard, then paste
+# the resulting IDs here (or set the same names in dashboard → Settings →
+# Functions → Bindings). Local dev uses `wrangler pages dev` which creates
+# a local SQLite copy for D1 and a filesystem-backed R2 shim.
+
+[[d1_databases]]
+binding = "DB"              # env.DB
+database_name = "swingtheory"
+database_id = "REPLACE_WITH_D1_ID"
+
+[[r2_buckets]]
+binding = "MEDIA"           # env.MEDIA
+bucket_name = "swingtheory-media"
+
+# --- Environment variables (secrets) ---
+# Set via `wrangler pages secret put NAME` or in the dashboard.
+# Public (non-secret) values can go under [vars] below.
+
+[vars]
+CONTACT_TO_EMAIL = "info@swingtheory.golf"
+CONTACT_FROM_EMAIL = "noreply@swingtheory.golf"
+# Public R2 CDN base — served either via a custom domain on the bucket
+# or via Cloudflare Images. Override per-env.
+MEDIA_PUBLIC_BASE = "https://media.swingtheory.golf"
+# Cloudflare Access team domain (found in Zero Trust dashboard).
+# Example: yourteam.cloudflareaccess.com
+ACCESS_TEAM_DOMAIN = ""
+# Access application AUD tag (from the Access application settings).
+ACCESS_AUD = ""
+
+# Secrets to set separately (NEVER commit):
+#   RESEND_API_KEY
+#   TURNSTILE_SECRET_KEY

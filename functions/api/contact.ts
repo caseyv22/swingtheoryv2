@@ -1,14 +1,15 @@
-import { json, readJson, sendEmail, verifyTurnstile, renderKv, type Env } from "./_utils";
+import { json, readJson } from "../lib/http";
+import { sendEmail, renderKv, verifyTurnstile } from "../lib/email";
+import { logSubmission } from "../lib/submissions";
 import { contactSchema } from "../../src/lib/validation";
+import type { Env } from "../lib/db";
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const body = await readJson(request);
   const parsed = contactSchema.safeParse(body);
-  if (!parsed.success) {
-    return json({ error: "Please check your entries and try again." }, 400);
-  }
+  if (!parsed.success) return json({ error: "Please check your entries and try again." }, 400);
   const data = parsed.data;
-  if (data.honeypot) return json({ ok: true }); // Silent to bots
+  if (data.honeypot) return json({ ok: true });
 
   const ip = request.headers.get("cf-connecting-ip");
   const ok = await verifyTurnstile(data.turnstileToken, env.TURNSTILE_SECRET_KEY, ip);
@@ -21,8 +22,15 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       replyTo: data.email,
       html: `<h2>New contact form submission</h2>${renderKv(data as unknown as Record<string, unknown>)}`,
     });
-  } catch (e) {
+  } catch {
     return json({ error: "Send failed. Try again in a moment." }, 500);
   }
+  await logSubmission({
+    env,
+    formType: "contact",
+    data: data as unknown as Record<string, unknown>,
+    ip,
+    userAgent: request.headers.get("user-agent"),
+  });
   return json({ ok: true });
 };

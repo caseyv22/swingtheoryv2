@@ -59,7 +59,7 @@ export default function Home() {
               <span className="text-gold tracking-[2px]">★★★★★</span> 5.0 on Google
             </div>
             <div className="font-disp text-[13.5px] tracking-[0.06em] uppercase text-[#dcdac9]">
-              TrackMan &amp; Full Swing tech
+              Uneekor &amp; GSPro tech
             </div>
             <div className="font-disp text-[13.5px] tracking-[0.06em] uppercase text-[#dcdac9]">
               Private suite for events
@@ -72,10 +72,10 @@ export default function Home() {
 
       <Marquee
         items={[
-          "TrackMan",
-          "Full Swing",
-          "GSPro",
-          "Foresight",
+          "Uneekor Launch Monitors",
+          "GSPro Golf Simulation",
+          "24 Data Points",
+          "100+ World Courses",
           "Private Suite",
           "Leagues",
           "Lessons",
@@ -115,7 +115,7 @@ export default function Home() {
             />
             <XCard
               tag="Compete"
-              title="Leagues &amp; community"
+              title="League &amp; community"
               body="Weekly league play, junior program, and seasonal series."
               image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07806-1024x683.jpg"
               alt="Swing Theory Golf League night"
@@ -145,9 +145,9 @@ export default function Home() {
             Practice like the pros.
           </h2>
           <p className="text-muted text-[1.08rem]">
-            Every bay runs a tour-grade launch monitor that tracks the numbers
-            that matter — so whether you're grinding or playing Pebble with
-            friends, the feedback is real.
+            Every bay runs a tour-grade Uneekor launch monitor and GSPro
+            simulation — the same class of tech used on Tour. So whether
+            you're grinding or playing Pebble with friends, the feedback is real.
           </p>
           <FeatList
             items={[

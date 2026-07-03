@@ -4,6 +4,7 @@ export const primaryNav: NavItem[] = [
   { label: "Simulators", to: "/simulators" },
   { label: "Lessons", to: "/lessons" },
   { label: "Memberships", to: "/memberships" },
+  { label: "League", to: "/league" },
   { label: "Programs", to: "/programs" },
   { label: "Events", to: "/events" },
   { label: "Visit", to: "/visit" },
@@ -14,6 +15,7 @@ export const footerNav = {
     { label: "Simulators", to: "/simulators" },
     { label: "Lessons", to: "/lessons" },
     { label: "Memberships", to: "/memberships" },
+    { label: "League", to: "/league" },
     { label: "Programs", to: "/programs" },
     { label: "Events", to: "/events" },
   ] as NavItem[],
@@ -26,6 +28,6 @@ export const footerNav = {
     { label: "Book a bay", to: "/book" },
     { label: "Membership interest", to: "/memberships" },
     { label: "Plan an event", to: "/events" },
-    { label: "Join a league", to: "/programs/league-night" },
+    { label: "Join a league", to: "/league" },
   ] as NavItem[],
 };

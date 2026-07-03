@@ -20,8 +20,9 @@ Ownership: Casey (@caseykim). AI codegen directs the build.
 ## 2. Positioning
 
 **One-line pitch:** Swing Theory is Old Town Pasadena's indoor golf studio —
-four wide simulator bays with tour-grade launch monitors, private lessons,
-private events, and league play, open seven days a week.
+four wide simulator bays running tour-grade Uneekor launch monitors and
+GSPro simulation, with private lessons, private events, and league play,
+open seven days a week.
 
 **What this is:** a golf studio for practice, play, and hosting events.
 
@@ -44,12 +45,21 @@ drinks" as a paid offering.
 **Core differentiators to lead with everywhere:**
 
 - Location: Old Town Pasadena, 50 S De Lacey Ave — walkable, high foot traffic
-- Four wide bays including a private suite with karaoke
-- Tour-grade launch monitors (ball speed, spin, launch, carry, club-face)
+- Four wide bays; one can be closed off to become a private suite (with karaoke)
+- Tour-grade **Uneekor** launch monitors + **GSPro** simulation
+  (ball speed, spin, launch, carry, club-face on every shot)
 - 100+ world courses playable
 - 5.0 Google rating
 - Rental clubs for right and left-handed players
 - Open 7 days a week, evenings included
+
+**Bay count phrasing (exact):** "Four wide simulator bays; one can be
+closed off to become a private suite when booked for events." Not
+"3 open + 1 private" — that phrasing implies a fifth bay exists.
+
+**Membership pricing (Green Jacket, current):**
+- Green Jacket Solo — $239/month · unlimited days · 1 hour per day · bring up to 3 guests
+- Green Jacket Group — $349/month · two memberships · same perks each
 
 ---
 
@@ -99,8 +109,10 @@ gets 3.2× more citations), and expose author + dateModified in schema.
 - **Location anchor on every page.** "Pasadena" or "Old Town Pasadena" in
   H1, first paragraph, and at least one subheading.
 - **No promotional adjectives in factual/FAQ copy.**
-- **Concrete beats vague.** "Four wide bays, tour-grade launch monitors,
-  100+ courses" beats "state-of-the-art simulators."
+- **Concrete beats vague.** "Four wide bays, Uneekor launch monitors, GSPro,
+  100+ courses" beats "state-of-the-art simulators." Naming Uneekor and
+  GSPro explicitly also picks up long-tail SEO ("uneekor golf pasadena,"
+  "gspro simulator pasadena").
 - **Sentence case everywhere except brand marks.**
 - **Short paragraphs, scannable lists.**
 

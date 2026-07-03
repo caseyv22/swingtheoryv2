@@ -4,14 +4,25 @@
 /book  https://booking.registrygolf.com/?organizationId=639ff740-1b51-4959-99af-19ac2d069609  302
 
 # WordPress migration 301s — old URLs → new equivalents.
-# Add more here as we finalize the old→new map.
+# Old WP page slugs mapped from the June 2026 backup.
 /home                 /                     301
+/testing              /                     301
 /testing-period       /                     301
 /sign-up              /memberships          301
+/registration        /memberships          301
 /contact-us           /contact              301
 /private-events       /events               301
+/minimulligans        /programs/mini-mulligans  301
+/tournaments          /league               301
 /wp-content/*         /:splat               301
 /?p=*                 /                     301
+
+# Route renames within v2.
+/programs/league-night  /league  301
+
+# Admin and API paths must NOT be caught by the SPA fallback below —
+# Cloudflare Access sits in front of /admin/* and functions handle /api/*.
+# (The SPA fallback rule ignores requests that already match a Function.)
 
 # SPA fallback — must be last.
 /*  /index.html  200

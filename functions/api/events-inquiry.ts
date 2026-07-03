@@ -1,5 +1,8 @@
-import { json, readJson, sendEmail, verifyTurnstile, renderKv, type Env } from "./_utils";
+import { json, readJson } from "../lib/http";
+import { sendEmail, renderKv, verifyTurnstile } from "../lib/email";
+import { logSubmission } from "../lib/submissions";
 import { eventsInquirySchema } from "../../src/lib/validation";
+import type { Env } from "../lib/db";
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const body = await readJson(request);
@@ -22,5 +25,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   } catch {
     return json({ error: "Send failed." }, 500);
   }
+  await logSubmission({
+    env,
+    formType: "event",
+    data: data as unknown as Record<string, unknown>,
+    ip,
+    userAgent: request.headers.get("user-agent"),
+  });
   return json({ ok: true });
 };

@@ -6,12 +6,33 @@ import SplitBlock, { FeatList } from "@/components/SplitBlock";
 import FAQAccordion from "@/components/FAQAccordion";
 import Button from "@/components/Button";
 import { site } from "@/data/site-config";
-import { coaches } from "@/data/coaches";
+import { coaches as fallbackCoaches } from "@/data/coaches";
 import { faqsFor } from "@/data/faqs";
 import { serviceSchema, faqPageSchema } from "@/schema";
+import { useApi } from "@/hooks/useApi";
+import type { CoachRow } from "@/data/types";
+
+// Adapter — old static coaches file uses different field names than the DB row.
+type CoachDisplay = { slug: string; name: string; title: string; bio: string; photo: string; specialties: string[] };
+function adaptFallback(): CoachDisplay[] {
+  return fallbackCoaches.map((c) => ({
+    slug: c.slug,
+    name: c.name,
+    title: c.title,
+    bio: c.bio,
+    photo: c.photo,
+    specialties: [...c.specialties],
+  }));
+}
+function adaptRow(r: CoachRow): CoachDisplay {
+  return { slug: r.slug, name: r.name, title: r.title, bio: r.bio, photo: r.photo_url, specialties: r.specialties };
+}
 
 export default function Lessons() {
   const items = faqsFor("lessons");
+  const { data } = useApi<CoachRow[]>("/api/public/coaches");
+  const coachList: CoachDisplay[] =
+    data && data.length > 0 ? data.map(adaptRow) : adaptFallback();
   return (
     <>
       <SEO
@@ -63,9 +84,10 @@ export default function Lessons() {
             Data + feel, together.
           </h2>
           <p className="text-muted text-[1.08rem]">
-            Every lesson happens on a bay running a tour-grade launch monitor
-            and slow-motion video. You'll leave with numbers, a swing you can
-            feel, and a specific practice plan — not just vibes.
+            Every lesson happens on a bay running a tour-grade Uneekor launch
+            monitor with GSPro simulation and slow-motion video. You'll leave
+            with numbers, a swing you can feel, and a specific practice plan —
+            not just vibes.
           </p>
           <FeatList
             items={[
@@ -85,7 +107,7 @@ export default function Lessons() {
         <div className="wrap">
           <SectionHead kicker="Coaches" title="Meet the team." />
           <div className="grid gap-6" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))" }}>
-            {coaches.map((c) => (
+            {coachList.map((c) => (
               <div key={c.slug} className="reveal bg-cream border border-line rounded-2xl overflow-hidden">
                 <img src={c.photo} alt={c.name} className="w-full aspect-square object-cover" loading="lazy" />
                 <div className="p-6">

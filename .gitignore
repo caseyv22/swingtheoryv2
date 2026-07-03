@@ -1,6 +1,8 @@
 node_modules
 dist
 .wrangler
+vite.config.ts.timestamp-*.mjs
+vite.config.js.timestamp-*.mjs
 .env
 .env.local
 .env.*.local

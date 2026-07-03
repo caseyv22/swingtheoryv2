@@ -173,28 +173,49 @@ Resend delivery to `info@swingtheory.golf`.
 
 ## 5. Brand and design
 
-Directional reference is `swing-theory-mockup.html` (kept in the previous
-project folder). Palette, typography, section rhythm all match.
+Reference is the actual Swing Theory Brand Guideline (v1.0 PDF, supplied by
+Casey), not the original placeholder mockup. `swing-theory-mockup-v2-brand.html`
+(in the project folder) is the current directional reference — same layout
+rhythm as the original mockup, reskinned to the real guideline with gold
+swapped in for the guideline's maroon accent per Casey's direction.
 
 ### Palette
 
 - `--green-900:#041d13` · `--green-800:#063a25` · `--green-700:#064029`
-  (brand primary) · `--green-600:#0a5c39`
-- `--cream:#f6f2e9` · `--paper:#ffffff`
-- `--gold:#c8a24a` · `--gold-dk:#a07f2e`
-- `--ink:#15201b` · `--muted:#5c6b63`
+  (brand primary, matches guideline Primary Color 04) · `--green-600:#0a5c39`
+- `--cream:#FAFBFF` (off-white page bg, guideline Primary Color 01) · `--paper:#ffffff`
+- `--gold:#c8a24a` · `--gold-dk:#a07f2e` (accent — deviates from the
+  guideline's maroon `#911A24` at Casey's request; kept from the original
+  site since it already existed and reads better for this business)
+- `--ink:#1E1E24` (guideline grayscale "Phantom") · `--muted:#6E7180`
+  (guideline grayscale "Graphite")
+- Full grayscale scale available as Tailwind tokens: `cloud #EDEFF7`,
+  `smoke #D3D6E0`, `steel #BCBFCC`, `space #9DA2B3`, `graphite #6E7180`,
+  `arsenic #40424D`, `phantom #1E1E24`
+- Guideline's maroon `#911A24` and black-only variant are documented but
+  intentionally not used site-wide — gold is the accent everywhere.
 
 ### Typography
 
-- Display: `Oxanium` (400/500/600/700/800)
-- Body: `Lato` (300/400/700)
+- Single family: `Manrope` (200/300/400/500/600/700/800) for both display
+  and body — matches the brand guideline exactly (guideline does not use
+  Oxanium/Lato; that was placeholder from before the real guideline existed).
 - Loaded via Google Fonts with `display=swap`
+
+### Logo
+
+- Coded as `src/components/Logo.tsx` — inline SVG swoosh mark + "SWING /
+  THEORY" wordmark lockup, rendered in `currentColor` so it works on any
+  background. Replaces the WordPress PNG logo images in the nav and footer.
+- The WP PNG logo URLs (`site.logos.white` / `site.logos.green`) are kept
+  only for the `logo` field in JSON-LD schema, which needs a real hosted
+  image URL — not used for on-page visual rendering anymore.
 
 ### Assets (live URLs from swingtheory.golf/wp-content/uploads)
 
 - Hero video: `2025/07/Swing-Theory-Website-Hero.mp4`
 - Hero poster / sim: `2024/12/HOME-GOLF-SIM.jpg`
-- Logos: `2024/12/Swing-Theory-Website-White.png`, `Green.png`
+- Logos (schema only, see above): `2024/12/Swing-Theory-Website-White.png`, `Green.png`
 - Interior: `2025/06/DSC07701`, `07806`, `07845`, `07877`, `07885`
 - Memberships: `2025/05/Swing-Theory-Memberships-1024x602.jpg`
 

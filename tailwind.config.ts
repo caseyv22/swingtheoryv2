@@ -11,24 +11,35 @@ export default {
           700: "#064029",
           600: "#0a5c39",
         },
-        cream: "#f6f2e9",
+        // Off-white page background (Brand Guideline Primary Color 01).
+        cream: "#FAFBFF",
         paper: "#ffffff",
         gold: {
           DEFAULT: "#c8a24a",
           dk: "#a07f2e",
         },
-        ink: "#15201b",
-        muted: "#5c6b63",
+        // Body text — brand guideline grayscale "Phantom".
+        ink: "#1E1E24",
+        // Secondary/muted text — brand guideline grayscale "Graphite".
+        muted: "#6E7180",
+        // Full brand guideline grayscale scale, available for new work.
+        cloud: "#EDEFF7",
+        smoke: "#D3D6E0",
+        steel: "#BCBFCC",
+        space: "#9DA2B3",
+        graphite: "#6E7180",
+        arsenic: "#40424D",
+        phantom: "#1E1E24",
       },
       fontFamily: {
-        disp: ['"Oxanium"', "system-ui", "sans-serif"],
-        body: ['"Lato"', "system-ui", "sans-serif"],
+        disp: ['"Manrope"', "system-ui", "sans-serif"],
+        body: ['"Manrope"', "system-ui", "sans-serif"],
       },
       maxWidth: {
         wrap: "1180px",
       },
       borderColor: {
-        line: "rgba(6,64,41,.14)",
+        line: "#D3D6E0",
       },
       animation: {
         marquee: "marquee 26s linear infinite",

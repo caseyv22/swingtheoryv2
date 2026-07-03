@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { site } from "@/data/site-config";
 import { primaryNav } from "@/data/nav";
 import Button from "./Button";
+import Logo from "./Logo";
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -10,8 +11,8 @@ export default function Nav() {
   return (
     <header className="sticky top-0 z-50 bg-green-900/85 backdrop-blur-md border-b border-white/10">
       <div className="wrap flex items-center justify-between h-[74px]">
-        <Link to="/" aria-label="Swing Theory home">
-          <img src={site.logos.white} alt="Swing Theory" className="h-[30px]" />
+        <Link to="/" aria-label="Swing Theory home" className="text-white">
+          <Logo />
         </Link>
         <nav className="hidden md:flex gap-8 items-center">
           {primaryNav.map((item) => (

@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --line: rgba(6, 64, 41, 0.14);
+    --line: #d3d6e0;
   }
   html {
     scroll-behavior: smooth;

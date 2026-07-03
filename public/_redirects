@@ -15,7 +15,6 @@
 /minimulligans        /programs/mini-mulligans  301
 /tournaments          /league               301
 /wp-content/*         /:splat               301
-/?p=*                 /                     301
 
 # Route renames within v2.
 /programs/league-night  /league  301

@@ -54,7 +54,7 @@ export default function AdminLeague() {
     try {
       setSaveError(null);
       if (drawer.id) {
-        await api.patch(`/api/admin/league/${drawer.id}`, drawer.form);
+        await api.post(`/api/admin/league/${drawer.id}`, drawer.form);
       } else {
         await api.post(`/api/admin/league`, drawer.form);
       }

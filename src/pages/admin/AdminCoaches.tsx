@@ -86,7 +86,7 @@ export default function AdminCoaches() {
       setSaveError(null);
       const payload = toPayload(drawer.form);
       if (drawer.form.id) {
-        await api.patch(`/api/admin/coaches/${drawer.form.id}`, payload);
+        await api.post(`/api/admin/coaches/${drawer.form.id}`, payload);
       } else {
         await api.post(`/api/admin/coaches`, payload);
       }

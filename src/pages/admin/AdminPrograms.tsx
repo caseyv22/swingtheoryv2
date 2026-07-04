@@ -107,7 +107,7 @@ export default function AdminPrograms() {
       setSaveError(null);
       const payload = toPayload(drawer.form);
       if (drawer.form.id) {
-        await api.patch(`/api/admin/programs/${drawer.form.id}`, payload);
+        await api.post(`/api/admin/programs/${drawer.form.id}`, payload);
       } else {
         await api.post(`/api/admin/programs`, payload);
       }

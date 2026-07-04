@@ -33,7 +33,7 @@ export default function AdminSubmissions() {
   const exportUrl = `/api/admin/submissions/export?${qs.toString()}`;
 
   async function updateStatus(id: number, newStatus: string) {
-    await api.patch(`/api/admin/submissions/${id}`, { status: newStatus });
+    await api.post(`/api/admin/submissions/${id}`, { status: newStatus });
     invalidateCache("/api/admin/submissions");
     reload();
   }

@@ -27,8 +27,8 @@ const pricing = [
     note: "Monday–Thursday. Corporate outings and team building.",
     from: "$900",
     tiers: [
-      { d: "2 hours", p: "$900" },
-      { d: "4 hours", p: "$1,300" },
+      { d: "3 hours", p: "$900" },
+      { d: "4 hours", p: "$1,400" },
       { d: "All day", p: "$1,800" },
     ],
   },
@@ -37,9 +37,9 @@ const pricing = [
     note: "Friday–Sunday. Birthdays and celebrations.",
     from: "$1,200",
     tiers: [
-      { d: "2 hours", p: "$1,200" },
+      { d: "3 hours", p: "$1,200" },
       { d: "4 hours", p: "$1,600" },
-      { d: "All day", p: "$2,450" },
+      { d: "All day", p: "$2,400" },
     ],
   },
 ];

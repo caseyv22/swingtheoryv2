@@ -36,6 +36,10 @@ export const onRequestPatch: PagesFunction<Env> = async ({ request, env, params 
   return json({ ok: true });
 };
 
+// Some proxies/edge configs are cagier about PATCH than POST — expose the
+// same update logic on POST too so edits work regardless.
+export const onRequestPost = onRequestPatch;
+
 export const onRequestDelete: PagesFunction<Env> = async ({ request, env, params }) => {
   const user = await requireAdmin(request, env);
   if (user instanceof Response) return user;

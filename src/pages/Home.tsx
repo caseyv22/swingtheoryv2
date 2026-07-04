@@ -96,28 +96,28 @@ export default function Home() {
               tag="Play"
               title="Simulator bays"
               body="Book by the hour. Play 100+ courses or hit the range."
-              image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg"
+              image="/images/home/home-sim-bays.webp"
               alt="Swing Theory simulator bays in Pasadena"
             />
             <XCard
               tag="Improve"
               title="Lessons"
               body="Data-backed coaching with club-face replay on every swing."
-              image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07701-1024x683.jpg"
+              image="/images/home/home-lessons.webp"
               alt="Indoor golf lesson in Old Town Pasadena"
             />
             <XCard
               tag="Host"
               title="Private events"
               body="Buyouts for birthdays, corporate nights, and team building."
-              image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07877-1024x683.jpg"
+              image="/images/home/home-private-events.webp"
               alt="Private event bay at Swing Theory"
             />
             <XCard
               tag="Compete"
               title="League &amp; community"
               body="Weekly league play, junior program, and seasonal series."
-              image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07806-1024x683.jpg"
+              image="/images/home/home-leaguecommunity.webp"
               alt="Swing Theory Golf League night"
             />
           </div>

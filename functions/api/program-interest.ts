@@ -21,7 +21,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       subject: `[PROGRAM · ${data.program}] ${data.name}`,
       replyTo: data.email,
       html: wrapBrandedEmail({
-        title: `Program interest — ${data.program}`,
+        title: `Program interest: ${data.program}`,
         intro: "Someone requested info about a Swing Theory program.",
         bodyHtml: renderKv(data as unknown as Record<string, unknown>),
       }),

@@ -6,7 +6,7 @@ export const site = {
   shortName: "Swing Theory",
   legalName: "Swing Theory Indoor Golf",
   tagline:
-    "Indoor golf and golf simulators in Old Town Pasadena — practice, play, and host events, seven days a week.",
+    "Indoor golf and golf simulators in Old Town Pasadena, practice, play, and host events, seven days a week.",
   url: "https://swingtheory.golf",
   logos: {
     white: "https://swingtheory.golf/wp-content/uploads/2024/12/Swing-Theory-Website-White.png",

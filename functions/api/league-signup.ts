@@ -18,7 +18,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
     await sendEmail({
       env,
-      subject: `[LEAGUE] ${data.name} — ${data.teamPreference || "?"}`,
+      subject: `[LEAGUE] ${data.name} · ${data.teamPreference || "?"}`,
       replyTo: data.email,
       html: wrapBrandedEmail({
         title: "New league signup",

@@ -22,7 +22,7 @@ export default function FormShell({
   if (status === "success") {
     return (
       <div className="rounded-2xl border border-green-700/20 bg-green-700/5 p-8 text-center">
-        <div className="font-disp text-2xl text-green-700 mb-2">Thanks — got it.</div>
+        <div className="font-disp text-2xl text-green-700 mb-2">Thanks, got it.</div>
         <p className="text-muted">{successMessage}</p>
       </div>
     );

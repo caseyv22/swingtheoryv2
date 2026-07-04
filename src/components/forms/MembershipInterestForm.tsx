@@ -32,18 +32,20 @@ export default function MembershipInterestForm() {
       status={status}
       error={error}
       submitLabel="Request membership info"
-      successMessage="Thanks — a team member will reach out to walk through membership options."
+      successMessage="Thanks, a team member will reach out to walk through membership options."
     >
       <Honeypot />
       <div className="grid md:grid-cols-2 gap-4">
-        <TextInput label="Name" name="name" required error={fieldError.name} />
-        <TextInput label="Email" name="email" type="email" required error={fieldError.email} />
+        <TextInput label="First name" name="firstName" required error={fieldError.firstName} />
+        <TextInput label="Last name" name="lastName" required error={fieldError.lastName} />
       </div>
-      <TextInput label="Phone" name="phone" type="tel" error={fieldError.phone} />
-      <Select label="Which plan sounds right?" name="interest" defaultValue="Not sure — tell me more">
-        <option>Founder</option>
-        <option>League</option>
-        <option>Not sure — tell me more</option>
+      <div className="grid md:grid-cols-2 gap-4">
+        <TextInput label="Email" name="email" type="email" required error={fieldError.email} />
+        <TextInput label="Phone" name="phone" type="tel" error={fieldError.phone} />
+      </div>
+      <Select label="Which plan sounds right?" name="interest" defaultValue="Green Jacket Solo">
+        <option>Green Jacket Solo</option>
+        <option>Green Jacket Group</option>
       </Select>
       <TextArea label="Anything you want us to know?" name="message" />
     </FormShell>

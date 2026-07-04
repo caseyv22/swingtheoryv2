@@ -20,7 +20,7 @@ export default function Events() {
   return (
     <>
       <SEO
-        title="Private Event Venue in Pasadena — Corporate, Birthday, Group | Swing Theory"
+        title="Private Event Venue in Pasadena: Corporate, Birthday, Group | Swing Theory"
         description="Host your private event at Swing Theory Indoor Golf in Old Town Pasadena. Corporate outings, birthdays, bachelor parties, and buyouts for groups from 4 to 40+."
         path="/events"
       />
@@ -44,7 +44,7 @@ export default function Events() {
             Private events in <em className="not-italic text-gold">Old Town Pasadena.</em>
           </>
         }
-        sub="Birthdays, corporate team-building, bachelor parties, and full buyouts. We handle the bays, the tech, and the setup — you bring the group (and your own food and drinks)."
+        sub="Birthdays, corporate team-building, bachelor parties, and full buyouts. We handle the bays, the tech, and the setup, you bring the group (and your own food and drinks)."
         ctas={
           <>
             <Button onClick={scrollToForm} variant="gold">
@@ -69,7 +69,7 @@ export default function Events() {
           </h2>
           <p className="text-muted text-[1.08rem]">
             Four wide simulator bays including a private suite for karaoke,
-            speeches, or off-the-clock team play. Bring your own catering — we
+            speeches, or off-the-clock team play. Bring your own catering. We
             keep the space set up around whatever your night looks like.
           </p>
           <FeatList

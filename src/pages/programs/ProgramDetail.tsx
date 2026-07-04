@@ -28,7 +28,7 @@ export default function ProgramDetail({ program, useLeagueForm = false }: Props)
   return (
     <>
       <SEO
-        title={`${program.name} — Indoor Golf in Pasadena | Swing Theory`}
+        title={`${program.name}, Indoor Golf in Pasadena | Swing Theory`}
         description={program.shortDescription}
         path={path}
       />

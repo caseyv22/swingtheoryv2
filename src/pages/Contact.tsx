@@ -9,7 +9,7 @@ export default function Contact() {
   return (
     <>
       <SEO
-        title="Contact Swing Theory Indoor Golf — Pasadena"
+        title="Contact Swing Theory Indoor Golf, Pasadena"
         description="Contact Swing Theory Indoor Golf in Old Town Pasadena. Call, email, or use the contact form and we'll follow up shortly."
         path="/contact"
       />
@@ -17,7 +17,7 @@ export default function Contact() {
       <Hero
         kicker="Contact"
         title={<>Say hello.</>}
-        sub="Questions about bays, lessons, memberships, programs, or events — send a note and a team member will follow up shortly."
+        sub="Questions about bays, lessons, memberships, programs, or events. Send a note and a team member will follow up shortly."
         ctas={<span />}
         poster="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07701-1024x683.jpg"
       />

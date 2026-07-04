@@ -11,7 +11,7 @@ export default function Book() {
   return (
     <>
       <SEO
-        title="Book a bay — Swing Theory Indoor Golf Pasadena"
+        title="Book a bay, Swing Theory Indoor Golf Pasadena"
         description="Reserve a simulator bay at Swing Theory Indoor Golf in Old Town Pasadena."
         path="/book"
         noIndex

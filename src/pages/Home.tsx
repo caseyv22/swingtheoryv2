@@ -13,7 +13,7 @@ import MapCard from "@/components/MapCard";
 import Button from "@/components/Button";
 import MembershipInterestForm from "@/components/forms/MembershipInterestForm";
 import { membershipPlans } from "@/data/memberships";
-import { reviews } from "@/data/reviews";
+import { reviews, ratingPlatforms } from "@/data/reviews";
 import { faqsFor } from "@/data/faqs";
 import { site } from "@/data/site-config";
 import { faqPageSchema } from "@/schema";
@@ -39,10 +39,10 @@ export default function Home() {
         kicker="Old Town Pasadena · Indoor Golf Studio"
         title={
           <>
-            Indoor golf and simulators in <em className="not-italic text-gold">Old Town Pasadena.</em>
+            Indoor golf in <em className="not-italic text-gold">Old Town Pasadena.</em>
           </>
         }
-        sub="Four wide simulator bays, tour-grade launch monitors, and 100+ world courses. Practice year-round, take a lesson, or host an event — rain or shine, seven days a week."
+        sub="Four wide simulator bays, tour-grade launch monitors, and 100+ world courses. Practice year-round, take a lesson, or host an event, rain or shine, seven days a week."
         ctas={
           <>
             <Button href={site.bookingUrl} external variant="gold">
@@ -88,7 +88,7 @@ export default function Home() {
         <div className="wrap">
           <SectionHead
             kicker="The Experience"
-            title="A real place to work on your game — in Pasadena."
+            title="A real place to work on your game in Pasadena."
             intro="Wide, comfortable bays. High-end simulators. A studio built for serious reps, group play, and everything in between."
           />
           <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))" }}>
@@ -101,7 +101,7 @@ export default function Home() {
             />
             <XCard
               tag="Improve"
-              title="Lessons &amp; fittings"
+              title="Lessons"
               body="Data-backed coaching with club-face replay on every swing."
               image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07701-1024x683.jpg"
               alt="Indoor golf lesson in Old Town Pasadena"
@@ -137,8 +137,8 @@ export default function Home() {
       {/* Technology */}
       <section className="py-24" id="tech">
         <SplitBlock
-          imageSrc="https://swingtheory.golf/wp-content/uploads/2024/12/HOME-GOLF-SIM.jpg"
-          imageAlt="Golf simulator with launch monitor data"
+          imageSrc="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07855-1024x683.jpg"
+          imageAlt="Uneekor launch monitor tracking a swing at Swing Theory"
         >
           <span className="kicker">The Technology</span>
           <h2 className="text-[clamp(1.9rem,3.6vw,2.9rem)] text-green-700 mt-3 mb-4">
@@ -146,7 +146,7 @@ export default function Home() {
           </h2>
           <p className="text-muted text-[1.08rem]">
             Every bay runs a tour-grade Uneekor launch monitor and GSPro
-            simulation — the same class of tech used on Tour. So whether
+            simulation, the same class of tech used on Tour. So whether
             you're grinding or playing Pebble with friends, the feedback is real.
           </p>
           <FeatList
@@ -168,9 +168,9 @@ export default function Home() {
         <div className="wrap">
           <SectionHead
             dark
-            kicker="Memberships"
+            kicker="Memberships &amp; Hourly"
             title="Play more. Dial in year-round."
-            intro="Priority booking, monthly bay hours, and member perks — built for regulars who want their swing sharp all year."
+            intro="Priority booking, monthly bay hours, and member perks, built for regulars who want their swing sharp all year."
           />
           <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))" }}>
             {membershipPlans.map((plan) => (
@@ -184,7 +184,7 @@ export default function Home() {
                 Interested? Tell us a bit about you.
               </h3>
               <p className="text-[#b9bdb0] mb-6 text-[0.98rem]">
-                Membership onboarding is personal — we walk each member through
+                Membership onboarding is personal. We walk each member through
                 plans one-on-one. Fill this out and a team member will follow up.
               </p>
               <div className="bg-white rounded-xl p-6">
@@ -208,7 +208,7 @@ export default function Home() {
           </h2>
           <p className="text-muted text-[1.08rem]">
             Birthdays, corporate team-building, bachelor parties, or a Friday
-            with friends. Bring your own food and drinks — we handle the golf,
+            with friends. Bring your own food and drinks. We handle the golf,
             the bays, and the tech.
           </p>
           <FeatList
@@ -233,6 +233,15 @@ export default function Home() {
             kicker="Loved in Pasadena"
             title="5.0 stars, and counting."
           />
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mb-12 reveal">
+            {ratingPlatforms.map((p) => (
+              <div key={p.name} className="flex items-center gap-2 font-disp text-sm text-muted">
+                <span className="text-gold tracking-[2px]">★★★★★</span>
+                <span className="font-semibold text-green-700">5.0</span>
+                <span>{p.name}</span>
+              </div>
+            ))}
+          </div>
           <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))" }}>
             {reviews.map((r, i) => (
               <ReviewCard key={i} review={r} />

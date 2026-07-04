@@ -9,8 +9,8 @@ export default function FAQ() {
   return (
     <>
       <SEO
-        title="Swing Theory FAQ — Indoor Golf in Pasadena"
-        description="Frequently asked questions about Swing Theory Indoor Golf in Old Town Pasadena — pricing, rentals, memberships, lessons, and events."
+        title="Swing Theory FAQ, Indoor Golf in Pasadena"
+        description="Frequently asked questions about Swing Theory Indoor Golf in Old Town Pasadena: pricing, rentals, memberships, lessons, and events."
         path="/faq"
       />
       <JsonLd data={faqPageSchema(faqs)} />
@@ -18,7 +18,7 @@ export default function FAQ() {
       <Hero
         kicker="FAQ"
         title={<>Frequently asked.</>}
-        sub="Everything most people ask before their first visit — from pricing and clubs to memberships and events."
+        sub="Everything most people ask before their first visit, from pricing and clubs to memberships and events."
         ctas={<span />}
         poster="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07877-1024x683.jpg"
       />

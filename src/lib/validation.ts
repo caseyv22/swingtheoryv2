@@ -51,12 +51,11 @@ export const leagueSignupSchema = z.object({
 });
 
 export const membershipInterestSchema = z.object({
-  name,
+  firstName: z.string().trim().min(1, "Please enter your first name").max(60),
+  lastName: z.string().trim().min(1, "Please enter your last name").max(60),
   email,
   phone,
-  interest: z
-    .enum(["Founder", "League", "Not sure — tell me more"])
-    .optional(),
+  interest: z.enum(["Green Jacket Solo", "Green Jacket Group"]).optional(),
   message: z.string().trim().max(2000).optional().or(z.literal("")),
   honeypot,
   turnstileToken: z.string().optional(),

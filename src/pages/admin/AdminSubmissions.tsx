@@ -167,7 +167,7 @@ export default function AdminSubmissions() {
               </a>
             </Field>
             <Field label="Phone">
-              <div className="text-ink">{view.phone || "—"}</div>
+              <div className="text-ink">{view.phone || "N/A"}</div>
             </Field>
             {view.program && (
               <Field label="Program">
@@ -175,7 +175,7 @@ export default function AdminSubmissions() {
               </Field>
             )}
             <Field label="Message">
-              <div className="whitespace-pre-line text-ink">{view.message || "—"}</div>
+              <div className="whitespace-pre-line text-ink">{view.message || "N/A"}</div>
             </Field>
             <Field label="Full payload">
               <pre className="text-xs bg-cream rounded-lg p-3 overflow-x-auto border border-line">
@@ -187,7 +187,7 @@ export default function AdminSubmissions() {
                 <div className="text-ink text-sm">{view.created_at}</div>
               </Field>
               <Field label="IP">
-                <div className="text-muted text-xs font-mono">{view.user_ip || "—"}</div>
+                <div className="text-muted text-xs font-mono">{view.user_ip || "N/A"}</div>
               </Field>
             </div>
             <div className="flex flex-wrap justify-between gap-2 pt-4">

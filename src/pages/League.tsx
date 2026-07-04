@@ -24,7 +24,7 @@ export default function League() {
   return (
     <>
       <SEO
-        title="Swing Theory Golf League — Indoor Golf League in Pasadena"
+        title="Swing Theory Golf League, Indoor Golf League in Pasadena"
         description="Weekly indoor golf league at Swing Theory in Old Town Pasadena. Match play with handicaps, live standings, season prizes. Open to individuals and teams."
         path="/league"
       />
@@ -103,7 +103,7 @@ export default function League() {
               "Format: match play with handicaps",
               "Live standings and playoff bracket",
               "Season prizes and a green jacket",
-              "Open to individuals — we place free agents on teams",
+              "Open to individuals, we place free agents on teams",
             ]}
           />
           <Button onClick={scrollToForm} variant="dk">

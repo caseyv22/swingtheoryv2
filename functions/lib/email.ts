@@ -85,7 +85,7 @@ export function wrapBrandedEmail(args: {
   </tr>
   <tr>
     <td style="background:#f7faf8;border-top:1px solid #eaf3ec;padding:20px 32px;text-align:center">
-      <p style="font-size:11px;color:#999999;margin:0">Swing Theory — 50 S De Lacey Ave, Pasadena, CA 91105</p>
+      <p style="font-size:11px;color:#999999;margin:0">Swing Theory, 50 S De Lacey Ave, Pasadena, CA 91105</p>
       <p style="font-size:11px;color:#999999;margin:6px 0 0">626-879-5513 &nbsp;•&nbsp; info@swingtheory.golf &nbsp;•&nbsp; swingtheory.golf</p>
     </td>
   </tr>

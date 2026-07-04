@@ -39,7 +39,7 @@ export default function Memberships() {
             Play more. <em className="not-italic text-gold">Dial in year-round.</em>
           </>
         }
-        sub="Priority booking, monthly bay hours, and member perks — built for regulars who want their swing sharp all year, indoors, no matter the weather."
+        sub="Priority booking, monthly bay hours, and member perks, built for regulars who want their swing sharp all year, indoors, no matter the weather."
         ctas={
           <>
             <Button onClick={scrollToForm} variant="gold">

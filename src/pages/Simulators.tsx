@@ -38,7 +38,7 @@ export default function Simulators() {
             Golf simulators in <em className="not-italic text-gold">Old Town Pasadena.</em>
           </>
         }
-        sub="Four wide simulator bays, tour-grade launch monitors, 100+ world courses. Bays hold up to 6 players and book by the hour — practice, group play, or a serious range session."
+        sub="Four wide simulator bays, tour-grade launch monitors, 100+ world courses. Bays hold up to 6 players and book by the hour: practice, group play, or a serious range session."
         ctas={
           <>
             <Button href={site.bookingUrl} external variant="gold">
@@ -63,7 +63,7 @@ export default function Simulators() {
           </h2>
           <p className="text-muted text-[1.08rem]">
             The bays run tour-grade Uneekor launch monitors and GSPro
-            simulation — the same class of tech used on Tour. That means ball
+            simulation, the same class of tech used on Tour. That means ball
             speed, spin, launch angle, carry, and club-face data on every
             swing, plus slow-motion video replay.
           </p>
@@ -88,7 +88,7 @@ export default function Simulators() {
           <SectionHead
             kicker="Serving"
             title="Golfers from across the LA basin."
-            intro={`Walk-in from Old Town, drive over from ${site.areaServed.slice(1).join(", ")} — the studio is a short trip from most of the San Gabriel Valley and easy to reach from downtown Los Angeles.`}
+            intro={`Walk-in from Old Town, drive over from ${site.areaServed.slice(1).join(", ")}. The studio is a short trip from most of the San Gabriel Valley and easy to reach from downtown Los Angeles.`}
           />
         </div>
       </section>

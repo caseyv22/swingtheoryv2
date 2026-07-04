@@ -120,7 +120,7 @@ export default function AdminCoaches() {
   return (
     <>
       <PageHead
-        title="Lessons — Coaches"
+        title="Lessons, Coaches"
         intro="Add, edit, or remove coach profiles shown on /lessons."
         actions={
           <Button

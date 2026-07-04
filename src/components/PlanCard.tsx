@@ -20,11 +20,6 @@ export default function PlanCard({ plan, onInterest, onLeague }: Props) {
           : "border-white/12 bg-white/[0.04] hover:-translate-y-1 hover:border-gold/50",
       )}
     >
-      {featured && (
-        <span className="inline-block font-disp text-[11px] tracking-[0.18em] uppercase text-[#241c05] bg-gold px-3 py-1 rounded-full mb-4">
-          Founding member
-        </span>
-      )}
       <h3 className="text-2xl">{plan.name}</h3>
       <p className="text-[#b9bdb0] text-sm mt-1">{plan.headline}</p>
       <div className="font-disp text-[2.6rem] font-extrabold text-gold mt-3 leading-none">

@@ -23,7 +23,7 @@ export const faqs: FAQ[] = [
   },
   {
     q: "Is Swing Theory good for beginners?",
-    a: "Yes. The simulators make it easy to learn — you see real launch monitor data on every swing and the staff is happy to walk first-timers through the setup. It works equally well for low-handicap players.",
+    a: "Yes. The simulators make it easy to learn. You see real launch monitor data on every swing and the staff is happy to walk first-timers through the setup. It works equally well for low-handicap players.",
     categories: ["home", "general", "lessons"],
   },
   {
@@ -43,7 +43,7 @@ export const faqs: FAQ[] = [
   },
   {
     q: "How many bays are there?",
-    a: "Swing Theory has four wide simulator bays. One can be closed off to become a private suite for events and group play — bringing the total to three open bays and one dedicated private bay when needed.",
+    a: "Swing Theory has four wide simulator bays. One can be closed off to become a private suite for events and group play, bringing the total to three open bays and one dedicated private bay when needed.",
     categories: ["simulators", "events"],
   },
   {
@@ -53,7 +53,7 @@ export const faqs: FAQ[] = [
   },
   {
     q: "Do you serve food or drinks?",
-    a: "Swing Theory is a golf studio — we do not sell food or drinks. Guests are welcome to bring their own food and beverages into the bay during their booking.",
+    a: "Swing Theory is a golf studio. We do not sell food or drinks. Guests are welcome to bring their own food and beverages into the bay during their booking.",
     categories: ["home", "general", "visit"],
   },
   {

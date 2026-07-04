@@ -86,7 +86,7 @@ export default function Lessons() {
           <p className="text-muted text-[1.08rem]">
             Every lesson happens on a bay running a tour-grade Uneekor launch
             monitor with GSPro simulation and slow-motion video. You'll leave
-            with numbers, a swing you can feel, and a specific practice plan —
+            with numbers, a swing you can feel, and a specific practice plan,
             not just vibes.
           </p>
           <FeatList

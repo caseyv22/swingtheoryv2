@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { site } from "@/data/site-config";
 import { footerNav } from "@/data/nav";
 import InstagramIcon from "./InstagramIcon";
-import Logo from "./Logo";
 
 export default function Footer() {
   return (
@@ -10,12 +9,14 @@ export default function Footer() {
       <div className="wrap">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr] pb-10 border-b border-white/10">
           <div>
-            <div className="text-white mb-4">
-              <Logo />
-            </div>
+            <img
+              src={site.logos.white}
+              alt="Swing Theory"
+              className="h-[28px] mb-4"
+            />
             <p className="max-w-[34ch] text-[0.95rem]">
               Indoor golf and golf simulators in Old Town Pasadena. Practice,
-              play, and host events — seven days a week.
+              play, and host events, seven days a week.
             </p>
             <p className="mt-4 text-white font-disp text-[0.95rem]">
               {site.address.street}

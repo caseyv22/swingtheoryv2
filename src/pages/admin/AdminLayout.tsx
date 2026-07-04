@@ -11,7 +11,7 @@ export default function AdminLayout() {
   return (
     <>
       <Helmet>
-        <title>Admin — Swing Theory</title>
+        <title>Admin, Swing Theory</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
       <div className="min-h-screen bg-cream text-ink flex">

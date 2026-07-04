@@ -1,5 +1,4 @@
 import { useEffect, type ReactNode } from "react";
-import AnnouncementBar from "./AnnouncementBar";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import JsonLd from "./JsonLd";
@@ -31,7 +30,6 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       {/* Global schema: LocalBusiness, Organization, WebSite on every page */}
       <JsonLd data={[localBusinessSchema(), organizationSchema(), websiteSchema()]} />
-      <AnnouncementBar />
       <Nav />
       <main>{children}</main>
       <Footer />

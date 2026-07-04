@@ -11,14 +11,14 @@ export type MembershipPlan = {
 };
 
 // Real pricing carried over from swingtheory.golf (Green Jacket tiers).
-// Membership onboarding is manual — every CTA opens the interest form.
+// Membership onboarding is manual, every CTA opens the interest form.
 export const membershipPlans: MembershipPlan[] = [
   {
-    slug: "casual",
-    name: "Casual",
-    headline: "Pay as you play",
-    priceLabel: "Pay",
-    priceSub: "/ as you go",
+    slug: "hourly",
+    name: "Hourly",
+    headline: "Book individual bays",
+    priceLabel: "$40 - $70",
+    priceSub: "/ per hour",
     perks: [
       "Book any open bay",
       "Online reservations",
@@ -39,8 +39,8 @@ export const membershipPlans: MembershipPlan[] = [
       "Unlimited days at Swing Theory",
       "1 hour per day of bay time",
       "Bring up to 3 guests",
-      "Priority booking windows",
-      "Member pricing on extras",
+      "Exclusive Member Hours",
+      "Merchandise discounts",
     ],
     ctaLabel: "Request membership info",
     ctaTarget: "interest",
@@ -56,7 +56,8 @@ export const membershipPlans: MembershipPlan[] = [
       "Unlimited days for both members",
       "1 hour per day of bay time each",
       "Bring up to 3 guests per member",
-      "Priority booking + member pricing",
+      "Exclusive Member Hours",
+      "Merchandise discounts",
     ],
     ctaLabel: "Request membership info",
     ctaTarget: "interest",

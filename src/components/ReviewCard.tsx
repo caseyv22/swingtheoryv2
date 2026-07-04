@@ -8,7 +8,7 @@ export default function ReviewCard({ review }: { review: Review }) {
       </div>
       <p className="my-3 text-[1.05rem] text-[#2b342e]">"{review.quote}"</p>
       <div className="font-disp font-semibold text-[13px] tracking-[0.05em] text-muted uppercase">
-        — {review.author} · {review.source}
+        {review.source} review
       </div>
     </div>
   );

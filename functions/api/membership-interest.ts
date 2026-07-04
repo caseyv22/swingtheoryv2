@@ -18,7 +18,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
     await sendEmail({
       env,
-      subject: `[MEMBERSHIP] ${data.name} — ${data.interest || "?"}`,
+      subject: `[MEMBERSHIP] ${data.firstName} ${data.lastName} · ${data.interest || "?"}`,
       replyTo: data.email,
       html: wrapBrandedEmail({
         title: "Membership interest",
@@ -32,7 +32,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   await logSubmission({
     env,
     formType: "membership",
-    data: data as unknown as Record<string, unknown>,
+    // logSubmission reads `name` for the submissions list column; this form
+    // collects firstName/lastName instead, so provide a combined name too.
+    data: { ...data, name: `${data.firstName} ${data.lastName}`.trim() } as unknown as Record<
+      string,
+      unknown
+    >,
     ip,
     userAgent: request.headers.get("user-agent"),
   });

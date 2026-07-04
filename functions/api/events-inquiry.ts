@@ -18,7 +18,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
     await sendEmail({
       env,
-      subject: `[EVENT] ${data.name} — ${data.eventType || "general"} · ${data.groupSize || "?"} guests`,
+      subject: `[EVENT] ${data.name} · ${data.eventType || "general"} · ${data.groupSize || "?"} guests`,
       replyTo: data.email,
       html: wrapBrandedEmail({
         title: "New event inquiry",

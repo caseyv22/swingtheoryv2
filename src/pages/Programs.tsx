@@ -9,8 +9,8 @@ export default function Programs() {
   return (
     <>
       <SEO
-        title="Golf Programs in Pasadena — Leagues, Juniors, Summer Series | Swing Theory"
-        description="Indoor golf programs at Swing Theory in Old Town Pasadena — Swing Theory Golf League, Mini Mulligans junior program, and summer series for women and seniors."
+        title="Golf Programs in Pasadena: Leagues, Juniors, Summer Series | Swing Theory"
+        description="Indoor golf programs at Swing Theory in Old Town Pasadena: Swing Theory Golf League, Mini Mulligans junior program, and summer series for women and seniors."
         path="/programs"
       />
 
@@ -21,7 +21,7 @@ export default function Programs() {
             Programs for every kind of <em className="not-italic text-gold">Pasadena golfer.</em>
           </>
         }
-        sub="Weekly leagues, junior lessons, and seasonal series built around real coaching and real launch monitor data — all indoors, seven days a week."
+        sub="Weekly leagues, junior lessons, and seasonal series built around real coaching and real launch monitor data, all indoors, seven days a week."
         ctas={
           <>
             <Button to="/programs/league-night" variant="gold">

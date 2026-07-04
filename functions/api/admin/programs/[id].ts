@@ -1,4 +1,4 @@
-import { json, readJson } from "../../../lib/http";
+import { json, readJson, safeJsonArray } from "../../../lib/http";
 import { requireAdmin } from "../../../lib/access";
 import type { Env } from "../../../lib/db";
 
@@ -11,9 +11,11 @@ const FIELDS = [
 export const onRequestGet: PagesFunction<Env> = async ({ request, env, params }) => {
   const user = await requireAdmin(request, env);
   if (user instanceof Response) return user;
-  const row = await env.DB.prepare(`SELECT * FROM programs WHERE id = ?`).bind(params.id).first();
+  const row = await env.DB.prepare(`SELECT * FROM programs WHERE id = ?`)
+    .bind(params.id)
+    .first<Record<string, unknown>>();
   if (!row) return json({ error: "Not found" }, 404);
-  return json(row);
+  return json({ ...row, key_details: safeJsonArray(row.key_details) });
 };
 
 export const onRequestPatch: PagesFunction<Env> = async ({ request, env, params }) => {

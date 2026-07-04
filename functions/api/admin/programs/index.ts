@@ -1,4 +1,4 @@
-import { json, readJson } from "../../../lib/http";
+import { json, readJson, safeJsonArray } from "../../../lib/http";
 import { requireAdmin } from "../../../lib/access";
 import type { Env } from "../../../lib/db";
 
@@ -7,8 +7,10 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (user instanceof Response) return user;
   const { results = [] } = await env.DB.prepare(
     `SELECT * FROM programs ORDER BY sort_order ASC, name ASC`,
-  ).all();
-  return json({ items: results });
+  ).all<Record<string, unknown>>();
+  return json({
+    items: results.map((r) => ({ ...r, key_details: safeJsonArray(r.key_details) })),
+  });
 };
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {

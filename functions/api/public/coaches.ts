@@ -1,4 +1,4 @@
-import { cachedJson } from "../../lib/http";
+import { cachedJson, safeJsonArray } from "../../lib/http";
 import type { Env } from "../../lib/db";
 
 type Row = {
@@ -30,12 +30,3 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     120,
   );
 };
-
-function safeJsonArray(s: string): string[] {
-  try {
-    const v = JSON.parse(s);
-    return Array.isArray(v) ? v.map(String) : [];
-  } catch {
-    return [];
-  }
-}

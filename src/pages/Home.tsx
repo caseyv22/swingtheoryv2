@@ -39,7 +39,7 @@ export default function Home() {
         kicker="Old Town Pasadena · Indoor Golf Studio"
         title={
           <>
-            Indoor golf in <em className="not-italic text-gold">Old Town Pasadena.</em>
+            Indoor golf simulators in <em className="not-italic text-gold">Old Town Pasadena.</em>
           </>
         }
         sub="Four wide simulator bays, tour-grade launch monitors, and 100+ world courses. Practice year-round, take a lesson, or host an event, rain or shine, seven days a week."

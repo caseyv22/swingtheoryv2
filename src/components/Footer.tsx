@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr] pb-10 border-b border-white/10">
           <div>
             <img
-              src="/logo.svg?v=2"
+              src="/logo.png?v=1"
               alt="Swing Theory"
               className="h-8 w-auto mb-4"
             />

@@ -10,9 +10,9 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr] pb-10 border-b border-white/10">
           <div>
             <img
-              src="/logo.svg"
+              src="/logo.svg?v=2"
               alt="Swing Theory"
-              className="h-9 w-auto mb-4"
+              className="h-8 w-auto mb-4"
             />
             <p className="max-w-[34ch] text-[0.95rem]">
               Indoor golf and golf simulators in Old Town Pasadena. Practice,

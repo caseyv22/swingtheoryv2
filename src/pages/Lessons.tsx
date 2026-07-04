@@ -76,7 +76,7 @@ export default function Lessons() {
 
       <section className="py-24">
         <SplitBlock
-          imageSrc="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07701-1024x683.jpg"
+          imageSrc="/images/lessons/uneekordata.webp"
           imageAlt="Golf coach at Swing Theory Pasadena"
         >
           <span className="kicker">How lessons work</span>
@@ -92,14 +92,10 @@ export default function Lessons() {
           <FeatList
             items={[
               "Full swing, short game, and putting",
-              "Club fittings with real ball-flight data",
               "Junior coaching (see the Mini Mulligans program)",
-              "Single lessons and multi-lesson packages",
+              "Single lessons and group programs",
             ]}
           />
-          <Button href={site.bookingUrl} external variant="dk">
-            Book a lesson
-          </Button>
         </SplitBlock>
       </section>
 

@@ -54,7 +54,7 @@ export default function Simulators() {
 
       <section className="py-24">
         <SplitBlock
-          imageSrc="https://swingtheory.golf/wp-content/uploads/2024/12/HOME-GOLF-SIM.jpg"
+          imageSrc="/images/simulators/bay.webp"
           imageAlt="Swing Theory golf simulator screen with launch monitor data"
         >
           <span className="kicker">Every bay</span>

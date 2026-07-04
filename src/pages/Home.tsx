@@ -137,7 +137,7 @@ export default function Home() {
       {/* Technology */}
       <section className="py-24" id="tech">
         <SplitBlock
-          imageSrc="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07855-1024x683.jpg"
+          imageSrc="/images/home/home-uneekor.webp"
           imageAlt="Uneekor launch monitor tracking a swing at Swing Theory"
         >
           <span className="kicker">The Technology</span>

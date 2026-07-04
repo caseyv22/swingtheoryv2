@@ -3,9 +3,10 @@ import SEO from "@/components/SEO";
 import Hero from "@/components/Hero";
 import SectionHead from "@/components/SectionHead";
 import Button from "@/components/Button";
-import { programs } from "@/data/programs";
+import { usePrograms } from "@/hooks/usePrograms";
 
 export default function Programs() {
+  const { programs } = usePrograms();
   return (
     <>
       <SEO

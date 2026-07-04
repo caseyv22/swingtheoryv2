@@ -1,7 +1,7 @@
 import ProgramDetail from "./ProgramDetail";
-import { findProgram } from "@/data/programs";
+import { useProgram } from "@/hooks/usePrograms";
 
 export default function MiniMulligans() {
-  const program = findProgram("mini-mulligans")!;
-  return <ProgramDetail program={program} />;
+  const { program } = useProgram("mini-mulligans");
+  return <ProgramDetail program={program!} />;
 }

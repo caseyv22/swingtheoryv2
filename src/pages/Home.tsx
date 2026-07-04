@@ -66,8 +66,8 @@ export default function Home() {
             </div>
           </>
         }
-        videoSrc="https://swingtheory.golf/wp-content/uploads/2025/07/Swing-Theory-Website-Hero.mp4"
-        poster="https://swingtheory.golf/wp-content/uploads/2024/12/HOME-GOLF-SIM.jpg"
+        videoSrc="/images/home/home-hero-compressed.mp4"
+        poster="/images/home/home-sim-bays.webp"
       />
 
       <Marquee

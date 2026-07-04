@@ -1,7 +1,7 @@
 import ProgramDetail from "./ProgramDetail";
-import { findProgram } from "@/data/programs";
+import { useProgram } from "@/hooks/usePrograms";
 
 export default function SummerSeniors() {
-  const program = findProgram("summer-seniors")!;
-  return <ProgramDetail program={program} />;
+  const { program } = useProgram("summer-seniors");
+  return <ProgramDetail program={program!} />;
 }

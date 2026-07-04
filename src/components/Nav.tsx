@@ -8,10 +8,10 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-green-700/92 backdrop-blur-md border-b border-white/10">
+    <header className="sticky top-0 z-50 bg-green-700 border-b border-white/10">
       <div className="wrap flex items-center justify-between h-[74px]">
         <Link to="/" aria-label="Swing Theory home">
-          <img src={site.logos.white} alt="Swing Theory" className="h-[30px]" />
+          <img src="/logo.svg" alt="Swing Theory" className="h-10 w-auto" />
         </Link>
         <nav className="hidden md:flex gap-8 items-center">
           {primaryNav.map((item) => (

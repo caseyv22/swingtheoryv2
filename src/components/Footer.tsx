@@ -12,7 +12,7 @@ export default function Footer() {
             <img
               src="/logo.png?v=1"
               alt="Swing Theory"
-              className="h-8 w-auto mb-4"
+              className="h-6 w-auto mb-4"
             />
             <p className="max-w-[34ch] text-[0.95rem]">
               Indoor golf and golf simulators in Old Town Pasadena. Practice,

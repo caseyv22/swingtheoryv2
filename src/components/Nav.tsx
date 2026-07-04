@@ -11,7 +11,7 @@ export default function Nav() {
     <header className="sticky top-0 z-50 bg-green-700 border-b border-white/10">
       <div className="wrap flex items-center justify-between h-[74px]">
         <Link to="/" aria-label="Swing Theory home">
-          <img src="/logo.png?v=1" alt="Swing Theory" className="h-9 w-auto" />
+          <img src="/logo.png?v=1" alt="Swing Theory" className="h-7 w-auto" />
         </Link>
         <nav className="hidden md:flex gap-8 items-center">
           {primaryNav.map((item) => (

@@ -12,6 +12,7 @@ import {
   Drawer,
 } from "@/components/admin/AdminUI";
 import { useApi, invalidateCache } from "@/hooks/useApi";
+import { useConfirm } from "@/hooks/useConfirm";
 import { api } from "@/lib/admin-api";
 import type { ProgramRow } from "@/data/types";
 
@@ -120,8 +121,10 @@ export default function AdminPrograms() {
     }
   }
 
+  const { confirm, dialog } = useConfirm();
+
   async function remove(id: number) {
-    if (!confirm("Delete this program?")) return;
+    if (!(await confirm("Delete this program?"))) return;
     await api.delete(`/api/admin/programs/${id}`);
     invalidateCache("/api/admin/programs");
     invalidateCache("/api/public/programs");
@@ -348,6 +351,7 @@ export default function AdminPrograms() {
           <Button onClick={save}>{drawer.form.id ? "Save" : "Create"}</Button>
         </div>
       </Drawer>
+      {dialog}
     </>
   );
 }

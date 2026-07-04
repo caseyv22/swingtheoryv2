@@ -12,6 +12,7 @@ import {
   Drawer,
 } from "@/components/admin/AdminUI";
 import { useApi, invalidateCache } from "@/hooks/useApi";
+import { useConfirm } from "@/hooks/useConfirm";
 import { api } from "@/lib/admin-api";
 import type { CoachRow } from "@/data/types";
 
@@ -99,8 +100,10 @@ export default function AdminCoaches() {
     }
   }
 
+  const { confirm, dialog } = useConfirm();
+
   async function remove(id: number) {
-    if (!confirm("Delete this coach profile?")) return;
+    if (!(await confirm("Delete this coach profile?"))) return;
     await api.delete(`/api/admin/coaches/${id}`);
     invalidateCache("/api/admin/coaches");
     invalidateCache("/api/public/coaches");
@@ -298,6 +301,7 @@ export default function AdminCoaches() {
           <Button onClick={save}>{drawer.form.id ? "Save" : "Create"}</Button>
         </div>
       </Drawer>
+      {dialog}
     </>
   );
 }

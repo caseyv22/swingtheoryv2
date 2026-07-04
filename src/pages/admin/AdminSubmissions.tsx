@@ -10,6 +10,7 @@ import {
   Field,
 } from "@/components/admin/AdminUI";
 import { useApi, invalidateCache } from "@/hooks/useApi";
+import { useConfirm } from "@/hooks/useConfirm";
 import { api } from "@/lib/admin-api";
 import type { SubmissionRow } from "@/data/types";
 
@@ -38,8 +39,10 @@ export default function AdminSubmissions() {
     reload();
   }
 
+  const { confirm, dialog } = useConfirm();
+
   async function remove(id: number) {
-    if (!confirm("Delete this submission?")) return;
+    if (!(await confirm("Delete this submission?"))) return;
     await api.delete(`/api/admin/submissions/${id}`);
     invalidateCache("/api/admin/submissions");
     reload();
@@ -218,6 +221,7 @@ export default function AdminSubmissions() {
           </>
         )}
       </Drawer>
+      {dialog}
     </>
   );
 }

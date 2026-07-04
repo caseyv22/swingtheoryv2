@@ -136,6 +136,42 @@ export function Badge({
   );
 }
 
+/** In-app confirm dialog — replaces window.confirm() so the browser's
+ *  native Safari/Chrome popup never shows up. Pair with useConfirm(). */
+export function ConfirmDialog({
+  message,
+  confirmLabel = "Delete",
+  onConfirm,
+  onCancel,
+}: {
+  message: string;
+  confirmLabel?: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4"
+      onClick={onCancel}
+    >
+      <div
+        className="w-full max-w-sm bg-white rounded-2xl shadow-2xl p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <p className="text-ink text-[0.98rem]">{message}</p>
+        <div className="flex justify-end gap-2 mt-6">
+          <Button variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={onConfirm}>
+            {confirmLabel}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Basic modal / drawer wrapper. */
 export function Drawer({
   open,

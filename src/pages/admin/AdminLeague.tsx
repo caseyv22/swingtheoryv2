@@ -12,6 +12,7 @@ import {
   Drawer,
 } from "@/components/admin/AdminUI";
 import { useApi, invalidateCache } from "@/hooks/useApi";
+import { useConfirm } from "@/hooks/useConfirm";
 import { api } from "@/lib/admin-api";
 import type { LeagueEventRow } from "@/data/types";
 
@@ -67,8 +68,10 @@ export default function AdminLeague() {
     }
   }
 
+  const { confirm, dialog } = useConfirm();
+
   async function remove(id: number) {
-    if (!confirm("Delete this league event?")) return;
+    if (!(await confirm("Delete this league event?"))) return;
     await api.delete(`/api/admin/league/${id}`);
     invalidateCache("/api/admin/league");
     invalidateCache("/api/public/league-next");
@@ -252,6 +255,7 @@ export default function AdminLeague() {
           <Button onClick={save}>{drawer.id ? "Save" : "Create"}</Button>
         </div>
       </Drawer>
+      {dialog}
     </>
   );
 }

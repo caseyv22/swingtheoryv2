@@ -89,7 +89,7 @@ export default function Lessons() {
             </Button>
           </>
         }
-        poster="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07701-1024x683.jpg"
+        poster="/images/home/home-lessons.webp"
       />
 
       <section className="py-24">

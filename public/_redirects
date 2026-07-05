@@ -16,9 +16,6 @@
 /tournaments          /league               301
 /wp-content/*         /:splat               301
 
-# Route renames within v2.
-/programs/league-night  /league  301
-
 # Admin and API paths must NOT be caught by the SPA fallback below —
 # Cloudflare Access sits in front of /admin/* and functions handle /api/*.
 # (The SPA fallback rule ignores requests that already match a Function.)

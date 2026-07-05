@@ -14,7 +14,6 @@ import NotFound from "@/pages/NotFound";
 import MiniMulligans from "@/pages/programs/MiniMulligans";
 import SummerWomens from "@/pages/programs/SummerWomens";
 import SummerSeniors from "@/pages/programs/SummerSeniors";
-import LeagueNight from "@/pages/programs/LeagueNight";
 import ProgramBySlug from "@/pages/programs/ProgramBySlug";
 import Book from "@/pages/Book";
 import League from "@/pages/League";
@@ -60,7 +59,6 @@ export default function App() {
                 <Route path="/programs/mini-mulligans" element={<MiniMulligans />} />
                 <Route path="/programs/summer-womens" element={<SummerWomens />} />
                 <Route path="/programs/summer-seniors" element={<SummerSeniors />} />
-                <Route path="/programs/league-night" element={<LeagueNight />} />
                 <Route path="/programs/:slug" element={<ProgramBySlug />} />
                 <Route path="/league" element={<League />} />
                 <Route path="/events" element={<Events />} />

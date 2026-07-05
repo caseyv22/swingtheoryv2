@@ -11,6 +11,17 @@ import type { Program } from "@/data/programs";
 import { serviceSchema } from "@/schema";
 import { useRef } from "react";
 
+// Fixed hero photos, one per known program slug. These are intentionally
+// NOT tied to program.image (which is the admin-uploaded photo shown next
+// to the "About the program" text block and on the /programs card) — Casey
+// flagged that a single admin upload was silently changing both the hero
+// background and the text-block photo. Keeping the hero static here means
+// uploading a new "About the program" image never touches the hero.
+const heroBySlug: Record<string, string> = {
+  "league-night": "/images/programs/stgl-league-night.webp",
+};
+const defaultProgramHero = "/images/home/home-sim-bays.webp";
+
 type Props = {
   program: Program;
   useLeagueForm?: boolean; // League Night uses the dedicated form
@@ -55,7 +66,7 @@ export default function ProgramDetail({ program, useLeagueForm = false }: Props)
             </Button>
           </>
         }
-        poster={program.image}
+        poster={heroBySlug[program.slug] ?? defaultProgramHero}
       />
 
       <section className="py-24">

@@ -27,6 +27,7 @@ export default function League() {
         title="Swing Theory Golf League, Indoor Golf League in Pasadena"
         description="Weekly indoor golf league at Swing Theory in Old Town Pasadena. Match play with handicaps, live standings, season prizes. Open to individuals and teams."
         path="/league"
+        image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg"
       />
       <JsonLd
         data={serviceSchema({

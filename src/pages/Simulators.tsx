@@ -17,6 +17,7 @@ export default function Simulators() {
         title="Golf Simulator Rental in Pasadena | Swing Theory Indoor Golf"
         description="Rent a golf simulator bay in Old Town Pasadena. Four wide bays running Uneekor launch monitors and GSPro simulation, 100+ world courses, up to 6 players per bay. Open 7 days a week."
         path="/simulators"
+        image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg"
       />
       <JsonLd
         data={[

@@ -69,6 +69,7 @@ export default function ProgramDetail({ program, useLeagueForm = false }: Props)
         title={`${program.name}, Indoor Golf in Pasadena | Swing Theory`}
         description={program.shortDescription}
         path={path}
+        image={`${site.url}${heroBySlug[program.slug] ?? defaultProgramHero}`}
       />
       <JsonLd
         data={serviceSchema({

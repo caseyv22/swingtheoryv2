@@ -21,6 +21,7 @@ export default function Memberships() {
         title="Indoor Golf Memberships in Pasadena | Swing Theory"
         description="Join the Swing Theory indoor golf membership program in Old Town Pasadena. Monthly bay hours, priority booking, member pricing, and league play options."
         path="/memberships"
+        image="https://swingtheory.golf/wp-content/uploads/2025/05/Swing-Theory-Memberships-1024x602.jpg"
       />
       <JsonLd
         data={serviceSchema({

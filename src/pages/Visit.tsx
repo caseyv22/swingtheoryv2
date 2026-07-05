@@ -13,6 +13,7 @@ export default function Visit() {
         title="Visit Swing Theory, 50 S De Lacey Ave, Old Town Pasadena"
         description="Swing Theory Indoor Golf is at 50 S De Lacey Ave #200 in the heart of Old Town Pasadena. Hours, parking, and directions."
         path="/visit"
+        image={`${site.url}/images/visit/delacey.webp`}
       />
 
       <Hero

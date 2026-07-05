@@ -31,6 +31,7 @@ export default function Home() {
         title="Indoor Golf and Golf Simulators in Old Town Pasadena | Swing Theory"
         description="Swing Theory is an indoor golf studio in Old Town Pasadena. Four wide simulator bays, tour-grade launch monitors, 100+ world courses, lessons, leagues, and private events."
         path="/"
+        image={`${site.url}/images/home/home-sim-bays.webp`}
       />
       {/* FAQ subset schema on the homepage (matches visible answers verbatim) */}
       <JsonLd data={faqPageSchema(homeFaqs)} />

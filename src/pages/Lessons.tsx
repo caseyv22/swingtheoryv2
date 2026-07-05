@@ -57,6 +57,7 @@ export default function Lessons() {
         title="Golf Lessons in Pasadena | Swing Theory Indoor Golf"
         description="Private golf lessons and club fittings in Old Town Pasadena. Data-backed coaching with tour-grade launch monitors, slow-motion swing replay, and coaches for every level."
         path="/lessons"
+        image={`${site.url}/images/home/home-lessons.webp`}
       />
       <JsonLd
         data={[

@@ -12,6 +12,7 @@ export default function Contact() {
         title="Contact Swing Theory Indoor Golf, Pasadena"
         description="Contact Swing Theory Indoor Golf in Old Town Pasadena. Call, email, or use the contact form and we'll follow up shortly."
         path="/contact"
+        image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07701-1024x683.jpg"
       />
 
       <Hero

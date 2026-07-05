@@ -13,6 +13,7 @@ export default function Programs() {
         title="Golf Programs in Pasadena: Leagues, Juniors, Summer Series | Swing Theory"
         description="Indoor golf programs at Swing Theory in Old Town Pasadena: Swing Theory Golf League, Mini Mulligans junior program, and summer series for women and seniors."
         path="/programs"
+        image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg"
       />
 
       <Hero

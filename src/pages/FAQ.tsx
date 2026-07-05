@@ -12,6 +12,7 @@ export default function FAQ() {
         title="Swing Theory FAQ, Indoor Golf in Pasadena"
         description="Frequently asked questions about Swing Theory Indoor Golf in Old Town Pasadena: pricing, rentals, memberships, lessons, and events."
         path="/faq"
+        image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07877-1024x683.jpg"
       />
       <JsonLd data={faqPageSchema(faqs)} />
 

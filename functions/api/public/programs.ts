@@ -16,12 +16,17 @@ type Row = {
   cta_label: string;
   cta_target: string;
   sort_order: number;
+  date_range: string;
+  time_range: string;
+  price: string;
+  starts_on: string;
 };
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
   const { results = [] } = await env.DB.prepare(
     `SELECT id, slug, name, kicker, h1, short_desc, long_desc, audience, season,
-            key_details, image_url, cta_label, cta_target, sort_order
+            key_details, image_url, cta_label, cta_target, sort_order,
+            date_range, time_range, price, starts_on
      FROM programs
      WHERE published = 1
      ORDER BY sort_order ASC, name ASC`,

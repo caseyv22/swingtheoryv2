@@ -34,6 +34,10 @@ type FormState = {
   cta_target: "interest" | "league";
   published: boolean;
   sort_order: number;
+  date_range: string;
+  time_range: string;
+  price: string;
+  starts_on: string;
 };
 
 const empty: FormState = {
@@ -51,6 +55,10 @@ const empty: FormState = {
   cta_target: "interest",
   published: true,
   sort_order: 100,
+  date_range: "",
+  time_range: "",
+  price: "",
+  starts_on: "",
 };
 
 function toForm(row: ProgramRow): FormState {
@@ -70,6 +78,10 @@ function toForm(row: ProgramRow): FormState {
     cta_target: row.cta_target,
     published: true,
     sort_order: row.sort_order,
+    date_range: row.date_range,
+    time_range: row.time_range,
+    price: row.price,
+    starts_on: row.starts_on,
   };
 }
 
@@ -92,6 +104,10 @@ function toPayload(f: FormState) {
     cta_target: f.cta_target,
     published: f.published,
     sort_order: f.sort_order,
+    date_range: f.date_range,
+    time_range: f.time_range,
+    price: f.price,
+    starts_on: f.starts_on,
   };
 }
 
@@ -264,6 +280,43 @@ export default function AdminPrograms() {
               value={drawer.form.season}
               onChange={(e) =>
                 setDrawer((d) => ({ ...d, form: { ...d.form, season: e.target.value } }))
+              }
+            />
+          </Field>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Date range" hint="E.g. 'Monday-Thursday' or 'Tuesday and Thursday'.">
+            <Input
+              value={drawer.form.date_range}
+              onChange={(e) =>
+                setDrawer((d) => ({ ...d, form: { ...d.form, date_range: e.target.value } }))
+              }
+            />
+          </Field>
+          <Field label="Time range" hint="E.g. '6:00 PM - 8:00 PM'.">
+            <Input
+              value={drawer.form.time_range}
+              onChange={(e) =>
+                setDrawer((d) => ({ ...d, form: { ...d.form, time_range: e.target.value } }))
+              }
+            />
+          </Field>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Price" hint="Free text, e.g. '$239/month' or '$25 per session'.">
+            <Input
+              value={drawer.form.price}
+              onChange={(e) =>
+                setDrawer((d) => ({ ...d, form: { ...d.form, price: e.target.value } }))
+              }
+            />
+          </Field>
+          <Field label="Starting date" hint="Next/upcoming start date.">
+            <Input
+              type="date"
+              value={drawer.form.starts_on}
+              onChange={(e) =>
+                setDrawer((d) => ({ ...d, form: { ...d.form, starts_on: e.target.value } }))
               }
             />
           </Field>

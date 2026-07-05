@@ -15,6 +15,10 @@ export type ProgramRow = {
   cta_label: string;
   cta_target: "interest" | "league";
   sort_order: number;
+  date_range: string;
+  time_range: string;
+  price: string;
+  starts_on: string;
 };
 
 export type CoachRow = {

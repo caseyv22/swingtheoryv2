@@ -10,6 +10,10 @@ export type Program = {
   keyDetails: string[];
   ctaLabel: string;
   image: string;
+  dateRange?: string; // e.g. "Monday-Thursday" or "Tuesday and Thursday"
+  timeRange?: string; // e.g. "6:00 PM - 8:00 PM"
+  price?: string; // free text, e.g. "$239/month" or "$25 per session"
+  startsOn?: string; // ISO date (YYYY-MM-DD)
 };
 
 // Programs are the recurring, formatted offerings — distinct from

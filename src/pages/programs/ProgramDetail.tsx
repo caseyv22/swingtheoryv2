@@ -22,6 +22,18 @@ const heroBySlug: Record<string, string> = {
 };
 const defaultProgramHero = "/images/home/home-sim-bays.webp";
 
+function formatStartsOn(iso: string): string {
+  // iso is YYYY-MM-DD from the admin date input; parse as local, not UTC,
+  // so it doesn't shift a day depending on timezone.
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return iso;
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 type Props = {
   program: Program;
   useLeagueForm?: boolean; // League Night uses the dedicated form
@@ -82,6 +94,34 @@ export default function ProgramDetail({ program, useLeagueForm = false }: Props)
           <FeatList items={program.keyDetails} />
           {program.season && (
             <p className="text-muted text-[0.98rem] italic">{program.season}</p>
+          )}
+          {(program.dateRange || program.timeRange || program.price || program.startsOn) && (
+            <div className="mt-4 rounded-xl border border-line bg-cream/60 p-5 grid gap-2 text-[0.98rem]">
+              {program.dateRange && (
+                <div>
+                  <span className="font-disp text-green-700">When: </span>
+                  {program.dateRange}
+                </div>
+              )}
+              {program.timeRange && (
+                <div>
+                  <span className="font-disp text-green-700">Time: </span>
+                  {program.timeRange}
+                </div>
+              )}
+              {program.price && (
+                <div>
+                  <span className="font-disp text-green-700">Price: </span>
+                  {program.price}
+                </div>
+              )}
+              {program.startsOn && (
+                <div>
+                  <span className="font-disp text-green-700">Starts: </span>
+                  {formatStartsOn(program.startsOn)}
+                </div>
+              )}
+            </div>
           )}
           <div className="mt-6">
             <Button onClick={scrollToForm} variant="dk">

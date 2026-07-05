@@ -6,6 +6,7 @@ const FIELDS = [
   "slug", "name", "kicker", "h1", "short_desc", "long_desc",
   "audience", "season", "key_details", "image_url",
   "cta_label", "cta_target", "published", "sort_order",
+  "date_range", "time_range", "price", "starts_on",
 ] as const;
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env, params }) => {

@@ -23,8 +23,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const result = await env.DB.prepare(
     `INSERT INTO programs
        (slug, name, kicker, h1, short_desc, long_desc, audience, season,
-        key_details, image_url, cta_label, cta_target, published, sort_order)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        key_details, image_url, cta_label, cta_target, published, sort_order,
+        date_range, time_range, price, starts_on)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   )
     .bind(
       String(body.slug),
@@ -41,6 +42,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       String(body.cta_target ?? "interest"),
       body.published === false ? 0 : 1,
       Number(body.sort_order ?? 100),
+      String(body.date_range ?? ""),
+      String(body.time_range ?? ""),
+      String(body.price ?? ""),
+      String(body.starts_on ?? ""),
     )
     .run();
   return json({ ok: true, id: result.meta.last_row_id }, 201);

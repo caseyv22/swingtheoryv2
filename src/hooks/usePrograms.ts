@@ -23,6 +23,10 @@ function adaptRow(r: ProgramRow): ProgramDisplay {
     keyDetails: r.key_details,
     ctaLabel: r.cta_label,
     image: r.image_url,
+    dateRange: r.date_range || undefined,
+    timeRange: r.time_range || undefined,
+    price: r.price || undefined,
+    startsOn: r.starts_on || undefined,
     useLeagueForm: r.cta_target === "league",
   };
 }

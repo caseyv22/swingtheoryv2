@@ -248,7 +248,10 @@ export default function AdminCoaches() {
             {uploading && <p className="text-muted text-sm">Uploading…</p>}
           </div>
         </Field>
-        <Field label="Specialties" hint="Comma-separated.">
+        <Field
+          label="Experience"
+          hint="Comma-separated. Shows as a checklist on the coach's card, e.g. '20+ Years of teaching, PGA Tour player Adviser since 2013'."
+        >
           <Input
             value={drawer.form.specialties_text}
             onChange={(e) =>
@@ -260,7 +263,7 @@ export default function AdminCoaches() {
           />
         </Field>
         <div className="grid grid-cols-3 gap-4">
-          <Field label="Phone">
+          <Field label="Phone" hint="Shown as a call button on the card.">
             <Input
               value={drawer.form.phone}
               onChange={(e) =>

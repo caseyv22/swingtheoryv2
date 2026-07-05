@@ -5,6 +5,7 @@ export type Coach = {
   bio: string;
   photo: string;
   specialties: string[];
+  phone?: string;
 };
 
 // Placeholder — swap real coaches, bios, and headshots before launch.

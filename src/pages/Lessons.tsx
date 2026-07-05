@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import SectionHead from "@/components/SectionHead";
 import SplitBlock, { FeatList } from "@/components/SplitBlock";
 import FAQAccordion from "@/components/FAQAccordion";
+import CoachCard from "@/components/CoachCard";
 import Button from "@/components/Button";
 import { site } from "@/data/site-config";
 import { coaches as fallbackCoaches } from "@/data/coaches";
@@ -13,7 +14,15 @@ import { useApi } from "@/hooks/useApi";
 import type { CoachRow } from "@/data/types";
 
 // Adapter — old static coaches file uses different field names than the DB row.
-type CoachDisplay = { slug: string; name: string; title: string; bio: string; photo: string; specialties: string[] };
+type CoachDisplay = {
+  slug: string;
+  name: string;
+  title: string;
+  bio: string;
+  photo: string;
+  specialties: string[];
+  phone?: string;
+};
 function adaptFallback(): CoachDisplay[] {
   return fallbackCoaches.map((c) => ({
     slug: c.slug,
@@ -22,10 +31,19 @@ function adaptFallback(): CoachDisplay[] {
     bio: c.bio,
     photo: c.photo,
     specialties: [...c.specialties],
+    phone: c.phone,
   }));
 }
 function adaptRow(r: CoachRow): CoachDisplay {
-  return { slug: r.slug, name: r.name, title: r.title, bio: r.bio, photo: r.photo_url, specialties: r.specialties };
+  return {
+    slug: r.slug,
+    name: r.name,
+    title: r.title,
+    bio: r.bio,
+    photo: r.photo_url,
+    specialties: r.specialties,
+    phone: r.phone,
+  };
 }
 
 export default function Lessons() {
@@ -102,25 +120,9 @@ export default function Lessons() {
       <section className="py-24 bg-paper">
         <div className="wrap">
           <SectionHead kicker="Coaches" title="Meet the team." />
-          <div className="grid gap-6" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))" }}>
+          <div className="grid gap-6" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))" }}>
             {coachList.map((c) => (
-              <div key={c.slug} className="reveal bg-cream border border-line rounded-2xl overflow-hidden">
-                <img src={c.photo} alt={c.name} className="w-full aspect-square object-cover" loading="lazy" />
-                <div className="p-6">
-                  <div className="font-disp text-xl text-green-700">{c.name}</div>
-                  <div className="font-disp text-xs uppercase tracking-[0.14em] text-muted mt-1">
-                    {c.title}
-                  </div>
-                  <p className="text-[0.98rem] text-ink mt-3">{c.bio}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {c.specialties.map((s) => (
-                      <span key={s} className="text-xs bg-green-700/10 text-green-700 rounded-full px-3 py-1 font-disp">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <CoachCard key={c.slug} coach={c} />
             ))}
           </div>
         </div>

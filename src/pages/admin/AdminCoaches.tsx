@@ -11,6 +11,7 @@ import {
   Badge,
   Drawer,
 } from "@/components/admin/AdminUI";
+import { ImageUploadField, type UploadStatus } from "@/components/admin/ImageUploadField";
 import { useApi, invalidateCache } from "@/hooks/useApi";
 import { useConfirm } from "@/hooks/useConfirm";
 import { api } from "@/lib/admin-api";
@@ -80,7 +81,7 @@ export default function AdminCoaches() {
     form: empty,
   });
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
 
   async function save() {
     try {
@@ -110,16 +111,6 @@ export default function AdminCoaches() {
     reload();
   }
 
-  async function handleUpload(file: File) {
-    setUploading(true);
-    try {
-      const { url } = await api.upload(file);
-      setDrawer((d) => ({ ...d, form: { ...d.form, photo_url: url } }));
-    } finally {
-      setUploading(false);
-    }
-  }
-
   return (
     <>
       <PageHead
@@ -129,6 +120,7 @@ export default function AdminCoaches() {
           <Button
             onClick={() => {
               setSaveError(null);
+              setUploadStatus("idle");
               setDrawer({ open: true, form: empty });
             }}
           >
@@ -172,7 +164,11 @@ export default function AdminCoaches() {
                   <div className="flex gap-2">
                     <Button
                       variant="ghost"
-                      onClick={() => setDrawer({ open: true, form: toForm(row) })}
+                      onClick={() => {
+                        setSaveError(null);
+                        setUploadStatus("idle");
+                        setDrawer({ open: true, form: toForm(row) });
+                      }}
                     >
                       Edit
                     </Button>
@@ -227,26 +223,14 @@ export default function AdminCoaches() {
             }
           />
         </Field>
-        <Field label="Headshot" hint="Uploads to R2.">
-          <div className="space-y-2">
-            {drawer.form.photo_url && (
-              <img
-                src={drawer.form.photo_url}
-                alt=""
-                className="max-h-40 rounded-lg border border-line"
-              />
-            )}
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              disabled={uploading}
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) handleUpload(f);
-              }}
-            />
-            {uploading && <p className="text-muted text-sm">Uploading…</p>}
-          </div>
+        <Field label="Headshot">
+          <ImageUploadField
+            value={drawer.form.photo_url}
+            onChange={(url) =>
+              setDrawer((d) => ({ ...d, form: { ...d.form, photo_url: url } }))
+            }
+            onStatusChange={setUploadStatus}
+          />
         </Field>
         <Field
           label="Experience"
@@ -301,7 +285,13 @@ export default function AdminCoaches() {
           <Button variant="ghost" onClick={() => setDrawer({ open: false, form: empty })}>
             Cancel
           </Button>
-          <Button onClick={save}>{drawer.form.id ? "Save" : "Create"}</Button>
+          <Button onClick={save} disabled={uploadStatus === "uploading"}>
+            {uploadStatus === "uploading"
+              ? "Uploading photo…"
+              : drawer.form.id
+                ? "Save"
+                : "Create"}
+          </Button>
         </div>
       </Drawer>
       {dialog}

@@ -11,6 +11,7 @@ import {
   Badge,
   Drawer,
 } from "@/components/admin/AdminUI";
+import { ImageUploadField, type UploadStatus } from "@/components/admin/ImageUploadField";
 import { useApi, invalidateCache } from "@/hooks/useApi";
 import { useConfirm } from "@/hooks/useConfirm";
 import { api } from "@/lib/admin-api";
@@ -36,16 +37,18 @@ export default function AdminLeague() {
     open: false,
     form: empty,
   });
-  const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
   const [saveError, setSaveError] = useState<string | null>(null);
 
   function openNew() {
     setDrawer({ open: true, form: empty });
     setSaveError(null);
+    setUploadStatus("idle");
   }
   function openEdit(row: LeagueEventRow) {
     setDrawer({ open: true, form: { ...row }, id: row.id });
     setSaveError(null);
+    setUploadStatus("idle");
   }
   function close() {
     setDrawer({ open: false, form: empty });
@@ -76,16 +79,6 @@ export default function AdminLeague() {
     invalidateCache("/api/admin/league");
     invalidateCache("/api/public/league-next");
     reload();
-  }
-
-  async function handleUpload(file: File) {
-    setUploading(true);
-    try {
-      const { url } = await api.upload(file);
-      setDrawer((d) => ({ ...d, form: { ...d.form, image_url: url } }));
-    } finally {
-      setUploading(false);
-    }
   }
 
   return (
@@ -203,27 +196,14 @@ export default function AdminLeague() {
             }
           />
         </Field>
-        <Field label="Image" hint="Uploads to R2. JPEG / PNG / WebP, up to 10 MB.">
-          <div className="space-y-2">
-            {drawer.form.image_url && (
-              <img
-                src={drawer.form.image_url}
-                alt=""
-                className="max-h-40 rounded-lg border border-line"
-              />
-            )}
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              disabled={uploading}
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) handleUpload(f);
-              }}
-              className="block text-sm"
-            />
-            {uploading && <p className="text-muted text-sm">Uploading…</p>}
-          </div>
+        <Field label="Image">
+          <ImageUploadField
+            value={drawer.form.image_url ?? ""}
+            onChange={(url) =>
+              setDrawer((d) => ({ ...d, form: { ...d.form, image_url: url } }))
+            }
+            onStatusChange={setUploadStatus}
+          />
         </Field>
         <div className="grid grid-cols-2 gap-4">
           <Field label="CTA label">
@@ -252,7 +232,9 @@ export default function AdminLeague() {
           <Button variant="ghost" onClick={close}>
             Cancel
           </Button>
-          <Button onClick={save}>{drawer.id ? "Save" : "Create"}</Button>
+          <Button onClick={save} disabled={uploadStatus === "uploading"}>
+            {uploadStatus === "uploading" ? "Uploading image…" : drawer.id ? "Save" : "Create"}
+          </Button>
         </div>
       </Drawer>
       {dialog}

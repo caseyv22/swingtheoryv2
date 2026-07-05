@@ -33,7 +33,7 @@ export default function Visit() {
             </Button>
           </>
         }
-        poster="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07806-1024x683.jpg"
+        poster="/images/visit/delacey.webp"
       />
 
       <section className="py-24">

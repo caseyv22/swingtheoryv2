@@ -41,11 +41,10 @@ function formatStartsOn(v: string): string {
 
 // Schedule/pricing pill — kept visually separate from the body copy so it
 // reads as scannable metadata rather than part of the description text.
-function Pill({ label, value }: { label: string; value: string }) {
+function Pill({ value }: { value: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-paper px-4 py-1.5 text-[0.9rem]">
-      <span className="font-disp text-green-700">{label}</span>
-      <span className="text-ink">{value}</span>
+    <span className="inline-flex items-center rounded-full border border-line bg-paper px-4 py-1.5 text-[0.9rem] text-ink">
+      {value}
     </span>
   );
 }
@@ -108,12 +107,10 @@ export default function ProgramDetail({ program, useLeagueForm = false }: Props)
           </h2>
           {(program.dateRange || program.timeRange || program.price || program.startsOn) && (
             <div className="flex flex-wrap gap-2 mb-5">
-              {program.dateRange && <Pill label="When" value={program.dateRange} />}
-              {program.timeRange && <Pill label="Time" value={program.timeRange} />}
-              {program.price && <Pill label="Price" value={program.price} />}
-              {program.startsOn && (
-                <Pill label="Starts" value={formatStartsOn(program.startsOn)} />
-              )}
+              {program.dateRange && <Pill value={program.dateRange} />}
+              {program.timeRange && <Pill value={program.timeRange} />}
+              {program.price && <Pill value={program.price} />}
+              {program.startsOn && <Pill value={formatStartsOn(program.startsOn)} />}
             </div>
           )}
           <p className="text-muted text-[1.08rem]">{program.longDescription}</p>

@@ -22,16 +22,32 @@ const heroBySlug: Record<string, string> = {
 };
 const defaultProgramHero = "/images/home/home-sim-bays.webp";
 
-function formatStartsOn(iso: string): string {
-  // iso is YYYY-MM-DD from the admin date input; parse as local, not UTC,
+function isOngoing(v: string): boolean {
+  return v.trim().toLowerCase() === "ongoing";
+}
+
+function formatStartsOn(v: string): string {
+  if (isOngoing(v)) return "Ongoing";
+  // v is YYYY-MM-DD from the admin date input; parse as local, not UTC,
   // so it doesn't shift a day depending on timezone.
-  const [y, m, d] = iso.split("-").map(Number);
-  if (!y || !m || !d) return iso;
+  const [y, m, d] = v.split("-").map(Number);
+  if (!y || !m || !d) return v;
   return new Date(y, m - 1, d).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
+}
+
+// Schedule/pricing pill — kept visually separate from the body copy so it
+// reads as scannable metadata rather than part of the description text.
+function Pill({ label, value }: { label: string; value: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-paper px-4 py-1.5 text-[0.9rem]">
+      <span className="font-disp text-green-700">{label}</span>
+      <span className="text-ink">{value}</span>
+    </span>
+  );
 }
 
 type Props = {
@@ -90,38 +106,20 @@ export default function ProgramDetail({ program, useLeagueForm = false }: Props)
           <h2 className="text-[clamp(1.9rem,3.6vw,2.9rem)] text-green-700 mt-3 mb-4">
             {program.name}
           </h2>
+          {(program.dateRange || program.timeRange || program.price || program.startsOn) && (
+            <div className="flex flex-wrap gap-2 mb-5">
+              {program.dateRange && <Pill label="When" value={program.dateRange} />}
+              {program.timeRange && <Pill label="Time" value={program.timeRange} />}
+              {program.price && <Pill label="Price" value={program.price} />}
+              {program.startsOn && (
+                <Pill label="Starts" value={formatStartsOn(program.startsOn)} />
+              )}
+            </div>
+          )}
           <p className="text-muted text-[1.08rem]">{program.longDescription}</p>
           <FeatList items={program.keyDetails} />
           {program.season && (
             <p className="text-muted text-[0.98rem] italic">{program.season}</p>
-          )}
-          {(program.dateRange || program.timeRange || program.price || program.startsOn) && (
-            <div className="mt-4 rounded-xl border border-line bg-cream/60 p-5 grid gap-2 text-[0.98rem]">
-              {program.dateRange && (
-                <div>
-                  <span className="font-disp text-green-700">When: </span>
-                  {program.dateRange}
-                </div>
-              )}
-              {program.timeRange && (
-                <div>
-                  <span className="font-disp text-green-700">Time: </span>
-                  {program.timeRange}
-                </div>
-              )}
-              {program.price && (
-                <div>
-                  <span className="font-disp text-green-700">Price: </span>
-                  {program.price}
-                </div>
-              )}
-              {program.startsOn && (
-                <div>
-                  <span className="font-disp text-green-700">Starts: </span>
-                  {formatStartsOn(program.startsOn)}
-                </div>
-              )}
-            </div>
           )}
           <div className="mt-6">
             <Button onClick={scrollToForm} variant="dk">

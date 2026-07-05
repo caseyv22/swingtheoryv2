@@ -111,6 +111,10 @@ function toPayload(f: FormState) {
   };
 }
 
+function isOngoing(v: string) {
+  return v.trim().toLowerCase() === "ongoing";
+}
+
 export default function AdminPrograms() {
   const { data, loading, reload } = useApi<{ items: ProgramRow[] }>("/api/admin/programs");
   const [drawer, setDrawer] = useState<{ open: boolean; form: FormState }>({
@@ -311,14 +315,30 @@ export default function AdminPrograms() {
               }
             />
           </Field>
-          <Field label="Starting date" hint="Next/upcoming start date.">
-            <Input
-              type="date"
-              value={drawer.form.starts_on}
-              onChange={(e) =>
-                setDrawer((d) => ({ ...d, form: { ...d.form, starts_on: e.target.value } }))
-              }
-            />
+          <Field label="Starting date" hint="Next/upcoming start date, or mark as ongoing.">
+            <div className="space-y-2">
+              <Input
+                type="date"
+                value={isOngoing(drawer.form.starts_on) ? "" : drawer.form.starts_on}
+                disabled={isOngoing(drawer.form.starts_on)}
+                onChange={(e) =>
+                  setDrawer((d) => ({ ...d, form: { ...d.form, starts_on: e.target.value } }))
+                }
+              />
+              <label className="flex items-center gap-2 text-sm text-muted">
+                <input
+                  type="checkbox"
+                  checked={isOngoing(drawer.form.starts_on)}
+                  onChange={(e) =>
+                    setDrawer((d) => ({
+                      ...d,
+                      form: { ...d.form, starts_on: e.target.checked ? "ongoing" : "" },
+                    }))
+                  }
+                />
+                Ongoing (no fixed start date)
+              </label>
+            </div>
           </Field>
         </div>
         <Field label="Key details" hint="One bullet per line.">

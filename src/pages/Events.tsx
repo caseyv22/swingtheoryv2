@@ -24,7 +24,7 @@ const gallerySlides = [
 const pricing = [
   {
     label: "Weekday rates",
-    note: "Monday–Thursday. Corporate outings and team building.",
+    note: "Monday–Thursday.\nCorporate outings and team building.",
     from: "$900",
     tiers: [
       { d: "3 hours", p: "$900" },
@@ -34,7 +34,7 @@ const pricing = [
   },
   {
     label: "Weekend rates",
-    note: "Friday–Sunday. Birthdays and celebrations.",
+    note: "Friday–Sunday.\nBirthdays and celebrations.",
     from: "$1,200",
     tiers: [
       { d: "3 hours", p: "$1,200" },
@@ -172,7 +172,7 @@ export default function Events() {
               >
                 <div className="bg-green-700 text-white px-6 py-5 text-center">
                   <div className="font-disp text-lg">{tier.label}</div>
-                  <div className="text-[#c9d2cb] text-sm mt-1">{tier.note}</div>
+                  <div className="text-[#c9d2cb] text-sm mt-1 whitespace-pre-line">{tier.note}</div>
                 </div>
                 <div className="px-6 pt-6 text-center">
                   <span className="font-disp text-4xl text-green-700">

@@ -1,12 +1,15 @@
 import { json, readJson } from "../lib/http";
 import { sendEmail, renderKv, verifyTurnstile, wrapBrandedEmail } from "../lib/email";
 import { logSubmission } from "../lib/submissions";
-import { membershipInterestSchema } from "../../src/lib/validation";
+import { interestSchema } from "../../src/lib/validation";
 import type { Env } from "../lib/db";
 
+// Shared "interest" endpoint — used by InterestForm for both membership
+// plans and programs. Replaces the old separate membership-interest and
+// program-interest routes.
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const body = await readJson(request);
-  const parsed = membershipInterestSchema.safeParse(body);
+  const parsed = interestSchema.safeParse(body);
   if (!parsed.success) return json({ error: "Please check your entries." }, 400);
   const data = parsed.data;
   if (data.honeypot) return json({ ok: true });
@@ -18,11 +21,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
     await sendEmail({
       env,
-      subject: `[MEMBERSHIP] ${data.firstName} ${data.lastName} · ${data.interest || "?"}`,
+      subject: `[INTEREST · ${data.program}] ${data.name}`,
       replyTo: data.email,
       html: wrapBrandedEmail({
-        title: "Membership interest",
-        intro: "Someone requested info about a Green Jacket membership.",
+        title: `Interest: ${data.program}`,
+        intro: "Someone requested info through the Swing Theory website.",
         bodyHtml: renderKv(data as unknown as Record<string, unknown>),
       }),
     });
@@ -31,13 +34,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
   await logSubmission({
     env,
-    formType: "membership",
-    // logSubmission reads `name` for the submissions list column; this form
-    // collects firstName/lastName instead, so provide a combined name too.
-    data: { ...data, name: `${data.firstName} ${data.lastName}`.trim() } as unknown as Record<
-      string,
-      unknown
-    >,
+    formType: "interest",
+    data: data as unknown as Record<string, unknown>,
+    program: String(data.program ?? ""),
     ip,
     userAgent: request.headers.get("user-agent"),
   });

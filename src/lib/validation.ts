@@ -50,18 +50,11 @@ export const leagueSignupSchema = z.object({
   turnstileToken: z.string().optional(),
 });
 
-export const membershipInterestSchema = z.object({
-  firstName: z.string().trim().min(1, "Please enter your first name").max(60),
-  lastName: z.string().trim().min(1, "Please enter your last name").max(60),
-  email,
-  phone,
-  interest: z.enum(["Green Jacket Solo", "Green Jacket Group"]).optional(),
-  message: z.string().trim().max(2000).optional().or(z.literal("")),
-  honeypot,
-  turnstileToken: z.string().optional(),
-});
-
-export const programInterestSchema = z.object({
+// One shared "interest" form used for membership plans and programs alike.
+// `program` doubles as the general "topic" field — kept as `program` (not
+// renamed to `topic`) because the D1 submissions table column and admin UI
+// already key off that name.
+export const interestSchema = z.object({
   name,
   email,
   phone,
@@ -97,7 +90,6 @@ export const programCheckoutSchema = z.object({
 export type ContactInput = z.infer<typeof contactSchema>;
 export type EventsInquiryInput = z.infer<typeof eventsInquirySchema>;
 export type LeagueSignupInput = z.infer<typeof leagueSignupSchema>;
-export type MembershipInterestInput = z.infer<typeof membershipInterestSchema>;
-export type ProgramInterestInput = z.infer<typeof programInterestSchema>;
+export type InterestInput = z.infer<typeof interestSchema>;
 export type MembershipCheckoutInput = z.infer<typeof membershipCheckoutSchema>;
 export type ProgramCheckoutInput = z.infer<typeof programCheckoutSchema>;

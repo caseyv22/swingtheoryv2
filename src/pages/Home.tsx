@@ -11,7 +11,7 @@ import ReviewCard from "@/components/ReviewCard";
 import FAQAccordion from "@/components/FAQAccordion";
 import MapCard from "@/components/MapCard";
 import Button from "@/components/Button";
-import MembershipInterestForm from "@/components/forms/MembershipInterestForm";
+import InterestForm from "@/components/forms/InterestForm";
 import { membershipPlans } from "@/data/memberships";
 import { reviews, ratingPlatforms } from "@/data/reviews";
 import { faqsFor } from "@/data/faqs";
@@ -189,7 +189,7 @@ export default function Home() {
                 plans one-on-one. Fill this out and a team member will follow up.
               </p>
               <div className="bg-white rounded-xl p-6">
-                <MembershipInterestForm />
+                <InterestForm defaultTopic="Green Jacket Group" extraOptions={["Green Jacket Group"]} />
               </div>
             </div>
           </div>

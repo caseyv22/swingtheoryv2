@@ -5,7 +5,7 @@ import SectionHead from "@/components/SectionHead";
 import SplitBlock, { FeatList } from "@/components/SplitBlock";
 import Button from "@/components/Button";
 import LeagueSignupForm from "@/components/forms/LeagueSignupForm";
-import ProgramInterestForm from "@/components/forms/ProgramInterestForm";
+import InterestForm from "@/components/forms/InterestForm";
 import { site } from "@/data/site-config";
 import type { ProgramDisplay } from "@/hooks/usePrograms";
 import { serviceSchema } from "@/schema";
@@ -151,7 +151,7 @@ export default function ProgramDetail({ program }: Props) {
             {useLeagueForm ? (
               <LeagueSignupForm />
             ) : (
-              <ProgramInterestForm program={program.name} />
+              <InterestForm defaultTopic={program.name} />
             )}
           </div>
         </section>

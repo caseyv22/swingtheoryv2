@@ -3,7 +3,7 @@ import JsonLd from "@/components/JsonLd";
 import Hero from "@/components/Hero";
 import SectionHead from "@/components/SectionHead";
 import PlanCard from "@/components/PlanCard";
-import MembershipInterestForm from "@/components/forms/MembershipInterestForm";
+import InterestForm from "@/components/forms/InterestForm";
 import Button from "@/components/Button";
 import { site } from "@/data/site-config";
 import { membershipPlans } from "@/data/memberships";
@@ -72,7 +72,7 @@ export default function Memberships() {
             title="Tell us a bit about you."
             intro="Membership onboarding is handled personally. Send this over and a team member will walk you through options, pricing, and next steps."
           />
-          <MembershipInterestForm />
+          <InterestForm defaultTopic="Green Jacket Group" extraOptions={["Green Jacket Group"]} />
         </div>
       </section>
     </>

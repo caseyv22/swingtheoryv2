@@ -14,7 +14,14 @@ import { useConfirm } from "@/hooks/useConfirm";
 import { api } from "@/lib/admin-api";
 import type { SubmissionRow } from "@/data/types";
 
-const FORM_TYPES = ["contact", "event", "league", "membership", "program"] as const;
+const FORM_TYPES = [
+  "contact",
+  "event",
+  "league",
+  "interest",
+  "membership-checkout",
+  "program-checkout",
+] as const;
 const STATUSES = ["new", "read", "archived"] as const;
 
 export default function AdminSubmissions() {

@@ -8,10 +8,13 @@ export async function logSubmission(args: {
     | "contact"
     | "event"
     | "league"
-    | "membership"
+    | "interest"
     | "membership-checkout"
-    | "program"
-    | "program-checkout";
+    | "program-checkout"
+    // Historical values from before membership/program interest forms were
+    // consolidated into "interest" — kept so old rows still type-check.
+    | "membership"
+    | "program";
   data: Record<string, unknown>;
   program?: string;
   ip: string | null;

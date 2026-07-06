@@ -16,9 +16,9 @@ export function localBusinessSchema() {
     telephone: site.phone.tel,
     email: site.email,
     image: [
-      "https://swingtheory.golf/wp-content/uploads/2024/12/HOME-GOLF-SIM.jpg",
-      "https://swingtheory.golf/wp-content/uploads/2025/06/DSC07806-1024x683.jpg",
-      "https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg",
+      `${site.url}/images/home/home-sim-bays.webp`,
+      `${site.url}/images/simulators/bay.webp`,
+      `${site.url}/images/events/main-room-1.webp`,
     ],
     logo: site.logos.green,
     priceRange: site.priceRange,

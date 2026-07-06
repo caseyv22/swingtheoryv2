@@ -13,9 +13,7 @@ type Props = {
 // except homepage which uses the money-phrase title from index.html.
 export default function SEO({ title, description, path, image, noIndex }: Props) {
   const url = `${site.url}${path}`;
-  const ogImage =
-    image ??
-    "https://swingtheory.golf/wp-content/uploads/2024/12/HOME-GOLF-SIM.jpg";
+  const ogImage = image ?? `${site.url}/images/home/home-sim-bays.webp`;
   return (
     <Helmet>
       <title>{title}</title>

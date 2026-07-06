@@ -27,7 +27,7 @@ export default function League() {
         title="Swing Theory Golf League, Indoor Golf League in Pasadena"
         description="Weekly indoor golf league at Swing Theory in Old Town Pasadena. Match play with handicaps, live standings, season prizes. Open to individuals and teams."
         path="/league"
-        image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg"
+        image={`${site.url}/images/programs/stgl-league-night.webp`}
       />
       <JsonLd
         data={serviceSchema({
@@ -57,7 +57,7 @@ export default function League() {
             </Button>
           </>
         }
-        poster="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg"
+        poster="/images/programs/stgl-league-night.webp"
       />
 
       {/* Next upcoming event — admin-controlled */}
@@ -86,7 +86,7 @@ export default function League() {
 
       <section className="py-24">
         <SplitBlock
-          imageSrc="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg"
+          imageSrc="/images/programs/stgl-league-night.webp"
           imageAlt="Swing Theory Golf League night in Pasadena"
         >
           <span className="kicker">How it works</span>

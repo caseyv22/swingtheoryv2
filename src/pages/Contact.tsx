@@ -12,7 +12,7 @@ export default function Contact() {
         title="Contact Swing Theory Indoor Golf, Pasadena"
         description="Contact Swing Theory Indoor Golf in Old Town Pasadena. Call, email, or use the contact form and we'll follow up shortly."
         path="/contact"
-        image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07701-1024x683.jpg"
+        image={`${site.url}/images/visit/delacey.webp`}
       />
 
       <Hero
@@ -20,7 +20,7 @@ export default function Contact() {
         title={<>Say hello.</>}
         sub="Questions about bays, lessons, memberships, programs, or events. Send a note and a team member will follow up shortly."
         ctas={<span />}
-        poster="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07701-1024x683.jpg"
+        poster="/images/visit/delacey.webp"
       />
 
       <section className="py-24">

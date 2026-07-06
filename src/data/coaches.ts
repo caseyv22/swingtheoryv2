@@ -15,8 +15,7 @@ export const coaches: Coach[] = [
     name: "Coach TBD",
     title: "Head Coach",
     bio: "Bio coming soon. Add a real coach entry here: specialties, teaching history, favorite drill.",
-    photo:
-      "https://swingtheory.golf/wp-content/uploads/2025/06/DSC07701-1024x683.jpg",
+    photo: "/images/home/home-lessons.webp",
     specialties: ["Full swing", "Short game", "Club fittings"],
   },
 ];

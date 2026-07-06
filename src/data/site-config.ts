@@ -8,9 +8,11 @@ export const site = {
   tagline:
     "Indoor golf and golf simulators in Old Town Pasadena, practice, play, and host events, seven days a week.",
   url: "https://swingtheory.golf",
+  // Real hosted URL for schema's `logo` field (JSON-LD needs an absolute
+  // image URL, not the inline currentColor <Logo> SVG used on-page).
   logos: {
-    white: "https://swingtheory.golf/wp-content/uploads/2024/12/Swing-Theory-Website-White.png",
-    green: "https://swingtheory.golf/wp-content/uploads/2024/12/Swing-Theory-Website-Green.png",
+    white: "https://swingtheory.golf/logo.png",
+    green: "https://swingtheory.golf/logo.png",
   },
   address: {
     street: "50 S De Lacey Ave #200",

@@ -199,7 +199,7 @@ export default function Home() {
       {/* Private events */}
       <section className="py-24" id="events">
         <SplitBlock
-          imageSrc="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07845-1024x683.jpg"
+          imageSrc="/images/home/home-private-events.webp"
           imageAlt="Private event at Swing Theory Pasadena"
           imageSide="right"
         >

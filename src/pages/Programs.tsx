@@ -3,6 +3,7 @@ import SEO from "@/components/SEO";
 import Hero from "@/components/Hero";
 import SectionHead from "@/components/SectionHead";
 import Button from "@/components/Button";
+import { site } from "@/data/site-config";
 import { usePrograms } from "@/hooks/usePrograms";
 
 export default function Programs() {
@@ -13,7 +14,7 @@ export default function Programs() {
         title="Golf Programs in Pasadena: Leagues, Juniors, Summer Series | Swing Theory"
         description="Indoor golf programs at Swing Theory in Old Town Pasadena: Swing Theory Golf League, Mini Mulligans junior program, and summer series for women and seniors."
         path="/programs"
-        image="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg"
+        image={`${site.url}/images/home/home-leaguecommunity.webp`}
       />
 
       <Hero
@@ -34,7 +35,7 @@ export default function Programs() {
             </Button>
           </>
         }
-        poster="https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg"
+        poster="/images/home/home-leaguecommunity.webp"
       />
 
       <section className="py-24">

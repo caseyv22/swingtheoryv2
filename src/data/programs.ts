@@ -38,8 +38,7 @@ export const programs: Program[] = [
       "Open to individuals, we help place free agents on teams",
     ],
     ctaLabel: "Sign up for League Night",
-    image:
-      "https://swingtheory.golf/wp-content/uploads/2025/06/DSC07885-scaled.jpg",
+    image: "/images/programs/stgl-league-night.webp",
   },
   {
     slug: "mini-mulligans",
@@ -60,8 +59,7 @@ export const programs: Program[] = [
       "Weekly sessions plus seasonal camps",
     ],
     ctaLabel: "Request Mini Mulligans info",
-    image:
-      "https://swingtheory.golf/wp-content/uploads/2025/06/DSC07701-1024x683.jpg",
+    image: "/images/home/home-lessons.webp",
   },
   {
     slug: "summer-womens",
@@ -82,8 +80,7 @@ export const programs: Program[] = [
       "All equipment provided",
     ],
     ctaLabel: "Request women's program info",
-    image:
-      "https://swingtheory.golf/wp-content/uploads/2025/06/DSC07877-1024x683.jpg",
+    image: "/images/home/home-leaguecommunity.webp",
   },
   {
     slug: "summer-seniors",
@@ -104,8 +101,7 @@ export const programs: Program[] = [
       "All equipment provided",
     ],
     ctaLabel: "Request seniors program info",
-    image:
-      "https://swingtheory.golf/wp-content/uploads/2025/06/DSC07806-1024x683.jpg",
+    image: "/images/home/home-sim-bays.webp",
   },
 ];
 

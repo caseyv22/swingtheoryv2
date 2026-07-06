@@ -140,22 +140,25 @@ export default function ProgramDetail({ program }: Props) {
         </SplitBlock>
       </section>
 
-      {!useCheckout && (
-        <section className="py-24 bg-paper" ref={formRef}>
-          <div className="wrap max-w-3xl">
-            <SectionHead
-              kicker="Sign up"
-              title={program.ctaLabel + "."}
-              intro={`Fill this out and we'll follow up with ${program.name.toLowerCase()} details, timing, and next steps.`}
-            />
-            {useLeagueForm ? (
+      <section className="py-24 bg-paper" ref={formRef}>
+        <div className="wrap max-w-3xl">
+          {useLeagueForm ? (
+            <>
+              <SectionHead
+                kicker="Sign up"
+                title={program.ctaLabel + "."}
+                intro={`Fill this out and we'll follow up with ${program.name.toLowerCase()} details, timing, and next steps.`}
+              />
               <LeagueSignupForm />
-            ) : (
+            </>
+          ) : (
+            <>
+              <SectionHead kicker="Programs Interest" title="Questions?" intro="Send us a message!" />
               <InterestForm defaultTopic={program.name} />
-            )}
-          </div>
-        </section>
-      )}
+            </>
+          )}
+        </div>
+      </section>
     </>
   );
 }

@@ -181,13 +181,8 @@ export default function Home() {
 
           <div className="mt-16 max-w-3xl mx-auto">
             <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-8">
-              <h3 className="font-disp text-2xl text-white mb-2">
-                Interested? Tell us a bit about you.
-              </h3>
-              <p className="text-[#b9bdb0] mb-6 text-[0.98rem]">
-                Membership onboarding is personal. We walk each member through
-                plans one-on-one. Fill this out and a team member will follow up.
-              </p>
+              <h3 className="font-disp text-2xl text-white mb-2">Questions?</h3>
+              <p className="text-[#b9bdb0] mb-6 text-[0.98rem]">Send us a message!</p>
               <div className="bg-white rounded-xl p-6">
                 <InterestForm defaultTopic="Green Jacket Group" extraOptions={["Green Jacket Group"]} />
               </div>

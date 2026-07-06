@@ -33,6 +33,14 @@ ACCESS_TEAM_DOMAIN = ""
 # Access application AUD tag (from the Access application settings).
 ACCESS_AUD = ""
 
+# Square membership checkout. Location ID and env mode are not secret —
+# the access token is (see below). SANDBOX values while we test the
+# Green Jacket Solo checkout flow; swap to the production location ID
+# and flip SQUARE_ENV to "production" right before launch.
+SQUARE_LOCATION_ID = "LQ77M71PA1N9T"
+SQUARE_ENV = "sandbox"
+
 # Secrets to set separately (NEVER commit):
 #   RESEND_API_KEY
 #   TURNSTILE_SECRET_KEY
+#   SQUARE_ACCESS_TOKEN   (sandbox token for now — swap to production before launch)

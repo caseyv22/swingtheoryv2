@@ -56,6 +56,11 @@ export default function PlanCard({ plan, onInterest, onLeague }: Props) {
           {plan.ctaLabel}
         </Button>
       )}
+      {plan.ctaTarget === "checkout" && (
+        <Button to={`/memberships/checkout?plan=${plan.slug}`} variant="gold">
+          {plan.ctaLabel}
+        </Button>
+      )}
     </div>
   );
 }

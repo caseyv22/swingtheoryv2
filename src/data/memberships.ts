@@ -7,11 +7,19 @@ export type MembershipPlan = {
   featured?: boolean;
   perks: string[];
   ctaLabel: string;
-  ctaTarget: "book" | "interest" | "league";
+  ctaTarget: "book" | "interest" | "league" | "checkout";
+  // Square subscription plan variation ID for plans that go through the
+  // direct-checkout flow (/memberships/checkout). Only set this once the
+  // plan variation actually exists in the target Square environment —
+  // functions/api/membership-checkout.ts refuses to run without it.
+  // Currently a SANDBOX id; swap to the production plan variation id
+  // before launch (see functions/lib/db.ts SQUARE_ENV).
+  squarePlanVariationId?: string;
 };
 
 // Real pricing carried over from swingtheory.golf (Green Jacket tiers).
-// Membership onboarding is manual, every CTA opens the interest form.
+// Plans with a squarePlanVariationId go straight to Square checkout;
+// everything else still opens the human-follow-up interest form.
 export const membershipPlans: MembershipPlan[] = [
   {
     slug: "hourly",
@@ -42,8 +50,9 @@ export const membershipPlans: MembershipPlan[] = [
       "Exclusive Member Hours",
       "Merchandise discounts",
     ],
-    ctaLabel: "Request membership info",
-    ctaTarget: "interest",
+    ctaLabel: "Become a member",
+    ctaTarget: "checkout",
+    squarePlanVariationId: "MTVNYCWUXFC2I5DL4AM4HFZM",
   },
   {
     slug: "green-jacket-group",

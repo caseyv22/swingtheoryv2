@@ -10,6 +10,11 @@ export type Env = {
   MEDIA_PUBLIC_BASE: string;
   ACCESS_TEAM_DOMAIN: string;
   ACCESS_AUD: string;
+  // Square (membership checkout). Access token is a secret
+  // (`wrangler pages secret put SQUARE_ACCESS_TOKEN`), never a [vars] entry.
+  SQUARE_ACCESS_TOKEN: string;
+  SQUARE_LOCATION_ID: string;
+  SQUARE_ENV: "sandbox" | "production";
 };
 
 // Cloudflare types (minimal subset)

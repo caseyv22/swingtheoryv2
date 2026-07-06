@@ -5,6 +5,7 @@ import Home from "@/pages/Home";
 import Simulators from "@/pages/Simulators";
 import Lessons from "@/pages/Lessons";
 import Memberships from "@/pages/Memberships";
+import MembershipCheckout from "@/pages/MembershipCheckout";
 import Programs from "@/pages/Programs";
 import Events from "@/pages/Events";
 import Visit from "@/pages/Visit";
@@ -55,6 +56,7 @@ export default function App() {
                 <Route path="/simulators" element={<Simulators />} />
                 <Route path="/lessons" element={<Lessons />} />
                 <Route path="/memberships" element={<Memberships />} />
+                <Route path="/memberships/checkout" element={<MembershipCheckout />} />
                 <Route path="/programs" element={<Programs />} />
                 <Route path="/programs/mini-mulligans" element={<MiniMulligans />} />
                 <Route path="/programs/summer-womens" element={<SummerWomens />} />

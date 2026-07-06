@@ -71,8 +71,21 @@ export const programInterestSchema = z.object({
   turnstileToken: z.string().optional(),
 });
 
+// Membership checkout — paid signup via Square. No honeypot/turnstile here:
+// a bot can't tokenize a real card through Square's SDK, and the payment
+// call itself is the anti-abuse gate.
+export const membershipCheckoutSchema = z.object({
+  planSlug: z.string().trim().min(1).max(60),
+  firstName: z.string().trim().min(1, "Please enter your first name").max(60),
+  lastName: z.string().trim().min(1, "Please enter your last name").max(60),
+  email,
+  phone,
+  sourceId: z.string().trim().min(1, "Missing payment details"),
+});
+
 export type ContactInput = z.infer<typeof contactSchema>;
 export type EventsInquiryInput = z.infer<typeof eventsInquirySchema>;
 export type LeagueSignupInput = z.infer<typeof leagueSignupSchema>;
 export type MembershipInterestInput = z.infer<typeof membershipInterestSchema>;
 export type ProgramInterestInput = z.infer<typeof programInterestSchema>;
+export type MembershipCheckoutInput = z.infer<typeof membershipCheckoutSchema>;

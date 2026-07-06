@@ -164,9 +164,27 @@ export default function MembershipCheckout() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="font-disp font-semibold text-sm text-green-700">
-                  Card details <span className="text-gold">*</span>
-                </label>
+                <div className="flex items-center justify-between gap-2">
+                  <label className="font-disp font-semibold text-sm text-green-700">
+                    Card details <span className="text-gold">*</span>
+                  </label>
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-disp font-semibold uppercase tracking-wide text-green-700 bg-green-700/10 border border-green-700/15 rounded-full px-2.5 py-1">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-3.5 h-3.5"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z" />
+                      <path d="m9 12 2 2 4-4" />
+                    </svg>
+                    Secure
+                  </span>
+                </div>
                 <div
                   id="sq-card-container"
                   className="w-full rounded-lg border border-line bg-white px-4 py-3 min-h-[56px]"

@@ -7,7 +7,7 @@ import Button from "@/components/Button";
 import LeagueSignupForm from "@/components/forms/LeagueSignupForm";
 import ProgramInterestForm from "@/components/forms/ProgramInterestForm";
 import { site } from "@/data/site-config";
-import type { Program } from "@/data/programs";
+import type { ProgramDisplay } from "@/hooks/usePrograms";
 import { serviceSchema } from "@/schema";
 import { useRef } from "react";
 
@@ -50,18 +50,19 @@ function Pill({ value }: { value: string }) {
 }
 
 type Props = {
-  program: Program;
-  useLeagueForm?: boolean; // League Night uses the dedicated form
+  program: ProgramDisplay;
 };
 
 // Shared program template. Every program page hits identical SEO patterns:
 // H1 with primary keyword, first-paragraph direct answer, Service schema.
-export default function ProgramDetail({ program, useLeagueForm = false }: Props) {
+export default function ProgramDetail({ program }: Props) {
+  const { useLeagueForm, useCheckout } = program;
   const formRef = useRef<HTMLDivElement | null>(null);
   const scrollToForm = () =>
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const path = `/programs/${program.slug}`;
+  const checkoutHref = `/programs/checkout?plan=${program.slug}`;
 
   return (
     <>
@@ -86,9 +87,15 @@ export default function ProgramDetail({ program, useLeagueForm = false }: Props)
         sub={program.shortDescription}
         ctas={
           <>
-            <Button onClick={scrollToForm} variant="gold">
-              {program.ctaLabel}
-            </Button>
+            {useCheckout ? (
+              <Button to={checkoutHref} variant="gold">
+                {program.ctaLabel}
+              </Button>
+            ) : (
+              <Button onClick={scrollToForm} variant="gold">
+                {program.ctaLabel}
+              </Button>
+            )}
             <Button to="/programs" variant="ghost">
               All programs
             </Button>
@@ -120,27 +127,35 @@ export default function ProgramDetail({ program, useLeagueForm = false }: Props)
             <p className="text-muted text-[0.98rem] italic">{program.season}</p>
           )}
           <div className="mt-6">
-            <Button onClick={scrollToForm} variant="dk">
-              {program.ctaLabel}
-            </Button>
+            {useCheckout ? (
+              <Button to={checkoutHref} variant="dk">
+                {program.ctaLabel}
+              </Button>
+            ) : (
+              <Button onClick={scrollToForm} variant="dk">
+                {program.ctaLabel}
+              </Button>
+            )}
           </div>
         </SplitBlock>
       </section>
 
-      <section className="py-24 bg-paper" ref={formRef}>
-        <div className="wrap max-w-3xl">
-          <SectionHead
-            kicker="Sign up"
-            title={program.ctaLabel + "."}
-            intro={`Fill this out and we'll follow up with ${program.name.toLowerCase()} details, timing, and next steps.`}
-          />
-          {useLeagueForm ? (
-            <LeagueSignupForm />
-          ) : (
-            <ProgramInterestForm program={program.name} />
-          )}
-        </div>
-      </section>
+      {!useCheckout && (
+        <section className="py-24 bg-paper" ref={formRef}>
+          <div className="wrap max-w-3xl">
+            <SectionHead
+              kicker="Sign up"
+              title={program.ctaLabel + "."}
+              intro={`Fill this out and we'll follow up with ${program.name.toLowerCase()} details, timing, and next steps.`}
+            />
+            {useLeagueForm ? (
+              <LeagueSignupForm />
+            ) : (
+              <ProgramInterestForm program={program.name} />
+            )}
+          </div>
+        </section>
+      )}
     </>
   );
 }

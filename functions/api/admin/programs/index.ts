@@ -24,8 +24,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     `INSERT INTO programs
        (slug, name, kicker, h1, short_desc, long_desc, audience, season,
         key_details, image_url, cta_label, cta_target, published, sort_order,
-        date_range, time_range, price, starts_on)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        date_range, time_range, price, starts_on, square_catalog_id, checkout_mode)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   )
     .bind(
       String(body.slug),
@@ -46,6 +46,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       String(body.time_range ?? ""),
       String(body.price ?? ""),
       String(body.starts_on ?? ""),
+      String(body.square_catalog_id ?? ""),
+      String(body.checkout_mode ?? "none"),
     )
     .run();
   return json({ ok: true, id: result.meta.last_row_id }, 201);

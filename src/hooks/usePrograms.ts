@@ -8,7 +8,7 @@ import { programs as staticPrograms, type Program } from "@/data/programs";
 // published rows, those win (so admin edits actually show up on the live
 // site); otherwise we fall back to the static list so the site still
 // works with an empty/unreachable database.
-export type ProgramDisplay = Program & { useLeagueForm: boolean };
+export type ProgramDisplay = Program & { useLeagueForm: boolean; useCheckout: boolean };
 
 function adaptRow(r: ProgramRow): ProgramDisplay {
   return {
@@ -28,11 +28,16 @@ function adaptRow(r: ProgramRow): ProgramDisplay {
     price: r.price || undefined,
     startsOn: r.starts_on || undefined,
     useLeagueForm: r.cta_target === "league",
+    // Belt and suspenders with the admin drawer's own gating: only route to
+    // checkout if BOTH the CTA is set to it AND a checkout mode is actually
+    // configured, so a half-filled-in admin row falls back to the interest
+    // form instead of showing a "Pay now" button that would just error.
+    useCheckout: r.cta_target === "checkout" && r.checkout_mode !== "none",
   };
 }
 
 function adaptStatic(p: Program): ProgramDisplay {
-  return { ...p, useLeagueForm: p.slug === "league-night" };
+  return { ...p, useLeagueForm: p.slug === "league-night", useCheckout: false };
 }
 
 function fallbackList(): ProgramDisplay[] {

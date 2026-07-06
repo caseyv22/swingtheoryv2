@@ -27,15 +27,20 @@ type SquareErrorBody = {
   errors?: { code?: string; detail?: string; category?: string }[];
 };
 
-async function squareFetch<T>(env: Env, path: string, body: unknown): Promise<T> {
+async function squareFetch<T>(
+  env: Env,
+  path: string,
+  body?: unknown,
+  method: "GET" | "POST" = "POST",
+): Promise<T> {
   const res = await fetch(`${baseUrl(env)}${path}`, {
-    method: "POST",
+    method,
     headers: {
       "Square-Version": SQUARE_VERSION,
       Authorization: `Bearer ${env.SQUARE_ACCESS_TOKEN}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(body),
+    body: method === "GET" ? undefined : JSON.stringify(body),
   });
   const data = (await res.json().catch(() => ({}))) as T & SquareErrorBody;
   if (!res.ok) {
@@ -114,4 +119,53 @@ export async function createSubscription(
     },
   );
   return result.subscription;
+}
+
+type SquareMoney = { amount: number; currency: string };
+
+// One-time program fees (season sign-ups, camps) use a plain Catalog Item
+// Variation rather than a Subscription Plan — price lives on the variation
+// in Square, we just look it up fresh at checkout time so a price change
+// made in Square shows up immediately without a deploy.
+export async function retrieveCatalogItemVariation(
+  env: Env,
+  catalogObjectId: string,
+): Promise<{ name: string; priceMoney: SquareMoney }> {
+  const result = await squareFetch<{
+    object: {
+      type: string;
+      item_variation_data?: { name: string; price_money?: SquareMoney };
+    };
+  }>(env, `/v2/catalog/object/${catalogObjectId}`, undefined, "GET");
+
+  const data = result.object?.item_variation_data;
+  if (result.object?.type !== "ITEM_VARIATION" || !data?.price_money) {
+    throw new SquareApiError(
+      "That Square catalog ID isn't a fixed-price item variation.",
+      400,
+    );
+  }
+  return { name: data.name, priceMoney: data.price_money };
+}
+
+// One-time payments charge the card nonce directly — no card-on-file
+// needed since there's nothing to bill again later.
+export async function createOneTimePayment(
+  env: Env,
+  args: { sourceId: string; amountMoney: SquareMoney; buyerEmail: string; note: string },
+): Promise<{ id: string; status: string }> {
+  const result = await squareFetch<{ payment: { id: string; status: string } }>(
+    env,
+    "/v2/payments",
+    {
+      idempotency_key: crypto.randomUUID(),
+      source_id: args.sourceId,
+      amount_money: args.amountMoney,
+      location_id: env.SQUARE_LOCATION_ID,
+      buyer_email_address: args.buyerEmail,
+      note: args.note,
+      autocomplete: true,
+    },
+  );
+  return result.payment;
 }

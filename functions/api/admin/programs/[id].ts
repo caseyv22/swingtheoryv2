@@ -7,6 +7,7 @@ const FIELDS = [
   "audience", "season", "key_details", "image_url",
   "cta_label", "cta_target", "published", "sort_order",
   "date_range", "time_range", "price", "starts_on",
+  "square_catalog_id", "checkout_mode",
 ] as const;
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env, params }) => {

@@ -83,9 +83,21 @@ export const membershipCheckoutSchema = z.object({
   sourceId: z.string().trim().min(1, "Missing payment details"),
 });
 
+// One-time program checkout (season fees, camps). Same no-honeypot
+// reasoning as membershipCheckoutSchema — the payment call is the gate.
+export const programCheckoutSchema = z.object({
+  programSlug: z.string().trim().min(1).max(60),
+  firstName: z.string().trim().min(1, "Please enter your first name").max(60),
+  lastName: z.string().trim().min(1, "Please enter your last name").max(60),
+  email,
+  phone,
+  sourceId: z.string().trim().min(1, "Missing payment details"),
+});
+
 export type ContactInput = z.infer<typeof contactSchema>;
 export type EventsInquiryInput = z.infer<typeof eventsInquirySchema>;
 export type LeagueSignupInput = z.infer<typeof leagueSignupSchema>;
 export type MembershipInterestInput = z.infer<typeof membershipInterestSchema>;
 export type ProgramInterestInput = z.infer<typeof programInterestSchema>;
 export type MembershipCheckoutInput = z.infer<typeof membershipCheckoutSchema>;
+export type ProgramCheckoutInput = z.infer<typeof programCheckoutSchema>;

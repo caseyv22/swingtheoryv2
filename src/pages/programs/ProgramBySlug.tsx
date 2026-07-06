@@ -14,5 +14,5 @@ export default function ProgramBySlug() {
   if (!program && loading) return null;
   if (!program) return <NotFound />;
 
-  return <ProgramDetail program={program} useLeagueForm={program.useLeagueForm} />;
+  return <ProgramDetail program={program} />;
 }

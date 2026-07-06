@@ -4,7 +4,14 @@ import type { Env } from "./db";
 // We swallow DB errors on the write path so a DB blip never blocks the user.
 export async function logSubmission(args: {
   env: Env;
-  formType: "contact" | "event" | "league" | "membership" | "membership-checkout" | "program";
+  formType:
+    | "contact"
+    | "event"
+    | "league"
+    | "membership"
+    | "membership-checkout"
+    | "program"
+    | "program-checkout";
   data: Record<string, unknown>;
   program?: string;
   ip: string | null;

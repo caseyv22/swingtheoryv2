@@ -13,12 +13,18 @@ export type ProgramRow = {
   key_details: string[];
   image_url: string;
   cta_label: string;
-  cta_target: "interest" | "league";
+  cta_target: "interest" | "league" | "checkout";
   sort_order: number;
   date_range: string;
   time_range: string;
   price: string;
   starts_on: string;
+  // Square wiring for direct checkout (cta_target === "checkout"). Empty
+  // square_catalog_id / checkout_mode "none" means the CTA falls back to
+  // the interest form even if someone sets cta_target to "checkout" by
+  // mistake — see functions/api/program-checkout.ts.
+  square_catalog_id: string;
+  checkout_mode: "none" | "one_time" | "subscription";
 };
 
 export type CoachRow = {
@@ -49,7 +55,14 @@ export type LeagueEventRow = {
 
 export type SubmissionRow = {
   id: number;
-  form_type: "contact" | "event" | "league" | "membership" | "program";
+  form_type:
+    | "contact"
+    | "event"
+    | "league"
+    | "membership"
+    | "membership-checkout"
+    | "program"
+    | "program-checkout";
   program: string;
   name: string;
   email: string;

@@ -31,13 +31,15 @@ type FormState = {
   key_details_text: string; // one per line
   image_url: string;
   cta_label: string;
-  cta_target: "interest" | "league";
+  cta_target: "interest" | "league" | "checkout";
   published: boolean;
   sort_order: number;
   date_range: string;
   time_range: string;
   price: string;
   starts_on: string;
+  square_catalog_id: string;
+  checkout_mode: "none" | "one_time" | "subscription";
 };
 
 const empty: FormState = {
@@ -59,6 +61,8 @@ const empty: FormState = {
   time_range: "",
   price: "",
   starts_on: "",
+  square_catalog_id: "",
+  checkout_mode: "none",
 };
 
 function toForm(row: ProgramRow): FormState {
@@ -82,6 +86,8 @@ function toForm(row: ProgramRow): FormState {
     time_range: row.time_range,
     price: row.price,
     starts_on: row.starts_on,
+    square_catalog_id: row.square_catalog_id,
+    checkout_mode: row.checkout_mode,
   };
 }
 
@@ -108,6 +114,8 @@ function toPayload(f: FormState) {
     time_range: f.time_range,
     price: f.price,
     starts_on: f.starts_on,
+    square_catalog_id: f.square_catalog_id,
+    checkout_mode: f.checkout_mode,
   };
 }
 
@@ -375,12 +383,13 @@ export default function AdminPrograms() {
               onChange={(e) =>
                 setDrawer((d) => ({
                   ...d,
-                  form: { ...d.form, cta_target: e.target.value as "interest" | "league" },
+                  form: { ...d.form, cta_target: e.target.value as "interest" | "league" | "checkout" },
                 }))
               }
             >
               <option value="interest">Interest form</option>
               <option value="league">League signup</option>
+              <option value="checkout">Direct checkout (Square)</option>
             </select>
           </Field>
           <Field label="Sort order">
@@ -396,6 +405,43 @@ export default function AdminPrograms() {
             />
           </Field>
         </div>
+        {drawer.form.cta_target === "checkout" && (
+          <div className="grid grid-cols-2 gap-4 rounded-lg border border-gold/40 bg-gold/5 p-4">
+            <Field
+              label="Square catalog ID"
+              hint="Item Variation ID (one-time) or Plan Variation ID (subscription), created in Square first."
+            >
+              <Input
+                value={drawer.form.square_catalog_id}
+                onChange={(e) =>
+                  setDrawer((d) => ({
+                    ...d,
+                    form: { ...d.form, square_catalog_id: e.target.value },
+                  }))
+                }
+              />
+            </Field>
+            <Field label="Checkout mode" hint="Must match how the catalog ID above was created in Square.">
+              <select
+                className="w-full rounded-lg border border-line bg-white px-3 py-2 text-ink focus:outline-none focus:border-green-700"
+                value={drawer.form.checkout_mode}
+                onChange={(e) =>
+                  setDrawer((d) => ({
+                    ...d,
+                    form: {
+                      ...d.form,
+                      checkout_mode: e.target.value as "none" | "one_time" | "subscription",
+                    },
+                  }))
+                }
+              >
+                <option value="none">None (checkout disabled)</option>
+                <option value="one_time">One-time fee</option>
+                <option value="subscription">Recurring subscription</option>
+              </select>
+            </Field>
+          </div>
+        )}
         {saveError && (
           <div className="text-sm text-red-700 border border-red-200 bg-red-50 rounded-lg p-3">
             {saveError}

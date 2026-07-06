@@ -13,10 +13,36 @@ import { membershipCheckoutSchema } from "@/lib/validation";
 // the API call (sourceId only exists once the card is tokenized).
 const clientFieldsSchema = membershipCheckoutSchema.omit({ sourceId: true, planSlug: true });
 
+function ordinal(n: number): string {
+  const v = n % 100;
+  if (v >= 11 && v <= 13) return `${n}th`;
+  switch (n % 10) {
+    case 1:
+      return `${n}st`;
+    case 2:
+      return `${n}nd`;
+    case 3:
+      return `${n}rd`;
+    default:
+      return `${n}th`;
+  }
+}
+
 export default function MembershipCheckout() {
   const [params] = useSearchParams();
   const slug = params.get("plan") ?? "";
   const plan = useMemo(() => membershipPlans.find((p) => p.slug === slug), [slug]);
+
+  const startDateLabel = useMemo(
+    () =>
+      new Date().toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }),
+    [],
+  );
+  const renewalDay = useMemo(() => ordinal(new Date().getDate()), []);
 
   const { status, error, submit } = useFormSubmit<Record<string, unknown>>(
     "/api/membership-checkout",
@@ -135,9 +161,12 @@ export default function MembershipCheckout() {
                 </li>
               ))}
             </ul>
-            <p className="text-xs text-muted mt-6 border-t border-line pt-4">
-              Billed monthly to the card below. Cancel anytime, email {site.email} or call{" "}
-              {site.phone.display}.
+            <p className="text-sm text-ink mt-6 border-t border-line pt-4">
+              Starts today, <b className="font-disp">{startDateLabel}</b>. Renews automatically on
+              the <b className="font-disp">{renewalDay}</b> of each month until you cancel.
+            </p>
+            <p className="text-xs text-muted mt-2">
+              Cancel anytime, email {site.email} or call {site.phone.display}.
             </p>
           </div>
 

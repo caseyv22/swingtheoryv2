@@ -40,7 +40,14 @@ ACCESS_AUD = ""
 SQUARE_LOCATION_ID = "LQ77M71PA1N9T"
 SQUARE_ENV = "sandbox"
 
+# mm-api provisioning handoff. Called by /api/program-checkout after a
+# successful Square payment to create the corresponding user + paid
+# enrollment on the Sync side. Base URL is the mm-api-prod Worker; the
+# shared secret is INTERNAL_PROVISIONING_SECRET, set separately.
+MM_API_BASE_URL = "https://mm-api-prod.swingtheoryla.workers.dev"
+
 # Secrets to set separately (NEVER commit):
 #   RESEND_API_KEY
 #   TURNSTILE_SECRET_KEY
 #   SQUARE_ACCESS_TOKEN   (sandbox token for now — swap to production before launch)
+#   INTERNAL_PROVISIONING_SECRET  (must match the same-named secret on mm-api-prod)

@@ -13,6 +13,13 @@ import { programCheckoutSchema } from "@/lib/validation";
 // before the API call (sourceId only exists once the card is tokenized).
 const clientFieldsSchema = programCheckoutSchema.omit({ sourceId: true, programSlug: true });
 
+// Programs where the payer is enrolling a child, not themselves — so we
+// need to collect the child's first name (and optionally age) at checkout.
+// Kept as a hardcoded allowlist for now because there's exactly one such
+// program (Mini Mulligans); when we add a second, promote this into a
+// `booker_type` column on the programs table and drive it off the API.
+const PARENT_ROLE_SLUGS = new Set<string>(["mini-mulligans"]);
+
 export default function ProgramCheckout() {
   const [params] = useSearchParams();
   const slug = params.get("plan") ?? "";
@@ -38,6 +45,13 @@ export default function ProgramCheckout() {
       const errs: Record<string, string> = {};
       parsed.error.issues.forEach((i) => (errs[i.path.join(".")] = i.message));
       setFieldError(errs);
+      return;
+    }
+    // Parent-role programs (Mini Mulligans today) need the child's first
+    // name — the enrollment is for the kid, not the parent. Guarded here
+    // so the customer gets a clear error before we ever tokenize their card.
+    if (PARENT_ROLE_SLUGS.has(program.slug) && !parsed.data.childFirstName) {
+      setFieldError({ childFirstName: "Please enter your child's first name" });
       return;
     }
     setFieldError({});
@@ -163,6 +177,26 @@ export default function ProgramCheckout() {
                 />
                 <TextInput label="Phone" name="phone" type="tel" error={fieldError.phone} />
               </div>
+
+              {/* Parent-role programs collect the child's name (and optional
+                  age). Skipped for student-role programs (Women's Clinic,
+                  Senior Clinic, etc.) where the payer IS the enrollee. */}
+              {PARENT_ROLE_SLUGS.has(program.slug) && (
+                <div className="grid md:grid-cols-2 gap-4">
+                  <TextInput
+                    label="Child's first name"
+                    name="childFirstName"
+                    required
+                    error={fieldError.childFirstName}
+                  />
+                  <TextInput
+                    label="Child's age (optional)"
+                    name="childAge"
+                    type="number"
+                    error={fieldError.childAge}
+                  />
+                </div>
+              )}
 
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between gap-2">

@@ -15,6 +15,13 @@ export type Env = {
   SQUARE_ACCESS_TOKEN: string;
   SQUARE_LOCATION_ID: string;
   SQUARE_ENV: "sandbox" | "production";
+  // Handoff to mm-api after a successful program checkout. Base URL is a
+  // [vars] entry (public origin). The shared secret is set via
+  // `wrangler pages secret put INTERNAL_PROVISIONING_SECRET` and must
+  // match the same-named secret on the mm-api-prod Worker (see
+  // POST /internal/enrollments there).
+  MM_API_BASE_URL: string;
+  INTERNAL_PROVISIONING_SECRET: string;
 };
 
 // Cloudflare types (minimal subset)

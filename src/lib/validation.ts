@@ -78,6 +78,11 @@ export const membershipCheckoutSchema = z.object({
 
 // One-time program checkout (season fees, camps). Same no-honeypot
 // reasoning as membershipCheckoutSchema — the payment call is the gate.
+//
+// childFirstName / childAge are optional at the schema level so students'
+// programs (Women's Clinic, Senior Clinic, etc.) don't have to send them.
+// The API layer enforces presence for parent-role programs like Mini
+// Mulligans where the enrollment is for the child, not the payer.
 export const programCheckoutSchema = z.object({
   programSlug: z.string().trim().min(1).max(60),
   firstName: z.string().trim().min(1, "Please enter your first name").max(60),
@@ -85,6 +90,10 @@ export const programCheckoutSchema = z.object({
   email,
   phone,
   sourceId: z.string().trim().min(1, "Missing payment details"),
+  childFirstName: z.string().trim().max(60).optional().or(z.literal("")),
+  // Kept as a string here because the form's FormData gives us strings.
+  // The API layer parses it to an int before handing it off to mm-api.
+  childAge: z.string().trim().max(3).optional().or(z.literal("")),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;

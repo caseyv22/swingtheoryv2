@@ -52,7 +52,11 @@ export const membershipPlans: MembershipPlan[] = [
     ],
     ctaLabel: "Become a member",
     ctaTarget: "checkout",
-    squarePlanVariationId: "MTVNYCWUXFC2I5DL4AM4HFZM",
+    // Production: "Green Jacket 2026" subscription plan variation. Pricing
+    // is RELATIVE — it pulls $239/mo from the linked "Green Jacket 2026"
+    // item, so any future price change happens in Square dashboard, no
+    // deploy needed. Previous sandbox id was MTVNYCWUXFC2I5DL4AM4HFZM.
+    squarePlanVariationId: "FLGWJC4WPDD753IGVONJNELW",
   },
   {
     slug: "green-jacket-group",

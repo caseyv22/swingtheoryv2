@@ -123,6 +123,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     .bind(data.programSlug)
     .first<ProgramCheckoutRow>();
 
+  if (!program) {
+    return json({ error: "That program isn't available for checkout yet." }, 400);
+  }
   const mode = program.checkout_mode;
   if (
     (mode !== "one_time" && mode !== "subscription") ||

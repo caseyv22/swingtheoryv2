@@ -37,8 +37,8 @@ ACCESS_AUD = ""
 # the access token is (see below). SANDBOX values while we test the
 # Green Jacket Solo checkout flow; swap to the production location ID
 # and flip SQUARE_ENV to "production" right before launch.
-SQUARE_LOCATION_ID = "LQ77M71PA1N9T"
-SQUARE_ENV = "sandbox"
+SQUARE_LOCATION_ID = "LDTYCKQHBQH01"
+SQUARE_ENV = "production"
 
 # mm-api provisioning handoff. Called by /api/program-checkout after a
 # successful Square payment to create the corresponding user + paid

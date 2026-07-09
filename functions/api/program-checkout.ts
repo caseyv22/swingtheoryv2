@@ -2,7 +2,14 @@ import { json, readJson } from "../lib/http";
 import { sendEmail, renderKv, wrapBrandedEmail } from "../lib/email";
 import { logSubmission } from "../lib/submissions";
 import { programCheckoutSchema } from "../../src/lib/validation";
-import { retrieveCatalogItemVariation, createOneTimePayment, SquareApiError } from "../lib/square";
+import {
+  retrieveCatalogItemVariation,
+  createOneTimePayment,
+  findOrCreateCustomer,
+  createCardOnFile,
+  createSubscription,
+  SquareApiError,
+} from "../lib/square";
 import type { Env } from "../lib/db";
 
 type ProgramCheckoutRow = {
@@ -11,6 +18,7 @@ type ProgramCheckoutRow = {
   name: string;
   checkout_mode: string;
   square_catalog_id: string;
+  price: string;
 };
 
 // Programs where the payer is enrolling a child, not themselves. Kept in
@@ -18,6 +26,18 @@ type ProgramCheckoutRow = {
 // add a second parent-role program, promote to a booker_type column on
 // programs and drive both files off it.
 const PARENT_ROLE_SLUGS = new Set<string>(["mini-mulligans"]);
+
+// Parse a display price string ("$400", "$169/month", "125") into cents.
+// Only used for the subscription branch where Square's create-subscription
+// response doesn't echo the recurring amount — we lift it from the program
+// row so the mm-api enrollment email can show the customer what they paid.
+// Returns null if the string doesn't contain a parseable number.
+function parsePriceToCents(price: string | undefined | null): number | null {
+  if (!price) return null;
+  const m = String(price).match(/(\d+(?:\.\d+)?)/);
+  if (!m) return null;
+  return Math.round(parseFloat(m[1]) * 100);
+}
 
 // Returns today's date in America/Los_Angeles as a "YYYY-MM-DD" string.
 // Cloudflare Workers run in UTC, so a naive toISOString() could shift the
@@ -97,13 +117,17 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   // Server-side lookup — never trust a client-supplied catalog id or price.
   // Only published programs explicitly wired for one_time checkout qualify.
   const program = await env.DB.prepare(
-    `SELECT id, slug, name, checkout_mode, square_catalog_id FROM programs
+    `SELECT id, slug, name, checkout_mode, square_catalog_id, price FROM programs
      WHERE slug = ? AND published = 1`,
   )
     .bind(data.programSlug)
     .first<ProgramCheckoutRow>();
 
-  if (!program || program.checkout_mode !== "one_time" || !program.square_catalog_id) {
+  const mode = program.checkout_mode;
+  if (
+    (mode !== "one_time" && mode !== "subscription") ||
+    !program.square_catalog_id
+  ) {
     return json({ error: "That program isn't available for checkout yet." }, 400);
   }
 
@@ -117,31 +141,85 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   const ip = request.headers.get("cf-connecting-ip");
+  const fullName = `${data.firstName} ${data.lastName}`.trim();
+  const parsedChildAge = data.childAge ? parseInt(String(data.childAge), 10) : NaN;
 
   try {
-    // Price always comes fresh from Square, not from our own DB or the
-    // client — a price change in Square shows up immediately, no deploy.
-    const item = await retrieveCatalogItemVariation(env, program.square_catalog_id);
+    // Two branches: one-time programs (Summer clinics) charge the card
+    // nonce once via createOneTimePayment. Subscription programs (Mini
+    // Mulligans) create a Square Customer, put the card on file, and
+    // create a recurring subscription. Both branches funnel through the
+    // same mm-api handoff, but payment_ref differs — the payment id for
+    // one-time, the subscription id for subscription.
+    let paymentRef: string;
+    let paymentAmountCents: number;
+    let paymentStatusLabel: string;
+    let squareSummary: Record<string, unknown>;
 
-    const payment = await createOneTimePayment(env, {
-      sourceId: data.sourceId,
-      amountMoney: item.priceMoney,
-      buyerEmail: data.email,
-      note: `${program.name} — ${item.name}`,
-    });
+    if (mode === "one_time") {
+      // Price comes fresh from Square, not from our own DB or the client.
+      const item = await retrieveCatalogItemVariation(env, program.square_catalog_id);
+      const payment = await createOneTimePayment(env, {
+        sourceId: data.sourceId,
+        amountMoney: item.priceMoney,
+        buyerEmail: data.email,
+        note: `${program.name} — ${item.name}`,
+      });
+      paymentRef = payment.id;
+      paymentAmountCents = item.priceMoney.amount;
+      paymentStatusLabel = payment.status;
+      squareSummary = {
+        amount: `$${(item.priceMoney.amount / 100).toFixed(2)} ${item.priceMoney.currency}`,
+        paymentId: payment.id,
+        paymentStatus: payment.status,
+      };
+    } else {
+      // Subscription flow — Mini Mulligans. Card nonce alone isn't enough;
+      // subscriptions require a Customer + card_on_file. If the buyer's
+      // email already has a Square Customer, findOrCreateCustomer reuses
+      // it so we don't spawn duplicates on repeat signups.
+      const customerId = await findOrCreateCustomer(env, {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone || undefined,
+      });
+      const cardId = await createCardOnFile(env, {
+        customerId,
+        sourceId: data.sourceId,
+        cardholderName: fullName,
+      });
+      const subscription = await createSubscription(env, {
+        customerId,
+        cardId,
+        planVariationId: program.square_catalog_id,
+      });
+      paymentRef = subscription.id;
+      // Amount stays as a best-effort — Square doesn't return the plan's
+      // recurring amount in the subscription create response. If the
+      // program row carries a price string like "$400", pull cents from it
+      // for the mm-api payload; otherwise omit and let the enrollment
+      // email hide the amount line.
+      paymentAmountCents = parsePriceToCents(program.price) ?? 0;
+      paymentStatusLabel = subscription.status;
+      squareSummary = {
+        plan: program.name,
+        price: program.price || "",
+        subscriptionId: subscription.id,
+        subscriptionStatus: subscription.status,
+      };
+    }
 
     // Hand the paid enrollment off to mm-api so the customer has a Sync
     // login + a paid enrollment when they follow up. Never fails the
     // checkout — the card has already been charged. If mm-api errors, the
     // staff notification and submission log both surface the failure so
     // an admin can manually provision the member from Sync.
-    const fullName = `${data.firstName} ${data.lastName}`.trim();
-    const parsedChildAge = data.childAge ? parseInt(String(data.childAge), 10) : NaN;
     const mmResult = await provisionInMmApi(env, {
       programSlug: program.slug,
       programName: program.name,
-      paymentRef: payment.id,
-      paymentAmountCents: item.priceMoney.amount,
+      paymentRef,
+      paymentAmountCents,
       fullName,
       email: data.email,
       phone: data.phone || "",
@@ -150,7 +228,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     });
     if (!mmResult.ok) {
       console.error(
-        `[program-checkout] mm-api provisioning failed for payment=${payment.id}: ${mmResult.error}`,
+        `[program-checkout] mm-api provisioning failed for ref=${paymentRef}: ${mmResult.error}`,
       );
     }
 
@@ -169,11 +247,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
             email: data.email,
             phone: data.phone || "",
             program: program.name,
-            amount: `$${(item.priceMoney.amount / 100).toFixed(2)} ${item.priceMoney.currency}`,
+            mode,
+            ...squareSummary,
             childFirstName: data.childFirstName || "",
             childAge: data.childAge || "",
-            paymentId: payment.id,
-            paymentStatus: payment.status,
             syncProvisioning: mmResult.ok
               ? `OK (${mmResult.action}, enrollment ${mmResult.enrollmentId})`
               : `FAILED — ${mmResult.error} (please add member manually in Sync)`,
@@ -191,8 +268,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         name: fullName,
         email: data.email,
         phone: data.phone || "",
-        message: `${program.name} — payment ${payment.id} (${payment.status}), sync=${mmResult.ok ? mmResult.action : "FAILED:" + mmResult.error}`,
-        paymentId: payment.id,
+        message: `${program.name} [${mode}] — ref ${paymentRef} (${paymentStatusLabel}), sync=${mmResult.ok ? mmResult.action : "FAILED:" + mmResult.error}`,
+        paymentRef,
+        checkoutMode: mode,
         childFirstName: data.childFirstName || "",
         childAge: data.childAge || "",
         syncEnrollmentId: mmResult.enrollmentId || "",
@@ -203,7 +281,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       userAgent: request.headers.get("user-agent"),
     });
 
-    return json({ ok: true, paymentId: payment.id, status: payment.status });
+    return json({ ok: true, paymentRef, status: paymentStatusLabel, mode });
   } catch (e) {
     if (e instanceof SquareApiError) {
       return json({ error: e.message }, e.status >= 500 ? 502 : e.status);

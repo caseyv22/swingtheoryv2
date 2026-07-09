@@ -136,7 +136,7 @@ export function Badge({
   );
 }
 
-/** In-app confirm dialog — replaces window.confirm() so the browser's
+/** In-app confirm dialog, replaces window.confirm() so the browser's
  *  native Safari/Chrome popup never shows up. Pair with useConfirm(). */
 export function ConfirmDialog({
   message,

@@ -13,7 +13,7 @@ import { useRef } from "react";
 
 // Fixed hero photos, one per known program slug. These are intentionally
 // NOT tied to program.image (which is the admin-uploaded photo shown next
-// to the "About the program" text block and on the /programs card) — Casey
+// to the "About the program" text block and on the /programs card), Casey
 // flagged that a single admin upload was silently changing both the hero
 // background and the text-block photo. Keeping the hero static here means
 // uploading a new "About the program" image never touches the hero.
@@ -39,7 +39,7 @@ function formatStartsOn(v: string): string {
   });
 }
 
-// Schedule/pricing pill — kept visually separate from the body copy so it
+// Schedule/pricing pill, kept visually separate from the body copy so it
 // reads as scannable metadata rather than part of the description text.
 function Pill({ value }: { value: string }) {
   return (

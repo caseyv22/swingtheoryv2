@@ -13,7 +13,7 @@ import { serviceSchema, faqPageSchema } from "@/schema";
 import { useApi } from "@/hooks/useApi";
 import type { CoachRow } from "@/data/types";
 
-// Adapter — old static coaches file uses different field names than the DB row.
+// Adapter, old static coaches file uses different field names than the DB row.
 type CoachDisplay = {
   slug: string;
   name: string;

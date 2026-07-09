@@ -12,13 +12,13 @@ import { localBusinessSchema, organizationSchema, websiteSchema } from "@/schema
 //    rebuilt the IntersectionObserver on every render, not just on
 //    navigation. That churn could race with the observer's first
 //    callback and leave ".reveal" sections stuck at opacity:0
-//    indefinitely — looking like the section "never loaded" until a hard
+//    indefinitely, looking like the section "never loaded" until a hard
 //    refresh happened to land cleanly. Fixed by keying the effect to the
 //    route pathname (rebuild once per page, not once per render).
-// 2. Content that mounts AFTER that initial per-route scan — e.g. the
+// 2. Content that mounts AFTER that initial per-route scan, e.g. the
 //    Lessons "Meet the team" grid, which renders a fallback card
 //    immediately then swaps in real coaches once /api/public/coaches
-//    responds — was never observed at all, since the DOM was only
+//    responds, was never observed at all, since the DOM was only
 //    scanned once on mount. Those elements had nothing that would ever
 //    add the ".in" class, so they stayed invisible forever ("not
 //    loading") no matter how long you waited or how many times you

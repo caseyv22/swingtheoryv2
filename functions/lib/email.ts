@@ -45,7 +45,7 @@ export function renderKv(pairs: Record<string, unknown>): string {
 
 /**
  * Wraps inner content (e.g. renderKv output) in the branded Swing Theory
- * email shell — dark green header with logo, white card body, NAP footer.
+ * email shell, dark green header with logo, white card body, NAP footer.
  * Matches the look used for Swing Sync account emails.
  */
 export function wrapBrandedEmail(args: {

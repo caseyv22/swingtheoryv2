@@ -10,7 +10,7 @@ type Props = {
   children: ReactNode;
 };
 
-// Shared shell — handles submit state, success card, and error banner.
+// Shared shell, handles submit state, success card, and error banner.
 export default function FormShell({
   onSubmit,
   status,

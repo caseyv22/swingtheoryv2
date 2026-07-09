@@ -7,7 +7,7 @@ import { findOrCreateCustomer, createCardOnFile, createSubscription, SquareApiEr
 import type { Env } from "../lib/db";
 
 // Paid membership signup. The Web Payments SDK on /memberships/checkout
-// tokenizes the card in-browser and posts us the nonce (sourceId) — the raw
+// tokenizes the card in-browser and posts us the nonce (sourceId), the raw
 // card number never touches this server. From there: find-or-create the
 // Square customer, put the card on file, then create the subscription.
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
@@ -16,7 +16,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!parsed.success) return json({ error: "Please check your entries and try again." }, 400);
   const data = parsed.data;
 
-  // Server-side allowlist — never trust a client-supplied plan variation id
+  // Server-side allowlist, never trust a client-supplied plan variation id
   // or price. The slug has to match a plan we've actually wired up here.
   const plan = membershipPlans.find((p) => p.slug === data.planSlug);
   if (!plan?.squarePlanVariationId) {
@@ -45,7 +45,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       planVariationId: plan.squarePlanVariationId,
     });
 
-    // Staff notification — best-effort. The subscription already succeeded
+    // Staff notification, best-effort. The subscription already succeeded
     // by this point, so an email hiccup shouldn't fail the checkout.
     try {
       await sendEmail({
@@ -67,7 +67,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         }),
       });
     } catch {
-      // swallow — see comment above
+      // swallow, see comment above
     }
 
     await logSubmission({
@@ -77,7 +77,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         name: `${data.firstName} ${data.lastName}`.trim(),
         email: data.email,
         phone: data.phone || "",
-        message: `${plan.name} — subscription ${subscription.id} (${subscription.status})`,
+        message: `${plan.name}, subscription ${subscription.id} (${subscription.status})`,
         plan: plan.slug,
         subscriptionId: subscription.id,
       },

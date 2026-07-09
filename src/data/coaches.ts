@@ -8,7 +8,7 @@ export type Coach = {
   phone?: string;
 };
 
-// Placeholder — swap real coaches, bios, and headshots before launch.
+// Placeholder, swap real coaches, bios, and headshots before launch.
 export const coaches: Coach[] = [
   {
     slug: "coach-placeholder",

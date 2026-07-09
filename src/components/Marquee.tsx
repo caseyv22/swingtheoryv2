@@ -1,6 +1,6 @@
 type Props = { items: string[] };
 
-// F&B intentionally not listed — no lounge / food / drinks selling.
+// F&B intentionally not listed, no lounge / food / drinks selling.
 export default function Marquee({ items }: Props) {
   const doubled = [...items, ...items];
   return (

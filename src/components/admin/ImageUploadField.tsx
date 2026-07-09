@@ -6,7 +6,7 @@ export type UploadStatus = "idle" | "uploading" | "ok" | "error";
 // Shared upload widget for admin image fields (coaches, programs, league
 // events). Fixes two things Casey flagged:
 // 1. The Save button could be clicked while an upload was still in
-//    flight — now the parent can disable Save via onStatusChange.
+//    flight, now the parent can disable Save via onStatusChange.
 // 2. A successful upload response doesn't guarantee the URL actually
 //    serves an image back (e.g. if the R2 bucket's public custom domain
 //    isn't connected yet). This renders the preview with onLoad/onError
@@ -39,7 +39,7 @@ export function ImageUploadField({
       onChange(url);
       // Status stays "uploading" until the <img> below actually confirms
       // the URL loads (onLoad/onError), not just until the upload POST
-      // returns — that's the real "did it work" signal.
+      // returns, that's the real "did it work" signal.
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed");
       report("error");

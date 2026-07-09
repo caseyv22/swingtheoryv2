@@ -39,7 +39,7 @@ export default function App() {
     <>
       <ScrollToTop />
       <Routes>
-        {/* Admin routes — no public Layout, own AdminLayout with sidebar */}
+        {/* Admin routes, no public Layout, own AdminLayout with sidebar */}
         <Route path="/admin/*" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="league" element={<AdminLeague />} />

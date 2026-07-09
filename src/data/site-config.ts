@@ -48,7 +48,7 @@ export const site = {
   },
   bookingUrl:
     "https://booking.registrygolf.com/?organizationId=639ff740-1b51-4959-99af-19ac2d069609",
-  // Local intent — per CLAUDE.md §3 + user feedback, target the LA basin.
+  // Local intent, per CLAUDE.md §3 + user feedback, target the LA basin.
   areaServed: [
     "Pasadena",
     "South Pasadena",

@@ -12,7 +12,7 @@ export async function logSubmission(args: {
     | "membership-checkout"
     | "program-checkout"
     // Historical values from before membership/program interest forms were
-    // consolidated into "interest" — kept so old rows still type-check.
+    // consolidated into "interest", kept so old rows still type-check.
     | "membership"
     | "program";
   data: Record<string, unknown>;

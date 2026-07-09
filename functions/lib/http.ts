@@ -31,7 +31,7 @@ export async function readJson(request: Request): Promise<Record<string, unknown
 
 // D1 stores JSON-array columns (key_details, specialties, ...) as raw TEXT.
 // Every place that reads one of those columns back out needs to parse it
-// into an actual array before handing it to the client — otherwise
+// into an actual array before handing it to the client, otherwise
 // client code that calls .join()/.map() on it throws (this is what broke
 // the admin Edit buttons: the admin GET routes returned the raw TEXT
 // column instead of a parsed array).

@@ -4,7 +4,7 @@ import { logSubmission } from "../lib/submissions";
 import { interestSchema } from "../../src/lib/validation";
 import type { Env } from "../lib/db";
 
-// Shared "interest" endpoint — used by InterestForm for both membership
+// Shared "interest" endpoint, used by InterestForm for both membership
 // plans and programs. Replaces the old separate membership-interest and
 // program-interest routes.
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {

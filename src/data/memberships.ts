@@ -10,7 +10,7 @@ export type MembershipPlan = {
   ctaTarget: "book" | "interest" | "league" | "checkout";
   // Square subscription plan variation ID for plans that go through the
   // direct-checkout flow (/memberships/checkout). Only set this once the
-  // plan variation actually exists in the target Square environment —
+  // plan variation actually exists in the target Square environment ,
   // functions/api/membership-checkout.ts refuses to run without it.
   // Currently a SANDBOX id; swap to the production plan variation id
   // before launch (see functions/lib/db.ts SQUARE_ENV).
@@ -53,7 +53,7 @@ export const membershipPlans: MembershipPlan[] = [
     ctaLabel: "Become a member",
     ctaTarget: "checkout",
     // Production: "Green Jacket 2026" subscription plan variation. Pricing
-    // is RELATIVE — it pulls $239/mo from the linked "Green Jacket 2026"
+    // is RELATIVE, it pulls $239/mo from the linked "Green Jacket 2026"
     // item, so any future price change happens in Square dashboard, no
     // deploy needed. Previous sandbox id was MTVNYCWUXFC2I5DL4AM4HFZM.
     squarePlanVariationId: "FLGWJC4WPDD753IGVONJNELW",

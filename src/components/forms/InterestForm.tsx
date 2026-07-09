@@ -10,7 +10,7 @@ type Props = {
   // available option if omitted, or if it no longer exists (e.g. a
   // program was renamed or removed in admin).
   defaultTopic?: string;
-  // Extra options appended after the live Programs list — for things that
+  // Extra options appended after the live Programs list, for things that
   // aren't in the Programs table, like a membership plan.
   extraOptions?: string[];
 };

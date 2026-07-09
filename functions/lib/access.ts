@@ -50,7 +50,7 @@ export async function verifyAccessJwt(
   // Dev bypass: allow if Access isn't configured yet.
   if (!env.ACCESS_TEAM_DOMAIN || !env.ACCESS_AUD) {
     // eslint-disable-next-line no-console
-    console.warn("Cloudflare Access not configured — allowing request in dev-mode.");
+    console.warn("Cloudflare Access not configured, allowing request in dev-mode.");
     return { email: "dev@localhost", sub: "dev" };
   }
 

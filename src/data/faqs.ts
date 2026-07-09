@@ -1,6 +1,6 @@
 // FAQ pairs. Rendered on /faq AND fed to FAQPage JSON-LD.
 // CRITICAL: JSON-LD answer text MUST match visible answer text verbatim.
-// Direct, factual answers — no promotional language ("premier," "best," etc.)
+// Direct, factual answers, no promotional language ("premier," "best," etc.)
 // per CLAUDE.md §3.
 
 export type FAQ = {

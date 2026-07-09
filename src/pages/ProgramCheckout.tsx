@@ -13,7 +13,7 @@ import { programCheckoutSchema } from "@/lib/validation";
 // before the API call (sourceId only exists once the card is tokenized).
 const clientFieldsSchema = programCheckoutSchema.omit({ sourceId: true, programSlug: true });
 
-// Programs where the payer is enrolling a child, not themselves — so we
+// Programs where the payer is enrolling a child, not themselves, so we
 // need to collect the child's first name (and optionally age) at checkout.
 // Kept as a hardcoded allowlist for now because there's exactly one such
 // program (Mini Mulligans); when we add a second, promote this into a
@@ -48,7 +48,7 @@ export default function ProgramCheckout() {
       return;
     }
     // Parent-role programs (Mini Mulligans today) need the child's first
-    // name — the enrollment is for the kid, not the parent. Guarded here
+    // name, the enrollment is for the kid, not the parent. Guarded here
     // so the customer gets a clear error before we ever tokenize their card.
     if (PARENT_ROLE_SLUGS.has(program.slug) && !parsed.data.childFirstName) {
       setFieldError({ childFirstName: "Please enter your child's first name" });
@@ -68,7 +68,7 @@ export default function ProgramCheckout() {
     }
   }
 
-  // Still fetching /api/public/programs — don't flash the "not available"
+  // Still fetching /api/public/programs, don't flash the "not available"
   // state before we actually know.
   if (!program && loading) return null;
 
@@ -226,7 +226,7 @@ export default function ProgramCheckout() {
             </form>
           </div>
 
-          {/* Order Summary — right column on desktop, top on mobile. Purely
+          {/* Order Summary, right column on desktop, top on mobile. Purely
               informational; the form on the left is the interactive column.
               Kept minimal per product intent: Selected Program, name,
               description, and the amount charged today. */}

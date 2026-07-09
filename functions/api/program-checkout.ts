@@ -22,14 +22,14 @@ type ProgramCheckoutRow = {
 };
 
 // Programs where the payer is enrolling a child, not themselves. Kept in
-// sync with PARENT_ROLE_SLUGS in src/pages/ProgramCheckout.tsx — when we
+// sync with PARENT_ROLE_SLUGS in src/pages/ProgramCheckout.tsx, when we
 // add a second parent-role program, promote to a booker_type column on
 // programs and drive both files off it.
 const PARENT_ROLE_SLUGS = new Set<string>(["mini-mulligans"]);
 
 // Parse a display price string ("$400", "$169/month", "125") into cents.
 // Only used for the subscription branch where Square's create-subscription
-// response doesn't echo the recurring amount — we lift it from the program
+// response doesn't echo the recurring amount, we lift it from the program
 // row so the mm-api enrollment email can show the customer what they paid.
 // Returns null if the string doesn't contain a parseable number.
 function parsePriceToCents(price: string | undefined | null): number | null {
@@ -49,7 +49,7 @@ function pacificDateString(): string {
   );
 }
 
-// Hand the paid enrollment off to mm-api. Never throws — returns a
+// Hand the paid enrollment off to mm-api. Never throws, returns a
 // { ok, action?, error? } result so the caller can log the outcome but
 // still return success to the customer (their card was already charged).
 async function provisionInMmApi(
@@ -106,7 +106,7 @@ async function provisionInMmApi(
 
 // One-time program fees (season sign-ups, camps). The Web Payments SDK on
 // /programs/checkout tokenizes the card in-browser and posts us the nonce
-// (sourceId) — we charge it directly via the Payments API, no card-on-file
+// (sourceId), we charge it directly via the Payments API, no card-on-file
 // needed since there's nothing to bill again later.
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const body = await readJson(request);
@@ -114,7 +114,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!parsed.success) return json({ error: "Please check your entries and try again." }, 400);
   const data = parsed.data;
 
-  // Server-side lookup — never trust a client-supplied catalog id or price.
+  // Server-side lookup, never trust a client-supplied catalog id or price.
   // Only published programs explicitly wired for one_time checkout qualify.
   const program = await env.DB.prepare(
     `SELECT id, slug, name, checkout_mode, square_catalog_id, price FROM programs
@@ -152,7 +152,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     // nonce once via createOneTimePayment. Subscription programs (Mini
     // Mulligans) create a Square Customer, put the card on file, and
     // create a recurring subscription. Both branches funnel through the
-    // same mm-api handoff, but payment_ref differs — the payment id for
+    // same mm-api handoff, but payment_ref differs, the payment id for
     // one-time, the subscription id for subscription.
     let paymentRef: string;
     let paymentAmountCents: number;
@@ -166,7 +166,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         sourceId: data.sourceId,
         amountMoney: item.priceMoney,
         buyerEmail: data.email,
-        note: `${program.name} — ${item.name}`,
+        note: `${program.name}, ${item.name}`,
       });
       paymentRef = payment.id;
       paymentAmountCents = item.priceMoney.amount;
@@ -177,7 +177,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         paymentStatus: payment.status,
       };
     } else {
-      // Subscription flow — Mini Mulligans. Card nonce alone isn't enough;
+      // Subscription flow, Mini Mulligans. Card nonce alone isn't enough;
       // subscriptions require a Customer + card_on_file. If the buyer's
       // email already has a Square Customer, findOrCreateCustomer reuses
       // it so we don't spawn duplicates on repeat signups.
@@ -198,7 +198,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         planVariationId: program.square_catalog_id,
       });
       paymentRef = subscription.id;
-      // Amount stays as a best-effort — Square doesn't return the plan's
+      // Amount stays as a best-effort, Square doesn't return the plan's
       // recurring amount in the subscription create response. If the
       // program row carries a price string like "$400", pull cents from it
       // for the mm-api payload; otherwise omit and let the enrollment
@@ -215,7 +215,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
     // Hand the paid enrollment off to mm-api so the customer has a Sync
     // login + a paid enrollment when they follow up. Never fails the
-    // checkout — the card has already been charged. If mm-api errors, the
+    // checkout, the card has already been charged. If mm-api errors, the
     // staff notification and submission log both surface the failure so
     // an admin can manually provision the member from Sync.
     const mmResult = await provisionInMmApi(env, {
@@ -235,7 +235,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       );
     }
 
-    // Staff notification — best-effort. The payment already succeeded by
+    // Staff notification, best-effort. The payment already succeeded by
     // this point, so an email hiccup shouldn't fail the checkout.
     try {
       await sendEmail({
@@ -256,12 +256,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
             childAge: data.childAge || "",
             syncProvisioning: mmResult.ok
               ? `OK (${mmResult.action}, enrollment ${mmResult.enrollmentId})`
-              : `FAILED — ${mmResult.error} (please add member manually in Sync)`,
+              : `FAILED, ${mmResult.error} (please add member manually in Sync)`,
           }),
         }),
       });
     } catch {
-      // swallow — see comment above
+      // swallow, see comment above
     }
 
     await logSubmission({
@@ -271,7 +271,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         name: fullName,
         email: data.email,
         phone: data.phone || "",
-        message: `${program.name} [${mode}] — ref ${paymentRef} (${paymentStatusLabel}), sync=${mmResult.ok ? mmResult.action : "FAILED:" + mmResult.error}`,
+        message: `${program.name} [${mode}], ref ${paymentRef} (${paymentStatusLabel}), sync=${mmResult.ok ? mmResult.action : "FAILED:" + mmResult.error}`,
         paymentRef,
         checkoutMode: mode,
         childFirstName: data.childFirstName || "",

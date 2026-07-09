@@ -6,7 +6,7 @@ type Props = {
   alt: string;
 };
 
-// "Experience" card — image bg with gradient, tag, title, body.
+// "Experience" card, image bg with gradient, tag, title, body.
 export default function XCard({ tag, title, body, image, alt }: Props) {
   return (
     <div className="reveal relative rounded-2xl overflow-hidden min-h-[360px] flex items-end text-white isolate group">

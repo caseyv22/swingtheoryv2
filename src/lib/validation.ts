@@ -12,7 +12,7 @@ const phone = z
   .or(z.literal(""));
 const message = z.string().trim().min(5, "Add a short message").max(2000);
 
-// Honeypot — must be empty. Real users don't see it; bots fill it in.
+// Honeypot, must be empty. Real users don't see it; bots fill it in.
 const honeypot = z.string().max(0, "Bot detected").optional().or(z.literal(""));
 
 export const contactSchema = z.object({
@@ -51,7 +51,7 @@ export const leagueSignupSchema = z.object({
 });
 
 // One shared "interest" form used for membership plans and programs alike.
-// `program` doubles as the general "topic" field — kept as `program` (not
+// `program` doubles as the general "topic" field, kept as `program` (not
 // renamed to `topic`) because the D1 submissions table column and admin UI
 // already key off that name.
 export const interestSchema = z.object({
@@ -64,7 +64,7 @@ export const interestSchema = z.object({
   turnstileToken: z.string().optional(),
 });
 
-// Membership checkout — paid signup via Square. No honeypot/turnstile here:
+// Membership checkout, paid signup via Square. No honeypot/turnstile here:
 // a bot can't tokenize a real card through Square's SDK, and the payment
 // call itself is the anti-abuse gate.
 export const membershipCheckoutSchema = z.object({
@@ -77,7 +77,7 @@ export const membershipCheckoutSchema = z.object({
 });
 
 // One-time program checkout (season fees, camps). Same no-honeypot
-// reasoning as membershipCheckoutSchema — the payment call is the gate.
+// reasoning as membershipCheckoutSchema, the payment call is the gate.
 //
 // childFirstName / childAge are optional at the schema level so students'
 // programs (Women's Clinic, Senior Clinic, etc.) don't have to send them.

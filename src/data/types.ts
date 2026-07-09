@@ -22,7 +22,7 @@ export type ProgramRow = {
   // Square wiring for direct checkout (cta_target === "checkout"). Empty
   // square_catalog_id / checkout_mode "none" means the CTA falls back to
   // the interest form even if someone sets cta_target to "checkout" by
-  // mistake — see functions/api/program-checkout.ts.
+  // mistake, see functions/api/program-checkout.ts.
   square_catalog_id: string;
   checkout_mode: "none" | "one_time" | "subscription";
 };
@@ -63,7 +63,7 @@ export type SubmissionRow = {
     | "membership-checkout"
     | "program-checkout"
     // Historical values from before membership/program interest forms were
-    // consolidated into "interest" — kept so old rows still type-check.
+    // consolidated into "interest", kept so old rows still type-check.
     | "membership"
     | "program";
   program: string;

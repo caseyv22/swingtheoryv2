@@ -1,5 +1,5 @@
 /**
- * Swing Theory lockup logo — swoosh mark + "SWING / THEORY" wordmark.
+ * Swing Theory lockup logo, swoosh mark + "SWING / THEORY" wordmark.
  * Recreated in code per the brand guideline (Manrope, lockup with the
  * wordmark to the right of the mark). Renders in `currentColor`, so wrap
  * with a text color class to control it on light or dark backgrounds.

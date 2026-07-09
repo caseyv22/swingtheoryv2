@@ -16,7 +16,7 @@ export type Program = {
   startsOn?: string; // ISO date (YYYY-MM-DD)
 };
 
-// Programs are the recurring, formatted offerings — distinct from
+// Programs are the recurring, formatted offerings, distinct from
 // one-off events or standard lessons. Each gets its own route + schema.
 export const programs: Program[] = [
   {

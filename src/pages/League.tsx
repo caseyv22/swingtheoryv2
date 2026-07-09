@@ -60,7 +60,7 @@ export default function League() {
         poster="/images/programs/stgl-league-night.webp"
       />
 
-      {/* Next upcoming event — admin-controlled */}
+      {/* Next upcoming event, admin-controlled */}
       <section className="py-16 bg-cream">
         <div className="wrap">
           <div className="reveal">

@@ -49,7 +49,7 @@ type Status = "loading" | "ready" | "error";
 
 // Loads Square's Web Payments SDK, attaches a card element to `#containerId`,
 // and exposes tokenize() for the checkout form to call on submit. The card
-// number/CVV never touch our state or our server — Square hosts that field
+// number/CVV never touch our state or our server, Square hosts that field
 // in its own iframe and hands back a one-time nonce we forward to our API.
 export function useSquareCard(containerId: string) {
   const [status, setStatus] = useState<Status>("loading");

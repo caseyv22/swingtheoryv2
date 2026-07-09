@@ -217,7 +217,7 @@ export default function MembershipCheckout() {
             </form>
           </div>
 
-          {/* Order Summary — right column on desktop, top on mobile. Purely
+          {/* Order Summary, right column on desktop, top on mobile. Purely
               informational; the form on the left is the interactive column.
               Kept minimal per product intent: Selected Plan, name,
               description, and the amount charged today. */}
@@ -240,7 +240,7 @@ export default function MembershipCheckout() {
             </div>
             <p className="text-xs text-muted mt-3 text-right">
               Then {plan.priceLabel}
-              {plan.priceSub ?? "/ month"} — starts {startDateLabel}, renews on the {renewalDay}.
+              {plan.priceSub ?? "/ month"}, starts {startDateLabel}, renews on the {renewalDay}.
             </p>
             <p className="text-xs text-muted mt-6 pt-4 border-t border-line">
               Cancel anytime, email {site.email} or call {site.phone.display}.

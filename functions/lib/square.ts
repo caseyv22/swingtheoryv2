@@ -1,4 +1,4 @@
-// Square API helper — membership checkout (customer, card on file, subscription).
+// Square API helper, membership checkout (customer, card on file, subscription).
 // SQUARE_ENV picks the base URL; SQUARE_ACCESS_TOKEN is the only secret.
 // Swap SQUARE_ENV to "production" (and the production access token +
 // location ID) once the real Green Jacket plans are confirmed working here.
@@ -64,7 +64,7 @@ type CustomerInput = {
 type SquareCustomer = { id: string };
 
 // Look up an existing customer by exact email match before creating a new
-// one — keeps retries (and repeat members) from spawning duplicate
+// one, keeps retries (and repeat members) from spawning duplicate
 // customer records in the Square Directory.
 export async function findOrCreateCustomer(env: Env, input: CustomerInput): Promise<string> {
   const search = await squareFetch<{ customers?: SquareCustomer[] }>(
@@ -124,7 +124,7 @@ export async function createSubscription(
 type SquareMoney = { amount: number; currency: string };
 
 // One-time program fees (season sign-ups, camps) use a plain Catalog Item
-// Variation rather than a Subscription Plan — price lives on the variation
+// Variation rather than a Subscription Plan, price lives on the variation
 // in Square, we just look it up fresh at checkout time so a price change
 // made in Square shows up immediately without a deploy.
 export async function retrieveCatalogItemVariation(
@@ -148,7 +148,7 @@ export async function retrieveCatalogItemVariation(
   return { name: data.name, priceMoney: data.price_money };
 }
 
-// One-time payments charge the card nonce directly — no card-on-file
+// One-time payments charge the card nonce directly, no card-on-file
 // needed since there's nothing to bill again later.
 export async function createOneTimePayment(
   env: Env,

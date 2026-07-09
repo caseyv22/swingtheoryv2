@@ -38,7 +38,7 @@ export const onRequestPatch: PagesFunction<Env> = async ({ request, env, params 
   return json({ ok: true });
 };
 
-// Some proxies/edge configs are cagier about PATCH than POST — expose the
+// Some proxies/edge configs are cagier about PATCH than POST, expose the
 // same update logic on POST too so edits work regardless.
 export const onRequestPost = onRequestPatch;
 

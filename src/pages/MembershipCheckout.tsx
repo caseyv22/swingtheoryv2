@@ -142,35 +142,8 @@ export default function MembershipCheckout() {
       </section>
 
       <section className="py-16">
-        <div className="wrap grid gap-10 md:grid-cols-[1fr_1.2fr] items-start">
-          <div className="reveal rounded-2xl border border-gold bg-gradient-to-b from-gold/15 to-gold/[0.03] p-8">
-            <span className="kicker">Selected plan</span>
-            <h2 className="font-disp text-2xl text-green-700 mt-2">{plan.name}</h2>
-            <p className="text-muted text-sm mt-1">{plan.headline}</p>
-            <div className="font-disp text-[2.4rem] font-extrabold text-gold-dk mt-4 leading-none">
-              {plan.priceLabel}
-              {plan.priceSub && (
-                <small className="text-sm text-muted font-normal ml-1">{plan.priceSub}</small>
-              )}
-            </div>
-            <ul className="list-none mt-6 space-y-2">
-              {plan.perks.map((p, i) => (
-                <li key={i} className="flex gap-2 items-start text-ink text-[0.96rem]">
-                  <span className="text-gold-dk font-bold shrink-0">✓</span>
-                  <span>{p}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="text-sm text-ink mt-6 border-t border-line pt-4">
-              Starts today, <b className="font-disp">{startDateLabel}</b>. Renews automatically on
-              the <b className="font-disp">{renewalDay}</b> of each month until you cancel.
-            </p>
-            <p className="text-xs text-muted mt-2">
-              Cancel anytime, email {site.email} or call {site.phone.display}.
-            </p>
-          </div>
-
-          <div className="reveal">
+        <div className="wrap grid gap-10 md:grid-cols-[1.2fr_1fr] items-start">
+          <div className="reveal order-2 md:order-1">
             <form onSubmit={onSubmit} className="flex flex-col gap-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <TextInput
@@ -243,6 +216,36 @@ export default function MembershipCheckout() {
               </p>
             </form>
           </div>
+
+          {/* Order Summary — right column on desktop, top on mobile. Purely
+              informational; the form on the left is the interactive column.
+              Kept minimal per product intent: Selected Plan, name,
+              description, and the amount charged today. */}
+          <aside className="reveal order-1 md:order-2 rounded-2xl border border-gold bg-gradient-to-b from-gold/15 to-gold/[0.03] p-8 md:sticky md:top-24">
+            <h2 className="font-disp text-xl text-green-700 tracking-wide uppercase mb-6">
+              Order Summary
+            </h2>
+            <div className="border-t border-line pt-5">
+              <span className="kicker">Selected plan</span>
+              <div className="font-disp text-2xl text-green-700 mt-2">{plan.name}</div>
+              <p className="text-muted text-sm mt-2 leading-relaxed">{plan.headline}</p>
+            </div>
+            <div className="mt-6 pt-5 border-t border-line flex items-baseline justify-between gap-3">
+              <span className="font-disp font-semibold text-sm text-ink uppercase tracking-wide">
+                Due today
+              </span>
+              <span className="font-disp text-[1.8rem] font-extrabold text-gold-dk leading-none">
+                {plan.priceLabel}
+              </span>
+            </div>
+            <p className="text-xs text-muted mt-3 text-right">
+              Then {plan.priceLabel}
+              {plan.priceSub ?? "/ month"} — starts {startDateLabel}, renews on the {renewalDay}.
+            </p>
+            <p className="text-xs text-muted mt-6 pt-4 border-t border-line">
+              Cancel anytime, email {site.email} or call {site.phone.display}.
+            </p>
+          </aside>
         </div>
       </section>
     </>

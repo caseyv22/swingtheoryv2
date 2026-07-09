@@ -132,31 +132,8 @@ export default function ProgramCheckout() {
       </section>
 
       <section className="py-16">
-        <div className="wrap grid gap-10 md:grid-cols-[1fr_1.2fr] items-start">
-          <div className="reveal rounded-2xl border border-gold bg-gradient-to-b from-gold/15 to-gold/[0.03] p-8">
-            <span className="kicker">Selected program</span>
-            <h2 className="font-disp text-2xl text-green-700 mt-2">{program.name}</h2>
-            <p className="text-muted text-sm mt-1">{program.shortDescription}</p>
-            {program.price && (
-              <div className="font-disp text-[2.4rem] font-extrabold text-gold-dk mt-4 leading-none">
-                {program.price}
-              </div>
-            )}
-            <ul className="list-none mt-6 space-y-2">
-              {program.keyDetails.map((k, i) => (
-                <li key={i} className="flex gap-2 items-start text-ink text-[0.96rem]">
-                  <span className="text-gold-dk font-bold shrink-0">✓</span>
-                  <span>{k}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="text-xs text-muted mt-6 border-t border-line pt-4">
-              One-time charge to the card below. Questions? Email {site.email} or call{" "}
-              {site.phone.display}.
-            </p>
-          </div>
-
-          <div className="reveal">
+        <div className="wrap grid gap-10 md:grid-cols-[1.2fr_1fr] items-start">
+          <div className="reveal order-2 md:order-1">
             <form onSubmit={onSubmit} className="flex flex-col gap-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <TextInput
@@ -242,11 +219,45 @@ export default function ProgramCheckout() {
                 </Button>
               </div>
               <p className="text-xs text-muted">
-                This is a one-time charge. Payments are processed securely by Square, we never
-                see or store your card number.
+                {program.isSubscription
+                  ? "Recurring monthly charge until you cancel. Payments are processed securely by Square, we never see or store your card number."
+                  : "This is a one-time charge. Payments are processed securely by Square, we never see or store your card number."}
               </p>
             </form>
           </div>
+
+          {/* Order Summary — right column on desktop, top on mobile. Purely
+              informational; the form on the left is the interactive column.
+              Kept minimal per product intent: Selected Program, name,
+              description, and the amount charged today. */}
+          <aside className="reveal order-1 md:order-2 rounded-2xl border border-gold bg-gradient-to-b from-gold/15 to-gold/[0.03] p-8 md:sticky md:top-24">
+            <h2 className="font-disp text-xl text-green-700 tracking-wide uppercase mb-6">
+              Order Summary
+            </h2>
+            <div className="border-t border-line pt-5">
+              <span className="kicker">Selected program</span>
+              <div className="font-disp text-2xl text-green-700 mt-2">{program.name}</div>
+              <p className="text-muted text-sm mt-2 leading-relaxed">{program.shortDescription}</p>
+            </div>
+            {program.price && (
+              <div className="mt-6 pt-5 border-t border-line flex items-baseline justify-between gap-3">
+                <span className="font-disp font-semibold text-sm text-ink uppercase tracking-wide">
+                  Due today
+                </span>
+                <span className="font-disp text-[1.8rem] font-extrabold text-gold-dk leading-none">
+                  {program.price}
+                </span>
+              </div>
+            )}
+            {program.isSubscription && program.price && (
+              <p className="text-xs text-muted mt-3 text-right">
+                Then {program.price}/month until you cancel.
+              </p>
+            )}
+            <p className="text-xs text-muted mt-6 pt-4 border-t border-line">
+              Questions? Email {site.email} or call {site.phone.display}.
+            </p>
+          </aside>
         </div>
       </section>
     </>

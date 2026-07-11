@@ -11,6 +11,7 @@ export async function logSubmission(args: {
     | "interest"
     | "membership-checkout"
     | "program-checkout"
+    | "mm-waitlist"
     // Historical values from before membership/program interest forms were
     // consolidated into "interest", kept so old rows still type-check.
     | "membership"

@@ -6,6 +6,7 @@ import SplitBlock, { FeatList } from "@/components/SplitBlock";
 import Button from "@/components/Button";
 import LeagueSignupForm from "@/components/forms/LeagueSignupForm";
 import InterestForm from "@/components/forms/InterestForm";
+import MiniMulligansWaitlistForm from "@/components/forms/MiniMulligansWaitlistForm";
 import { site } from "@/data/site-config";
 import type { ProgramDisplay } from "@/hooks/usePrograms";
 import { serviceSchema } from "@/schema";
@@ -56,8 +57,15 @@ type Props = {
 
 // Shared program template. Every program page hits identical SEO patterns:
 // H1 with primary keyword, first-paragraph direct answer, Service schema.
+// Mini Mulligans has a purpose-built early-access waitlist form
+// (kid name + age, hard-capped at 18) instead of the shared InterestForm.
+// Kept as a slug list so future junior programs can share the same
+// waitlist UX with one edit here.
+const WAITLIST_SLUGS = new Set<string>(["mini-mulligans"]);
+
 export default function ProgramDetail({ program }: Props) {
   const { useLeagueForm, useCheckout } = program;
+  const useWaitlist = WAITLIST_SLUGS.has(program.slug) && !useCheckout;
   const formRef = useRef<HTMLDivElement | null>(null);
   const scrollToForm = () =>
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -150,7 +158,16 @@ export default function ProgramDetail({ program }: Props) {
 
       <section className="py-24 bg-paper" ref={formRef}>
         <div className="wrap max-w-3xl">
-          {useLeagueForm ? (
+          {useWaitlist ? (
+            <>
+              <SectionHead
+                kicker="Early access"
+                title="Join the Mini Mulligans waitlist."
+                intro="Only 18 spots available. First-come, first-served — we'll email when we open bookings."
+              />
+              <MiniMulligansWaitlistForm />
+            </>
+          ) : useLeagueForm ? (
             <>
               <SectionHead
                 kicker="Sign up"

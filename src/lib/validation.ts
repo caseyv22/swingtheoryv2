@@ -96,9 +96,32 @@ export const programCheckoutSchema = z.object({
   childAge: z.string().trim().max(3).optional().or(z.literal("")),
 });
 
+// Mini Mulligans early-access waitlist. Separate schema from the general
+// interest form because the fields are program-specific (kid name + age)
+// and the backend enforces a hard 18-signup cap on this endpoint. No
+// Turnstile: form is throttled by the cap itself and by the UNIQUE(email)
+// constraint at the DB, and losing a slot to a bot signup is a bigger
+// problem than an occasional stale Turnstile token.
+export const miniMulligansWaitlistSchema = z.object({
+  name,
+  email,
+  kidName: z.string().trim().min(1, "Please enter your child's name").max(60),
+  // Kept as string because FormData gives us strings; the API layer
+  // coerces to int after validation.
+  kidAge: z
+    .string()
+    .trim()
+    .min(1, "Please enter your child's age")
+    .max(3)
+    .regex(/^\d+$/, "Age must be a number"),
+  phone,
+  honeypot,
+});
+
 export type ContactInput = z.infer<typeof contactSchema>;
 export type EventsInquiryInput = z.infer<typeof eventsInquirySchema>;
 export type LeagueSignupInput = z.infer<typeof leagueSignupSchema>;
 export type InterestInput = z.infer<typeof interestSchema>;
 export type MembershipCheckoutInput = z.infer<typeof membershipCheckoutSchema>;
 export type ProgramCheckoutInput = z.infer<typeof programCheckoutSchema>;
+export type MiniMulligansWaitlistInput = z.infer<typeof miniMulligansWaitlistSchema>;

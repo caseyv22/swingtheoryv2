@@ -64,3 +64,56 @@
   opacity: 1;
   transform: none;
 }
+
+/* Rich-text long descriptions. Same class used by the RichTextEditor
+   (admin) and the ProgramDetail public renderer so the WYSIWYG in the
+   drawer actually matches what customers see. Kept minimal: paragraphs,
+   two heading levels, lists, links, and inline emphasis. */
+.longdesc-content > *:first-child {
+  margin-top: 0;
+}
+.longdesc-content > *:last-child {
+  margin-bottom: 0;
+}
+.longdesc-content p {
+  margin: 0 0 1em;
+}
+.longdesc-content h2 {
+  @apply font-disp text-green-700;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1.4em 0 0.5em;
+  line-height: 1.15;
+}
+.longdesc-content h3 {
+  @apply font-disp text-green-700;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 1.2em 0 0.4em;
+  line-height: 1.2;
+}
+.longdesc-content ul {
+  list-style: disc;
+  padding-left: 1.4em;
+  margin: 0 0 1em;
+}
+.longdesc-content ol {
+  list-style: decimal;
+  padding-left: 1.4em;
+  margin: 0 0 1em;
+}
+.longdesc-content li {
+  margin: 0.25em 0;
+}
+.longdesc-content a {
+  @apply text-gold-dk underline;
+}
+.longdesc-content a:hover {
+  @apply text-green-700;
+}
+.longdesc-content strong {
+  font-weight: 700;
+}
+.longdesc-content em {
+  font-style: italic;
+}

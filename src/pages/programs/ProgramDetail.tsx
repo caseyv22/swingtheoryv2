@@ -122,7 +122,14 @@ export default function ProgramDetail({ program }: Props) {
               {program.startsOn && <Pill value={formatStartsOn(program.startsOn)} />}
             </div>
           )}
-          <p className="text-muted text-[1.08rem]">{program.longDescription}</p>
+          {/* longdesc-content class picks up the same paragraph, heading,
+              list, and link styles the admin drawer's RichTextEditor uses,
+              so the WYSIWYG in the drawer matches what customers see. Only
+              admins can edit this field so trusting the HTML is fine. */}
+          <div
+            className="longdesc-content text-muted text-[1.08rem]"
+            dangerouslySetInnerHTML={{ __html: program.longDescription }}
+          />
           <FeatList items={program.keyDetails} />
           {program.season && (
             <p className="text-muted text-[0.98rem] italic">{program.season}</p>

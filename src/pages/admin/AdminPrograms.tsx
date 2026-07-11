@@ -12,6 +12,7 @@ import {
   Drawer,
 } from "@/components/admin/AdminUI";
 import { ImageUploadField, type UploadStatus } from "@/components/admin/ImageUploadField";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import { useApi, invalidateCache } from "@/hooks/useApi";
 import { useConfirm } from "@/hooks/useConfirm";
 import { api } from "@/lib/admin-api";
@@ -269,13 +270,18 @@ export default function AdminPrograms() {
             }
           />
         </Field>
-        <Field label="Long description">
-          <Textarea
+        <Field label="Long description" hint="Bold, italics, headings, lists, links.">
+          {/* key changes when you switch programs so the editor re-mounts
+              with the new program's HTML. Same-program edits don't rekey,
+              which is what preserves the cursor while typing. */}
+          <RichTextEditor
+            key={`longdesc-${drawer.form.id || "new"}`}
             value={drawer.form.long_desc}
-            rows={5}
-            onChange={(e) =>
-              setDrawer((d) => ({ ...d, form: { ...d.form, long_desc: e.target.value } }))
+            onChange={(html) =>
+              setDrawer((d) => ({ ...d, form: { ...d.form, long_desc: html } }))
             }
+            placeholder="Describe the program in a few paragraphs."
+            minHeightPx={260}
           />
         </Field>
         <div className="grid grid-cols-2 gap-4">

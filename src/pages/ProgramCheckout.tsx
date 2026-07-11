@@ -214,7 +214,12 @@ export default function ProgramCheckout() {
               )}
 
               <div className="mt-2">
-                <Button type="submit" onClick={() => {}} variant="dk">
+                <Button
+                  type="submit"
+                  onClick={() => {}}
+                  variant="dk"
+                  className="w-full justify-center"
+                >
                   {busy ? "Processing…" : program.price ? `Pay ${program.price}` : "Confirm and pay"}
                 </Button>
               </div>

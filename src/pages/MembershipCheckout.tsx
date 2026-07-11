@@ -9,6 +9,13 @@ import { site } from "@/data/site-config";
 import { membershipPlans } from "@/data/memberships";
 import { membershipCheckoutSchema } from "@/lib/validation";
 
+// Public toggle: mirrors backend MEMBERSHIP_PROMO_ENABLED. Both must be
+// "true" for the promo to be live end-to-end (Order Summary + Pay button
+// copy + real Square charge). If they drift, we'd either advertise a
+// promo Square isn't applying OR silently apply a discount without
+// telling the customer. See wrangler.toml [vars] for the flip.
+const PROMO_ENABLED = import.meta.env.VITE_MEMBERSHIP_PROMO_ENABLED === "true";
+
 // Fields the person types in; planSlug + sourceId get added right before
 // the API call (sourceId only exists once the card is tokenized).
 const clientFieldsSchema = membershipCheckoutSchema.omit({ sourceId: true, planSlug: true });
@@ -42,7 +49,25 @@ export default function MembershipCheckout() {
       }),
     [],
   );
+  // Rollover date when the promo variation kicks over from Phase 1 ($119.50
+  // first month) to Phase 2 ($239 ongoing). Square anchors billing to the
+  // signup day-of-month, so full price starts one month from today.
+  const rolloverDateLabel = useMemo(() => {
+    const d = new Date();
+    d.setMonth(d.getMonth() + 1);
+    return d.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  }, []);
   const renewalDay = useMemo(() => ordinal(new Date().getDate()), []);
+
+  // Only offer the promo copy when BOTH the flag is on AND this plan has a
+  // promo variation configured in memberships.ts. Prevents advertising a
+  // promo on plans (e.g. Green Jacket Group) that haven't been set up in
+  // Square yet.
+  const promoActive = PROMO_ENABLED && !!plan?.squarePromoPlanVariationId;
 
   const { status, error, submit } = useFormSubmit<Record<string, unknown>>(
     "/api/membership-checkout",
@@ -212,6 +237,8 @@ export default function MembershipCheckout() {
                 >
                   {busy
                     ? "Processing…"
+                    : promoActive && plan.promoPriceLabel
+                    ? `Join for ${plan.promoPriceLabel} first month`
                     : `Join for ${plan.priceLabel}${plan.priceSub ?? ""}`}
                 </Button>
               </div>
@@ -230,6 +257,11 @@ export default function MembershipCheckout() {
             <h2 className="font-disp text-xl text-green-700 tracking-wide uppercase mb-6">
               Order Summary
             </h2>
+            {promoActive && (
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-gold/60 bg-gold/10 px-3 py-1 font-disp text-[10px] tracking-[0.14em] uppercase text-gold-dk">
+                50% off first month
+              </div>
+            )}
             <div className="border-t border-line pt-5">
               <span className="kicker">Selected plan</span>
               <div className="font-disp text-2xl text-green-700 mt-2">{plan.name}</div>
@@ -240,13 +272,20 @@ export default function MembershipCheckout() {
                 Due today
               </span>
               <span className="font-disp text-[1.8rem] font-extrabold text-gold-dk leading-none">
-                {plan.priceLabel}
+                {promoActive && plan.promoPriceLabel ? plan.promoPriceLabel : plan.priceLabel}
               </span>
             </div>
-            <p className="text-xs text-muted mt-3 text-right">
-              Then {plan.priceLabel}
-              {plan.priceSub ?? "/ month"}, starts {startDateLabel}, renews on the {renewalDay}.
-            </p>
+            {promoActive ? (
+              <p className="text-xs text-muted mt-3 text-right">
+                Then {plan.priceLabel}
+                {plan.priceSub ?? "/ month"} starting {rolloverDateLabel}, renews on the {renewalDay}.
+              </p>
+            ) : (
+              <p className="text-xs text-muted mt-3 text-right">
+                Then {plan.priceLabel}
+                {plan.priceSub ?? "/ month"}, starts {startDateLabel}, renews on the {renewalDay}.
+              </p>
+            )}
             <p className="text-xs text-muted mt-6 pt-4 border-t border-line">
               Cancel anytime, email {site.email} or call {site.phone.display}.
             </p>

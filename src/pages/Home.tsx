@@ -99,6 +99,7 @@ export default function Home() {
               body="Book by the hour. Play 100+ courses or hit the range."
               image="/images/home/home-sim-bays.webp"
               alt="Swing Theory simulator bays in Pasadena"
+              to="/simulators"
             />
             <XCard
               tag="Improve"
@@ -106,6 +107,7 @@ export default function Home() {
               body="Data-backed coaching with club-face replay on every swing."
               image="/images/home/home-lessons.webp"
               alt="Indoor golf lesson in Old Town Pasadena"
+              to="/lessons"
             />
             <XCard
               tag="Host"
@@ -113,6 +115,7 @@ export default function Home() {
               body="Buyouts for birthdays, corporate nights, and team building."
               image="/images/events/eventhero.jpg"
               alt="Private event bay at Swing Theory"
+              to="/events"
             />
             <XCard
               tag="Compete"
@@ -120,6 +123,7 @@ export default function Home() {
               body="Weekly league play, junior program, and seasonal series."
               image="/images/home/home-leaguecommunity.webp"
               alt="Swing Theory Golf League night"
+              to="/league"
             />
           </div>
         </div>
@@ -231,11 +235,18 @@ export default function Home() {
           />
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mb-12 reveal">
             {ratingPlatforms.map((p) => (
-              <div key={p.name} className="flex items-center gap-2 font-disp text-sm text-muted">
+              <a
+                key={p.name}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className="flex items-center gap-2 font-disp text-sm text-muted hover:text-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold rounded"
+                aria-label={`See our reviews on ${p.name}`}
+              >
                 <span className="text-gold tracking-[2px]">★★★★★</span>
                 <span className="font-semibold text-green-700">5.0</span>
                 <span>{p.name}</span>
-              </div>
+              </a>
             ))}
           </div>
           <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))" }}>

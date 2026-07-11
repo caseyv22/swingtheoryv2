@@ -1,6 +1,7 @@
 export type NavItem = { label: string; to: string; external?: boolean };
 
 export const primaryNav: NavItem[] = [
+  { label: "Home", to: "/" },
   { label: "Simulators", to: "/simulators" },
   { label: "Lessons", to: "/lessons" },
   { label: "Memberships", to: "/memberships" },

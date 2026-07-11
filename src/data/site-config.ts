@@ -48,6 +48,13 @@ export const site = {
   },
   bookingUrl:
     "https://booking.registrygolf.com/?organizationId=639ff740-1b51-4959-99af-19ac2d069609",
+  // Google Maps "Share → Embed a map" URL for the Swing Theory Business
+  // Profile. The `?pb=...` blob encodes the canonical place entity so
+  // Google renders the actual business card (photo, rating, hours) inside
+  // the iframe — no API key or billing needed. Grab it from Google Maps:
+  // search the business, click Share, click "Embed a map", copy the src
+  // attribute of the iframe. Empty string falls back to a search-URL pin.
+  mapEmbedSrc: "",
   // Local intent, per CLAUDE.md §3 + user feedback, target the LA basin.
   areaServed: [
     "Pasadena",
@@ -63,8 +70,11 @@ export const site = {
   socials: {
     instagram: "https://www.instagram.com/swingtheory.golf/",
     instagramHandle: "@swingtheory.golf",
-    google:
-      "https://www.google.com/maps/place/Swing+Theory+Indoor+Golf/",
+    // Canonical Google Business Profile URL via CID (customer id). Cleaner
+    // than a maps/place/ search URL and unambiguous for JSON-LD sameAs
+    // entity disambiguation. CID derived from the lrd= fragment on the
+    // Google reviews share URL.
+    google: "https://www.google.com/maps?cid=7794530456415141805",
     yelp: "https://www.yelp.com/biz/swing-theory-indoor-golf-pasadena",
     facebook: "",
   },

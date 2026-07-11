@@ -46,6 +46,14 @@ SQUARE_ENV = "production"
 # shared secret is INTERNAL_PROVISIONING_SECRET, set separately.
 MM_API_BASE_URL = "https://mm-api-prod.swingtheoryla.workers.dev"
 
+# Square Web Payments SDK, browser-side (VITE_ prefix means these get
+# baked into the JS bundle at build time and shipped to every visitor).
+# They're PUBLIC by nature — safe to commit here. Sandbox equivalents
+# used to be sq0idb-... / LQ77M71PA1N9T / "sandbox".
+VITE_SQUARE_APP_ID = "sq0idp-vicpiL2c2tM6uVPMPfpLOQ"
+VITE_SQUARE_LOCATION_ID = "LDTYCKQHBQH01"
+VITE_SQUARE_ENV = "production"
+
 # Secrets to set separately (NEVER commit):
 #   RESEND_API_KEY
 #   TURNSTILE_SECRET_KEY

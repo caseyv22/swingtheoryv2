@@ -22,6 +22,12 @@ export type Env = {
   // POST /internal/enrollments there).
   MM_API_BASE_URL: string;
   INTERNAL_PROVISIONING_SECRET: string;
+  // Toggle for the 50%-first-month membership promo. When "true" AND the
+  // plan has a squarePromoPlanVariationId in memberships.ts, checkout
+  // subscribes against the promo variation instead of the standard one.
+  // Public frontend equivalent is VITE_MEMBERSHIP_PROMO_ENABLED so the
+  // PlanCard copy stays in sync with what checkout actually charges.
+  MEMBERSHIP_PROMO_ENABLED?: string;
 };
 
 // Cloudflare types (minimal subset)

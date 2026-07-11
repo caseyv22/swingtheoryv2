@@ -12,9 +12,23 @@ export type MembershipPlan = {
   // direct-checkout flow (/memberships/checkout). Only set this once the
   // plan variation actually exists in the target Square environment ,
   // functions/api/membership-checkout.ts refuses to run without it.
-  // Currently a SANDBOX id; swap to the production plan variation id
-  // before launch (see functions/lib/db.ts SQUARE_ENV).
   squarePlanVariationId?: string;
+  // Optional second plan variation on the same subscription plan that
+  // charges 50% for the first billing cycle then rolls to full price on
+  // cycle 2 (STATIC phase 0 for 1 period, RELATIVE phase 1 indefinitely).
+  // Only used when the MEMBERSHIP_PROMO_ENABLED toggle is on server-side
+  // AND VITE_MEMBERSHIP_PROMO_ENABLED is on client-side. See
+  // functions/api/membership-checkout.ts for the swap and PlanCard.tsx for
+  // the promo price copy. Leaving this unset means the plan never runs the
+  // promo, even when the flag flips on.
+  squarePromoPlanVariationId?: string;
+  // Optional pre-formatted price copy shown on the PlanCard when the promo
+  // flag is active and squarePromoPlanVariationId is set. Kept in the data
+  // layer so we can tweak the marketing line without touching component
+  // code. Example: "$119.50 first month" (headline) + "then $239 / month"
+  // (subline).
+  promoPriceLabel?: string;
+  promoPriceSub?: string;
 };
 
 // Real pricing carried over from swingtheory.golf (Green Jacket tiers).
@@ -57,6 +71,13 @@ export const membershipPlans: MembershipPlan[] = [
     // item, so any future price change happens in Square dashboard, no
     // deploy needed. Previous sandbox id was MTVNYCWUXFC2I5DL4AM4HFZM.
     squarePlanVariationId: "FLGWJC4WPDD753IGVONJNELW",
+    // Second variation on the same "Green Jacket 2026" plan with a STATIC
+    // $119.50 phase 0 (1 period) and RELATIVE phase 1 ongoing. Empty string
+    // would keep the promo path dark even when MEMBERSHIP_PROMO_ENABLED
+    // flips on. Created via Square API on 2026-07-11.
+    squarePromoPlanVariationId: "5YDAAG36S4O2GWUJ7HTGPGWM",
+    promoPriceLabel: "$119.50",
+    promoPriceSub: " first month, then $239 / month",
   },
   {
     slug: "green-jacket-group",

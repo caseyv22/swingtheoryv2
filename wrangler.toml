@@ -46,6 +46,15 @@ SQUARE_ENV = "production"
 # shared secret is INTERNAL_PROVISIONING_SECRET, set separately.
 MM_API_BASE_URL = "https://mm-api-prod.swingtheoryla.workers.dev"
 
+# 50%-first-month membership promo toggle. Set to "true" to route
+# checkout at the promo Square plan variation (STATIC $ for month 1,
+# RELATIVE ongoing after) and show the promo copy on membership cards.
+# Any other value = promo off. Must be flipped in TANDEM with
+# VITE_MEMBERSHIP_PROMO_ENABLED below so backend charge + frontend copy
+# stay aligned. Flip requires a redeploy.
+MEMBERSHIP_PROMO_ENABLED = "false"
+VITE_MEMBERSHIP_PROMO_ENABLED = "false"
+
 # Square Web Payments SDK, browser-side (VITE_ prefix means these get
 # baked into the JS bundle at build time and shipped to every visitor).
 # They're PUBLIC by nature — safe to commit here. Sandbox equivalents

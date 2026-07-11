@@ -9,8 +9,27 @@ type Props = {
   onLeague?: () => void;
 };
 
+// Public toggle: mirrors backend MEMBERSHIP_PROMO_ENABLED. Both must be
+// "true" for the promo to be live end-to-end (frontend copy + real Square
+// charge). If they drift, we'd either advertise a promo Square isn't
+// applying OR silently apply a discount without telling the customer.
+// Setting/unsetting requires a redeploy of wrangler.toml.
+const PROMO_ENABLED = import.meta.env.VITE_MEMBERSHIP_PROMO_ENABLED === "true";
+
 export default function PlanCard({ plan, onInterest, onLeague }: Props) {
   const featured = plan.featured;
+  const showPromo =
+    PROMO_ENABLED &&
+    plan.ctaTarget === "checkout" &&
+    !!plan.squarePromoPlanVariationId;
+
+  const displayPriceLabel = showPromo && plan.promoPriceLabel
+    ? plan.promoPriceLabel
+    : plan.priceLabel;
+  const displayPriceSub = showPromo && plan.promoPriceSub
+    ? plan.promoPriceSub
+    : plan.priceSub;
+
   return (
     <div
       className={cn(
@@ -20,13 +39,18 @@ export default function PlanCard({ plan, onInterest, onLeague }: Props) {
           : "border-white/12 bg-white/[0.04] hover:-translate-y-1 hover:border-gold/50",
       )}
     >
+      {showPromo && (
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-gold/60 bg-gold/10 px-3 py-1 font-disp text-[11px] tracking-[0.14em] uppercase text-gold">
+          50% off first month
+        </div>
+      )}
       <h3 className="text-2xl">{plan.name}</h3>
       <p className="text-[#b9bdb0] text-sm mt-1">{plan.headline}</p>
       <div className="font-disp text-[2.6rem] font-extrabold text-gold mt-3 leading-none">
-        {plan.priceLabel}
-        {plan.priceSub && (
+        {displayPriceLabel}
+        {displayPriceSub && (
           <small className="text-sm text-[#b9bdb0] font-normal ml-1">
-            {plan.priceSub}
+            {displayPriceSub}
           </small>
         )}
       </div>

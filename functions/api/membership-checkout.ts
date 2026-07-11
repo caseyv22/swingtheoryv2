@@ -23,6 +23,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ error: "That plan isn't available for checkout yet." }, 400);
   }
 
+  // Promo swap: when MEMBERSHIP_PROMO_ENABLED is "true" AND this plan has a
+  // squarePromoPlanVariationId configured, subscribe against the promo
+  // variation instead of the regular one. The promo variation is set up in
+  // Square with a STATIC first-month phase followed by RELATIVE ongoing
+  // phases, so Square itself charges 50% for cycle 1 then switches to full
+  // price on cycle 2 — no billing logic in this handler.
+  const promoActive =
+    env.MEMBERSHIP_PROMO_ENABLED === "true" && !!plan.squarePromoPlanVariationId;
+  const planVariationId = promoActive
+    ? (plan.squarePromoPlanVariationId as string)
+    : plan.squarePlanVariationId;
+
   const ip = request.headers.get("cf-connecting-ip");
 
   try {
@@ -42,7 +54,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     const subscription = await createSubscription(env, {
       customerId,
       cardId,
-      planVariationId: plan.squarePlanVariationId,
+      planVariationId,
     });
 
     // Staff notification, best-effort. The subscription already succeeded
@@ -61,6 +73,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
             phone: data.phone || "",
             plan: plan.name,
             price: `${plan.priceLabel}${plan.priceSub ?? ""}`,
+            promo: promoActive ? "50% first month promo applied" : "",
             subscriptionId: subscription.id,
             subscriptionStatus: subscription.status,
           }),

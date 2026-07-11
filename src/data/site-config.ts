@@ -54,7 +54,9 @@ export const site = {
   // the iframe — no API key or billing needed. Grab it from Google Maps:
   // search the business, click Share, click "Embed a map", copy the src
   // attribute of the iframe. Empty string falls back to a search-URL pin.
-  mapEmbedSrc: "",
+  // `as string` widens the type under `as const` so MapCard's length check
+  // typechecks and any pasted-in URL is accepted.
+  mapEmbedSrc: "" as string,
   // Local intent, per CLAUDE.md §3 + user feedback, target the LA basin.
   areaServed: [
     "Pasadena",

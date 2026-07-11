@@ -81,14 +81,19 @@ function toForm(row: ProgramRow): FormState {
     image_url: row.image_url,
     cta_label: row.cta_label,
     cta_target: row.cta_target,
-    published: true,
+    // Preserve the row's published value; hardcoding true here would
+    // silently re-publish any unpublished program on save.
+    published: Boolean((row as unknown as { published: unknown }).published),
     sort_order: row.sort_order,
     date_range: row.date_range,
     time_range: row.time_range,
     price: row.price,
     starts_on: row.starts_on,
-    square_catalog_id: row.square_catalog_id,
-    checkout_mode: row.checkout_mode,
+    // Never let these default to '' / 'none' if the row happens to lack
+    // them (e.g. legacy pre-migration data) — write only what we have,
+    // let the server's own defaults apply when the field is truly absent.
+    square_catalog_id: row.square_catalog_id ?? "",
+    checkout_mode: (row.checkout_mode ?? "none") as FormState["checkout_mode"],
   };
 }
 
@@ -206,10 +211,30 @@ export default function AdminPrograms() {
                   <div className="flex gap-2">
                     <Button
                       variant="ghost"
-                      onClick={() => {
+                      onClick={async () => {
                         setSaveError(null);
                         setUploadStatus("idle");
-                        setDrawer({ open: true, form: toForm(row) });
+                        // Fetch fresh from D1 rather than trusting the
+                        // cached list. useApi caches the whole list in
+                        // memory and any external mutation (SQL update,
+                        // second admin tab, prior save that didn't fully
+                        // reload the cache) leaves the snapshot stale.
+                        // If we opened the drawer with stale data, Save
+                        // would silently push the stale values back and
+                        // clobber whatever changed underneath us — that's
+                        // the bug that reverted Mini Mulligans to sandbox
+                        // catalog + one_time mode after the checkout-
+                        // subscription cutover. Falling back to the
+                        // cached row on network failure keeps the "hit
+                        // Edit while offline" case functional.
+                        try {
+                          const fresh = await api.get<ProgramRow>(
+                            `/api/admin/programs/${row.id}`,
+                          );
+                          setDrawer({ open: true, form: toForm(fresh) });
+                        } catch {
+                          setDrawer({ open: true, form: toForm(row) });
+                        }
                       }}
                     >
                       Edit

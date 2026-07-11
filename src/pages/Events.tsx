@@ -56,7 +56,7 @@ export default function Events() {
         title="Private Event Venue in Pasadena: Corporate, Birthday, Group | Swing Theory"
         description="Host your private event at Swing Theory Indoor Golf in Old Town Pasadena. Corporate outings, birthdays, bachelor parties, and buyouts for groups from 4 to 40+."
         path="/events"
-        image={`${site.url}/images/events/main-room-1.webp`}
+        image={`${site.url}/images/events/eventhero.jpg`}
       />
       <JsonLd
         data={[
@@ -89,7 +89,7 @@ export default function Events() {
             </Button>
           </>
         }
-        poster="/images/events/main-room-1.webp"
+        poster="/images/events/eventhero.jpg"
       />
 
       <section className="py-24">

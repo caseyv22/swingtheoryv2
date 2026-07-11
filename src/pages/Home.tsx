@@ -111,7 +111,7 @@ export default function Home() {
               tag="Host"
               title="Private events"
               body="Buyouts for birthdays, corporate nights, and team building."
-              image="/images/home/home-private-events.webp"
+              image="/images/events/eventhero.jpg"
               alt="Private event bay at Swing Theory"
             />
             <XCard
@@ -194,7 +194,7 @@ export default function Home() {
       {/* Private events */}
       <section className="py-24" id="events">
         <SplitBlock
-          imageSrc="/images/home/home-private-events.webp"
+          imageSrc="/images/events/eventhero.jpg"
           imageAlt="Private event at Swing Theory Pasadena"
           imageSide="right"
         >

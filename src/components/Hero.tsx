@@ -42,11 +42,17 @@ export default function Hero({
           className="absolute inset-0 w-full h-full object-cover z-0"
         />
       )}
+      {/* Darkened gradient overlay so gold + white text stay high-contrast
+          against the underlying photo/video. Alpha bumped Jul 2026 after
+          Casey flagged that the previous stops let too much image color
+          through and muted the brand palette. Same green-900 base color,
+          just heavier — going darker green rather than pure black keeps
+          the brand tone intact. */}
       <div
         className="absolute inset-0 z-[1]"
         style={{
           background:
-            "linear-gradient(180deg,rgba(4,29,19,.55) 0%,rgba(4,29,19,.35) 40%,rgba(4,29,19,.88) 100%)",
+            "linear-gradient(180deg,rgba(4,29,19,.72) 0%,rgba(4,29,19,.58) 40%,rgba(4,29,19,.95) 100%)",
         }}
       />
       <div className="wrap relative z-[2] text-white py-28 md:py-32">

@@ -52,8 +52,8 @@ MM_API_BASE_URL = "https://mm-api-prod.swingtheoryla.workers.dev"
 # Any other value = promo off. Must be flipped in TANDEM with
 # VITE_MEMBERSHIP_PROMO_ENABLED below so backend charge + frontend copy
 # stay aligned. Flip requires a redeploy.
-MEMBERSHIP_PROMO_ENABLED = "true"
-VITE_MEMBERSHIP_PROMO_ENABLED = "true"
+MEMBERSHIP_PROMO_ENABLED = "false"
+VITE_MEMBERSHIP_PROMO_ENABLED = "false"
 
 # Square Web Payments SDK, browser-side (VITE_ prefix means these get
 # baked into the JS bundle at build time and shipped to every visitor).

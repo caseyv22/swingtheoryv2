@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import SEO from "@/components/SEO";
 import Button from "@/components/Button";
@@ -68,6 +68,28 @@ export default function MembershipCheckout() {
   // promo on plans (e.g. Green Jacket Group) that haven't been set up in
   // Square yet.
   const promoActive = PROMO_ENABLED && !!plan?.squarePromoPlanVariationId;
+
+  // Live Square item description for the Order Summary. Fetched from
+  // /api/membership-description on mount; endpoint edge-caches for 5 min.
+  // Falls back to plan.headline if the fetch fails or the plan has no
+  // squareItemId wired — no visible breakage either way.
+  const [squareDescription, setSquareDescription] = useState<string | null>(null);
+  useEffect(() => {
+    if (!plan?.slug) return;
+    let cancelled = false;
+    fetch(`/api/membership-description?slug=${encodeURIComponent(plan.slug)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: { description?: string } | null) => {
+        if (cancelled || !data?.description) return;
+        setSquareDescription(data.description);
+      })
+      .catch(() => {
+        // Non-fatal — falls back to plan.headline in the render below.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [plan?.slug]);
 
   const { status, error, submit } = useFormSubmit<Record<string, unknown>>(
     "/api/membership-checkout",
@@ -265,7 +287,15 @@ export default function MembershipCheckout() {
             <div className="border-t border-line pt-5">
               <span className="kicker">Selected plan</span>
               <div className="font-disp text-2xl text-green-700 mt-2">{plan.name}</div>
-              <p className="text-muted text-sm mt-2 leading-relaxed">{plan.headline}</p>
+              {/* Description is pulled from the Square catalog item (edited in
+                  Square Dashboard) so copy stays in sync with what a merchant
+                  is actually selling. Falls back to plan.headline while the
+                  fetch is in flight or if it fails. whitespace-pre-line
+                  preserves the blank lines Square includes in the description
+                  so the perks list stays readable. */}
+              <p className="text-muted text-sm mt-2 leading-relaxed whitespace-pre-line">
+                {squareDescription ?? plan.headline}
+              </p>
             </div>
             <div className="mt-6 pt-5 border-t border-line flex items-baseline justify-between gap-3">
               <span className="font-disp font-semibold text-sm text-ink uppercase tracking-wide">

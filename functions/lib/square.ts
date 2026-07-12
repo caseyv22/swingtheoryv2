@@ -148,6 +148,48 @@ export async function retrieveCatalogItemVariation(
   return { name: data.name, priceMoney: data.price_money };
 }
 
+// Retrieve a catalog ITEM by id. Used by /api/membership-description so
+// the checkout Order Summary can show the description Casey edits in
+// Square Dashboard instead of a hardcoded copy line. Only the fields we
+// actually render are returned so we don't leak the whole item shape to
+// the browser.
+export async function retrieveCatalogItem(
+  env: Env,
+  catalogObjectId: string,
+): Promise<{
+  name: string;
+  description: string;
+  descriptionHtml?: string;
+}> {
+  const result = await squareFetch<{
+    object: {
+      type: string;
+      item_data?: {
+        name?: string;
+        description?: string;
+        description_plaintext?: string;
+        description_html?: string;
+      };
+    };
+  }>(env, `/v2/catalog/object/${catalogObjectId}`, undefined, "GET");
+
+  const data = result.object?.item_data;
+  if (result.object?.type !== "ITEM" || !data) {
+    throw new SquareApiError(
+      "That Square catalog ID isn't an item.",
+      400,
+    );
+  }
+  return {
+    name: data.name ?? "",
+    // Prefer description_plaintext (Square's stripped version) over the
+    // raw description field so the render stays clean when Square adds
+    // formatting later.
+    description: data.description_plaintext ?? data.description ?? "",
+    descriptionHtml: data.description_html,
+  };
+}
+
 // One-time payments charge the card nonce directly, no card-on-file
 // needed since there's nothing to bill again later.
 export async function createOneTimePayment(

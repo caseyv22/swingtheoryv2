@@ -19,14 +19,16 @@ import type { Env } from "../lib/db";
 // on failure. The frontend expects a `success` field on the JSON in the
 // happy path — we mirror the WP `wp_send_json_success` shape.
 
-// Escape user-supplied text for interpolation into HTML.
+// Escape user-supplied text for interpolation into HTML. Regex form of
+// replace with the /g flag because the repo's tsconfig lib doesn't include
+// ES2021 String.prototype.replaceAll.
 function esc(s: unknown): string {
   return String(s ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 // Newline → <br> for AI summary / tip text where the model returns

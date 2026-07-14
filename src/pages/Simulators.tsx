@@ -15,7 +15,7 @@ export default function Simulators() {
     <>
       <SEO
         title="Golf Simulator Rental in Pasadena | Swing Theory Indoor Golf"
-        description="Rent a golf simulator bay in Old Town Pasadena. Four wide bays running Uneekor launch monitors and GSPro simulation, 100+ world courses, up to 6 players per bay. Open 7 days a week."
+        description="Rent a golf simulator bay in Old Town Pasadena. Four wide bays running Uneekor launch monitors and GSPro simulation, 100+ world courses. Open 7 days a week."
         path="/simulators"
         image={`${site.url}/images/simulators/bay.webp`}
       />
@@ -39,7 +39,7 @@ export default function Simulators() {
             Golf simulators in <em className="not-italic text-gold">Old Town Pasadena.</em>
           </>
         }
-        sub="Four wide simulator bays, tour-grade launch monitors, 100+ world courses. Bays hold up to 6 players and book by the hour: practice, group play, or a serious range session."
+        sub="Four wide simulator bays, tour-grade launch monitors, 100+ world courses. Book by the hour: practice, group play, or a serious range session."
         ctas={
           <>
             <Button href={site.bookingUrl} external variant="gold">
@@ -75,7 +75,6 @@ export default function Simulators() {
               "100+ playable world courses",
               "Virtual driving range and skills games",
               "Right and left-handed rental clubs available",
-              "Up to 6 players per bay",
             ]}
           />
           <Button href={site.bookingUrl} external variant="dk">

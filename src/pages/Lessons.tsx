@@ -55,16 +55,16 @@ export default function Lessons() {
     <>
       <SEO
         title="Golf Lessons in Pasadena | Swing Theory Indoor Golf"
-        description="Private golf lessons and club fittings in Old Town Pasadena. Data-backed coaching with tour-grade launch monitors, slow-motion swing replay, and coaches for every level."
+        description="Private golf lessons in Old Town Pasadena. Data-backed coaching with tour-grade launch monitors, slow-motion swing replay, and independent instructors for every level."
         path="/lessons"
         image={`${site.url}/images/home/home-lessons.webp`}
       />
       <JsonLd
         data={[
           serviceSchema({
-            name: "Golf lessons and club fittings",
+            name: "Golf lessons",
             description:
-              "Private indoor golf lessons and club fittings in Old Town Pasadena using tour-grade launch monitors and swing video.",
+              "Private indoor golf lessons in Old Town Pasadena using tour-grade launch monitors and swing video. Independent instructors set their own rates; contact the coach directly for pricing.",
             url: `${site.url}/lessons`,
             serviceType: "Golf instruction",
           }),
@@ -79,14 +79,14 @@ export default function Lessons() {
             Golf lessons in <em className="not-italic text-gold">Old Town Pasadena.</em>
           </>
         }
-        sub="Private lessons and club fittings with real launch monitor data on every swing. Beginner-friendly, and rigorous enough for low-handicappers dialing in tournament prep."
+        sub="Private lessons with real launch monitor data on every swing. Beginner-friendly, and rigorous enough for low-handicappers dialing in tournament prep."
         ctas={
           <>
-            <Button href={site.bookingUrl} external variant="gold">
-              Book a lesson
+            <Button to="/contact" variant="gold">
+              Contact a coach for rates
             </Button>
-            <Button to="/contact" variant="ghost">
-              Ask a coach
+            <Button href={site.bookingUrl} external variant="ghost">
+              Book a bay
             </Button>
           </>
         }
@@ -115,6 +115,11 @@ export default function Lessons() {
               "Single lessons and group programs",
             ]}
           />
+          <p className="text-muted text-[1.08rem] mt-6">
+            Coaches at Swing Theory are independent instructors and set their
+            own rates. Reach out to a coach directly for pricing and
+            availability.
+          </p>
         </SplitBlock>
       </section>
 

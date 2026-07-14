@@ -31,7 +31,12 @@ export const site = {
   },
   email: "info@swingtheory.golf",
   hours: {
+    // Single-line label kept for compact usages (footer, JSON-LD, meta).
     display: "Mon–Sat 10am–8pm · Sun 10am–7pm",
+    // Broken-out label used where we want Mon–Sat on one line and Sun on
+    // the next (Visit page currently). Keeps the source of truth in one
+    // place so hours-string tweaks don't drift between locations.
+    displayLines: ["Mon–Sat 10am–8pm", "Sun 10am–7pm"],
     // schema.org openingHoursSpecification format
     schema: [
       {

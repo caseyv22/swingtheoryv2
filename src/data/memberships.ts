@@ -50,7 +50,6 @@ export const membershipPlans: MembershipPlan[] = [
     perks: [
       "Book any open bay",
       "Online reservations",
-      "Bring up to 6 players per bay",
       "No commitment",
     ],
     ctaLabel: "Book a bay",

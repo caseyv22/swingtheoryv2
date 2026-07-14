@@ -13,7 +13,7 @@ export type FAQ = {
 export const faqs: FAQ[] = [
   {
     q: "How much does it cost to play at Swing Theory?",
-    a: "Simulator bays are booked by the hour and hold up to 6 players, so groups can split the cost. Members get discounted rates and monthly included hours. Live pricing and availability are shown when you book online.",
+    a: "Simulator bays are booked by the hour, so groups can split the cost. Members get discounted rates and monthly included hours. Live pricing and availability are shown when you book online.",
     categories: ["home", "general", "simulators"],
   },
   {
@@ -48,7 +48,7 @@ export const faqs: FAQ[] = [
   },
   {
     q: "Do you offer lessons?",
-    a: "Yes. Private lessons and club fittings are available with our coaches. Every session uses launch monitor data and video replay so you leave with real feedback, not just feel.",
+    a: "Yes. Private lessons are available with our coaches. Every session uses launch monitor data and video replay so you leave with real feedback, not just feel. Coaches are independent instructors and set their own rates. Call the coach directly for pricing and availability.",
     categories: ["lessons", "general"],
   },
   {

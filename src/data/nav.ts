@@ -28,6 +28,5 @@ export const footerNav = {
     { label: "Book a bay", to: "/book" },
     { label: "Membership interest", to: "/memberships" },
     { label: "Plan an event", to: "/events" },
-    { label: "Join a league", to: "/league" },
   ] as NavItem[],
 };

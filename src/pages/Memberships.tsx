@@ -19,7 +19,7 @@ export default function Memberships() {
     <>
       <SEO
         title="Indoor Golf Memberships in Pasadena | Swing Theory"
-        description="Join the Swing Theory indoor golf membership program in Old Town Pasadena. Monthly bay hours, priority booking, member pricing, and league play options."
+        description="Join the Swing Theory indoor golf membership program in Old Town Pasadena. Monthly bay hours, extended hours booking, member pricing, and league play options."
         path="/memberships"
         image={`${site.url}/images/home/home-sim-bays.webp`}
       />
@@ -27,7 +27,7 @@ export default function Memberships() {
         data={serviceSchema({
           name: "Indoor golf membership",
           description:
-            "Membership program with monthly simulator hours, priority booking, and member pricing at Swing Theory Indoor Golf in Old Town Pasadena.",
+            "Membership program with monthly simulator hours, extended hours booking, and member pricing at Swing Theory Indoor Golf in Old Town Pasadena.",
           url: `${site.url}/memberships`,
           serviceType: "Membership",
         })}
@@ -40,7 +40,7 @@ export default function Memberships() {
             Play more. <em className="not-italic text-gold">Dial in year-round.</em>
           </>
         }
-        sub="Priority booking, monthly bay hours, and member perks, built for regulars who want their swing sharp all year, indoors, no matter the weather."
+        sub="Extended hours booking, monthly bay hours, and member perks, built for regulars who want their swing sharp all year, indoors, no matter the weather."
         ctas={
           <>
             <Button onClick={scrollToForm} variant="gold">

@@ -175,7 +175,7 @@ export default function Home() {
             dark
             kicker="Memberships &amp; Hourly"
             title="Play more. Dial in year-round."
-            intro="Priority booking, monthly bay hours, and member perks, built for regulars who want their swing sharp all year."
+            intro="Extended hours booking, monthly bay hours, and member perks, built for regulars who want their swing sharp all year."
           />
           <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))" }}>
             {membershipPlans.map((plan) => (

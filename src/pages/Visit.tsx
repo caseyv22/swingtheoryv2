@@ -66,7 +66,9 @@ export default function Visit() {
               <p>
                 <b className="font-disp text-green-700">Hours</b>
                 <br />
-                {site.hours.display}
+                {site.hours.displayLines[0]}
+                <br />
+                {site.hours.displayLines[1]}
               </p>
               <p>
                 <b className="font-disp text-green-700">Instagram</b>

@@ -16,6 +16,6 @@ export const coaches: Coach[] = [
     title: "Head Coach",
     bio: "Bio coming soon. Add a real coach entry here: specialties, teaching history, favorite drill.",
     photo: "/images/home/home-lessons.webp",
-    specialties: ["Full swing", "Short game", "Club fittings"],
+    specialties: ["Full swing", "Short game", "Putting"],
   },
 ];

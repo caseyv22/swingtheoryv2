@@ -394,8 +394,7 @@ function processFile(file) {
 }
 
 function parseCSV(text) {
-  const lines = text.trim().split('\
-');
+  const lines = text.trim().split('\n');
   const headers = lines[0].split(',').map(h => h.trim());
   return lines.slice(1).map(line => {
     const vals = line.split(',');
@@ -705,32 +704,20 @@ async function runAISummary() {
   const el = document.getElementById('summaryText');
   el.classList.add('streaming'); el.textContent = '';
   const payload = 'Session: ' + s.totalShots + ' shots, clubs: ' + s.clubs.join(', ') +
-    '\
-Avg Carry: ' + s.avgCarry.toFixed(1) + 'yd (Max: ' + s.maxCarry.toFixed(1) + ')' +
-    '\
-Avg Ball Speed: ' + s.avgBallSpeed.toFixed(1) + 'mph (Max: ' + s.maxBallSpeed.toFixed(1) + ')' +
-    '\
-Avg Smash Factor: ' + s.avgSmash.toFixed(3) + ' (Max: ' + s.maxSmash.toFixed(3) + ')' +
-    '\
-Avg Attack Angle: ' + s.avgAoA.toFixed(2) + ' degrees' +
-    '\
-Avg Side Spin: ' + s.avgSideSpin.toFixed(1) + ' rpm' +
-    '\
-Avg Swing Path: ' + s.avgPath.toFixed(2) + ' degrees' +
-    '\
-Avg Face to Target: ' + s.avgFaceToTarget.toFixed(2) + ' degrees' +
-    '\
-Carry Std Dev: ' + s.stdCarry.toFixed(1) + 'yd, Offline Std Dev: ' + s.stdOffline.toFixed(1) + 'yd';
+    '\nAvg Carry: ' + s.avgCarry.toFixed(1) + 'yd (Max: ' + s.maxCarry.toFixed(1) + ')' +
+    '\nAvg Ball Speed: ' + s.avgBallSpeed.toFixed(1) + 'mph (Max: ' + s.maxBallSpeed.toFixed(1) + ')' +
+    '\nAvg Smash Factor: ' + s.avgSmash.toFixed(3) + ' (Max: ' + s.maxSmash.toFixed(3) + ')' +
+    '\nAvg Attack Angle: ' + s.avgAoA.toFixed(2) + ' degrees' +
+    '\nAvg Side Spin: ' + s.avgSideSpin.toFixed(1) + ' rpm' +
+    '\nAvg Swing Path: ' + s.avgPath.toFixed(2) + ' degrees' +
+    '\nAvg Face to Target: ' + s.avgFaceToTarget.toFixed(2) + ' degrees' +
+    '\nCarry Std Dev: ' + s.stdCarry.toFixed(1) + 'yd, Offline Std Dev: ' + s.stdOffline.toFixed(1) + 'yd';
   try {
     const res = await fetch('https://st-analyze-ai-proxy.caseyvillanueva.workers.dev', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 400,
         system: 'You are a friendly, encouraging golf coach at Swing Theory in Pasadena, CA. You speak like a real coach talking to a golfer after their session — warm, direct, and easy to understand. No jargon. Keep it to 2-3 short paragraphs. Lead with something positive, then give 1-2 honest insights using their actual numbers in plain language, then end with one simple thing to focus on next time. Under 120 words. No bullet points. No markdown.',
-        messages: [{ role: 'user', content: 'My GSPro session data:\
-\
-' + payload + '\
-\
-Give me a coaching summary.' }] })
+        messages: [{ role: 'user', content: 'My GSPro session data:\n\n' + payload + '\n\nGive me a coaching summary.' }] })
     });
     const data = await res.json();
     el.classList.remove('streaming');
@@ -762,9 +749,7 @@ async function getTip(type) {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 300,
         system: 'You are a friendly golf coach at Swing Theory. Give practical, easy-to-understand tips to help a golfer ' + goals[type] + '. Use their actual numbers but explain what they mean in plain English. 2 short paragraphs, encouraging and specific. Under 100 words. No bullet points. No markdown.',
-        messages: [{ role: 'user', content: 'Data: ' + payload + '\
-\
-Tips to ' + goals[type] + '.' }] })
+        messages: [{ role: 'user', content: 'Data: ' + payload + '\n\nTips to ' + goals[type] + '.' }] })
     });
     const data = await res.json();
     tipText.classList.remove('streaming');

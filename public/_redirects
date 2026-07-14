@@ -3,6 +3,13 @@
 # Booking handoff
 /book  https://booking.registrygolf.com/?organizationId=639ff740-1b51-4959-99af-19ac2d069609  302
 
+# Theory AI /analyze — static HTML at public/analyze/index.html, served
+# outside the React SPA. Rewrites (200) rather than redirects so the URL
+# stays clean. Matching /analyze (no slash) since Pages already resolves
+# /analyze/ from the directory. Kept above the WordPress 301 block so it
+# beats the SPA fallback.
+/analyze  /analyze/index.html  200
+
 # WordPress migration 301s, old URLs → new equivalents.
 # Old WP page slugs mapped from the June 2026 backup.
 /home                 /                     301

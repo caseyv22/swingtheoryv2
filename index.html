@@ -16,6 +16,31 @@
       name="description"
       content="Swing Theory is an indoor golf studio in Old Town Pasadena with four wide simulator bays, tour-grade launch monitors, and 100+ world courses. Practice, lessons, leagues, and private events."
     />
+
+    <!--
+      Open Graph / Twitter tags rendered into the raw HTML so link
+      previewers (iMessage, Slack, Facebook, LinkedIn, Discord) see them
+      without executing JS. React Helmet in <SEO /> updates these
+      per-route for browsers that actually run the SPA, but non-JS
+      crawlers only ever see what's here. Every shared URL will therefore
+      preview as the homepage until we add SSR / prerendering — imperfect
+      but way better than an empty preview.
+      Image is a 1200x630 JPG (Apple Messages doesn't reliably render
+      WebP for link previews).
+    -->
+    <meta property="og:title" content="Indoor Golf and Golf Simulators in Old Town Pasadena | Swing Theory" />
+    <meta property="og:description" content="Swing Theory is an indoor golf studio in Old Town Pasadena with four wide simulator bays, tour-grade launch monitors, and 100+ world courses. Practice, lessons, leagues, and private events." />
+    <meta property="og:url" content="https://swingtheory.golf/" />
+    <meta property="og:image" content="https://swingtheory.golf/images/home/home-sim-bays-og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Swing Theory" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Indoor Golf and Golf Simulators in Old Town Pasadena | Swing Theory" />
+    <meta name="twitter:description" content="Swing Theory is an indoor golf studio in Old Town Pasadena with four wide simulator bays, tour-grade launch monitors, and 100+ world courses." />
+    <meta name="twitter:image" content="https://swingtheory.golf/images/home/home-sim-bays-og.jpg" />
   </head>
   <body>
     <div id="root"></div>

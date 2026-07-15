@@ -13,7 +13,11 @@ type Props = {
 // except homepage which uses the money-phrase title from index.html.
 export default function SEO({ title, description, path, image, noIndex }: Props) {
   const url = `${site.url}${path}`;
-  const ogImage = image ?? `${site.url}/images/home/home-sim-bays.webp`;
+  // Default OG image is a 1200x630 JPG. Apple Messages / iMessage does not
+  // render WebP for link previews, and OG spec recommends JPG/PNG for
+  // widest crawler compatibility. Per-page callers can still pass a
+  // custom `image` prop.
+  const ogImage = image ?? `${site.url}/images/home/home-sim-bays-og.jpg`;
   return (
     <Helmet>
       <title>{title}</title>

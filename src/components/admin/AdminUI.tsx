@@ -104,9 +104,14 @@ export function Table({ children }: { children: ReactNode }) {
   );
 }
 
-export function Th({ children }: { children?: ReactNode }) {
+export function Th({ children, className }: { children?: ReactNode; className?: string }) {
   return (
-    <th className="text-left font-disp text-[12px] uppercase tracking-[0.1em] text-muted px-4 py-3 border-b border-line">
+    <th
+      className={cn(
+        "text-left font-disp text-[12px] uppercase tracking-[0.1em] text-muted px-4 py-3 border-b border-line",
+        className,
+      )}
+    >
       {children}
     </th>
   );

@@ -28,6 +28,11 @@ export type Env = {
   // Public frontend equivalent is VITE_MEMBERSHIP_PROMO_ENABLED so the
   // PlanCard copy stays in sync with what checkout actually charges.
   MEMBERSHIP_PROMO_ENABLED?: string;
+  // Shared secret verified by /api/internal/weekly-analytics-email against
+  // the X-Internal-Secret request header. Same value is set as a GitHub
+  // Actions repo secret and passed by the weekly cron workflow. Rotating
+  // it requires updating both places or the cron will start 401ing.
+  WEEKLY_ANALYTICS_SECRET: string;
 };
 
 // Cloudflare types (minimal subset)

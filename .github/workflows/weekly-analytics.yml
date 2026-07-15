@@ -1,0 +1,53 @@
+name: Weekly analytics email
+
+# Fires POST /api/internal/weekly-analytics-email every Monday at 15:00 UTC
+# (7am PDT / 8am PST). One fixed UTC time year-round is cleaner than
+# tracking DST — Casey gets the email around start-of-day Pacific either
+# way. workflow_dispatch is enabled so you can trigger a run manually from
+# the Actions tab for testing.
+#
+# The endpoint on Cloudflare Pages does all the heavy lifting: queries D1,
+# builds the HTML, sends via Resend. This workflow just fires the request
+# with the shared secret and fails loudly if the response isn't 2xx so
+# GitHub emails you when a scheduled run breaks.
+
+on:
+  schedule:
+    # Every Monday at 15:00 UTC.
+    - cron: "0 15 * * 1"
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fire weekly analytics email
+        env:
+          SECRET: ${{ secrets.WEEKLY_ANALYTICS_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SECRET:-}" ]; then
+            echo "::error::WEEKLY_ANALYTICS_SECRET is not set on this repo."
+            exit 1
+          fi
+
+          # -w writes the HTTP status to stdout after the response body so
+          # we can grep and gate on 2xx. -sS: silent but still show errors.
+          # -o response.txt: dump the JSON response for logging.
+          HTTP_CODE=$(curl -sS -o response.txt -w "%{http_code}" \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-Internal-Secret: ${SECRET}" \
+            https://swingtheory.golf/api/internal/weekly-analytics-email)
+
+          echo "HTTP status: ${HTTP_CODE}"
+          echo "Response body:"
+          cat response.txt
+          echo
+
+          if [ "${HTTP_CODE:0:1}" != "2" ]; then
+            echo "::error::Endpoint returned ${HTTP_CODE} — weekly analytics email did not send."
+            exit 1
+          fi
+
+          echo "Weekly analytics email sent OK."

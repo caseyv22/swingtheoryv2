@@ -16,11 +16,20 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const user = await requireAdmin(request, env);
   if (user instanceof Response) return user;
 
+  type Row = {
+    id: number;
+    parent_name: string;
+    email: string;
+    kid_name: string;
+    kid_age: number;
+    phone: string | null;
+    created_at: string;
+  };
   const { results = [] } = await env.DB.prepare(
     `SELECT id, parent_name, email, kid_name, kid_age, phone, created_at
        FROM mini_mulligans_waitlist
       ORDER BY created_at ASC`,
-  ).all();
+  ).all<Row>();
 
   return json({
     items: results.map((row, i) => ({ ...row, position: i + 1 })),

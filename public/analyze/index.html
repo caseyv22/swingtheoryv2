@@ -715,7 +715,7 @@ async function runAISummary() {
   try {
     const res = await fetch('https://st-analyze-ai-proxy.caseyvillanueva.workers.dev', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 400,
+      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 400,
         system: 'You are a friendly, encouraging golf coach at Swing Theory in Pasadena, CA. You speak like a real coach talking to a golfer after their session — warm, direct, and easy to understand. No jargon. Keep it to 2-3 short paragraphs. Lead with something positive, then give 1-2 honest insights using their actual numbers in plain language, then end with one simple thing to focus on next time. Under 120 words. No bullet points. No markdown.',
         messages: [{ role: 'user', content: 'My GSPro session data:\n\n' + payload + '\n\nGive me a coaching summary.' }] })
     });
@@ -747,7 +747,7 @@ async function getTip(type) {
   try {
     const res = await fetch('https://st-analyze-ai-proxy.caseyvillanueva.workers.dev', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 300,
+      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 300,
         system: 'You are a friendly golf coach at Swing Theory. Give practical, easy-to-understand tips to help a golfer ' + goals[type] + '. Use their actual numbers but explain what they mean in plain English. 2 short paragraphs, encouraging and specific. Under 100 words. No bullet points. No markdown.',
         messages: [{ role: 'user', content: 'Data: ' + payload + '\n\nTips to ' + goals[type] + '.' }] })
     });

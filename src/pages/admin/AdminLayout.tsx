@@ -27,6 +27,7 @@ export default function AdminLayout() {
             <SideLink to="/admin/league" label="League" />
             <SideLink to="/admin/programs" label="Programs" />
             <SideLink to="/admin/coaches" label="Lessons / Coaches" />
+            <SideLink to="/admin/mm-waitlist" label="MM Waitlist" />
             <SideLink to="/admin/submissions" label="Submissions" />
           </nav>
           <div className="p-4 border-t border-white/10 text-[13px] text-white/60">

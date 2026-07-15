@@ -2,7 +2,22 @@ import { json } from "../../../lib/http";
 import { requireAdmin } from "../../../lib/access";
 import type { Env } from "../../../lib/db";
 
-const ALLOWED_TYPES = new Set(["contact", "event", "league", "membership", "program"]);
+// Kept in sync with the `formType` union in functions/lib/submissions.ts.
+// If a new form is added, add its form_type value here too or the admin
+// filter will silently ignore the query param and show all rows.
+const ALLOWED_TYPES = new Set([
+  "contact",
+  "event",
+  "league",
+  "interest",
+  "membership-checkout",
+  "program-checkout",
+  "mm-waitlist",
+  // Legacy values from before membership/program interest were consolidated
+  // into "interest" — kept so historical rows still filter correctly.
+  "membership",
+  "program",
+]);
 const ALLOWED_STATUS = new Set(["new", "read", "archived"]);
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {

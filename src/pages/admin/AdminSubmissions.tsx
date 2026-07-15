@@ -21,6 +21,7 @@ const FORM_TYPES = [
   "interest",
   "membership-checkout",
   "program-checkout",
+  "mm-waitlist",
 ] as const;
 const STATUSES = ["new", "read", "archived"] as const;
 

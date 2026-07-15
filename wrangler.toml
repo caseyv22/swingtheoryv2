@@ -27,11 +27,14 @@ CONTACT_FROM_EMAIL = "noreply@swingtheory.golf"
 # Public R2 CDN base — served either via a custom domain on the bucket
 # or via Cloudflare Images. Override per-env.
 MEDIA_PUBLIC_BASE = "https://media.swingtheory.golf"
-# Cloudflare Access team domain (found in Zero Trust dashboard).
-# Example: yourteam.cloudflareaccess.com
-ACCESS_TEAM_DOMAIN = ""
-# Access application AUD tag (from the Access application settings).
-ACCESS_AUD = ""
+# Cloudflare Access — protects /admin/* at the edge. Both values are
+# public identifiers (not secrets). Team domain is the Zero Trust
+# subdomain; AUD is the specific Access application's audience tag
+# (Zero Trust dashboard → Access → Applications → "Swing Theory Admin").
+# functions/lib/access.ts fails closed if either is empty, so both MUST
+# be set for admin to work — do NOT clear these.
+ACCESS_TEAM_DOMAIN = "plain-cherry-61b1.cloudflareaccess.com"
+ACCESS_AUD = "5d184a78afa8977cd8de9b379effd6bb11844b368b5b300652d4a5b3dbe530d0"
 
 # Square membership checkout. Location ID and env mode are not secret —
 # the access token is (see below). SANDBOX values while we test the

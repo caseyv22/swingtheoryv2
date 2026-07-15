@@ -24,6 +24,7 @@ export default function AdminLayout() {
           </Link>
           <nav className="flex-1 p-4 space-y-1">
             <SideLink to="/admin" label="Dashboard" end />
+            <SideLink to="/admin/analytics" label="Analytics" />
             <SideLink to="/admin/league" label="League" />
             <SideLink to="/admin/programs" label="Programs" />
             <SideLink to="/admin/coaches" label="Lessons / Coaches" />

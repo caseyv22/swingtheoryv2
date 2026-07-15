@@ -80,8 +80,65 @@ function useRevealOnScroll() {
   }, [pathname]);
 }
 
+// First-party analytics beacon. Fires POST /api/pv on every SPA route
+// change (including the initial page load). Silent — never surfaces
+// errors or console noise to visitors. Session ID lives in
+// sessionStorage (cleared when the tab closes), visitor ID lives in
+// localStorage (persistent across sessions, cleared with cookies).
+//
+// Debounced against back-to-back same-path fires (StrictMode double-renders,
+// same-path scroll changes, etc.) so we don't inflate pageview counts.
+function usePageviewBeacon() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    // sessionStorage may throw in private browsing on some Safari builds —
+    // any exception means we skip the beacon this session. Not worth
+    // dying over.
+    let sessionId: string, visitorId: string;
+    try {
+      sessionId = sessionStorage.getItem("st_sid") || "";
+      if (!sessionId) {
+        sessionId = crypto.randomUUID().replace(/-/g, "");
+        sessionStorage.setItem("st_sid", sessionId);
+      }
+      visitorId = localStorage.getItem("st_vid") || "";
+      if (!visitorId) {
+        visitorId = crypto.randomUUID().replace(/-/g, "");
+        localStorage.setItem("st_vid", visitorId);
+      }
+    } catch {
+      return;
+    }
+
+    // Debounce: skip if we already logged this exact path within the last
+    // 800ms. Handles StrictMode double-invocation + rapid re-renders that
+    // don't actually change the URL.
+    const lastKey = "__st_last_pv";
+    const lastRaw = sessionStorage.getItem(lastKey) || "";
+    const [lastPath, lastTs] = lastRaw.split("|");
+    if (lastPath === pathname && Date.now() - Number(lastTs || 0) < 800) return;
+    sessionStorage.setItem(lastKey, `${pathname}|${Date.now()}`);
+
+    fetch("/api/pv", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        path: pathname,
+        referrer: document.referrer || "",
+        session_id: sessionId,
+        visitor_id: visitorId,
+      }),
+      keepalive: true,
+    }).catch(() => {
+      // Silent failure — analytics loss shouldn't ever affect UX.
+    });
+  }, [pathname]);
+}
+
 export default function Layout({ children }: { children: ReactNode }) {
   useRevealOnScroll();
+  usePageviewBeacon();
 
   return (
     <>

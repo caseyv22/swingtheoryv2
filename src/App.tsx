@@ -26,6 +26,7 @@ import AdminPrograms from "@/pages/admin/AdminPrograms";
 import AdminCoaches from "@/pages/admin/AdminCoaches";
 import AdminSubmissions from "@/pages/admin/AdminSubmissions";
 import AdminMMWaitlist from "@/pages/admin/AdminMMWaitlist";
+import AdminAnalytics from "@/pages/admin/AdminAnalytics";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="coaches" element={<AdminCoaches />} />
           <Route path="submissions" element={<AdminSubmissions />} />
           <Route path="mm-waitlist" element={<AdminMMWaitlist />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
         </Route>
         {/* Public site */}
         <Route

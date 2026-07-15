@@ -8,6 +8,31 @@
 <link rel="canonical" href="https://swingtheory.golf/analyze" />
 <meta name="theme-color" content="#064029" />
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  // First-party analytics beacon. Mirrors the SPA beacon in
+  // src/components/Layout.tsx so /analyze pageviews show up in
+  // /admin/analytics alongside every other page. IDs shared with the SPA
+  // because sessionStorage/localStorage are same-origin.
+  (function () {
+    try {
+      var sid = sessionStorage.getItem('st_sid');
+      if (!sid) { sid = crypto.randomUUID().replace(/-/g, ''); sessionStorage.setItem('st_sid', sid); }
+      var vid = localStorage.getItem('st_vid');
+      if (!vid) { vid = crypto.randomUUID().replace(/-/g, ''); localStorage.setItem('st_vid', vid); }
+      fetch('/api/pv', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          path: location.pathname,
+          referrer: document.referrer || '',
+          session_id: sid,
+          visitor_id: vid,
+        }),
+        keepalive: true,
+      }).catch(function () {});
+    } catch (e) {}
+  })();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

@@ -47,11 +47,17 @@ export async function verifyAccessJwt(
   request: Request,
   env: Env,
 ): Promise<AccessUser | null> {
-  // Dev bypass: allow if Access isn't configured yet.
+  // FAIL CLOSED. Older builds of this file returned a fake admin user
+  // when ACCESS_TEAM_DOMAIN / ACCESS_AUD were unset — a dev convenience
+  // that shipped to production and left /admin publicly accessible.
+  // Now: if the env vars aren't set, no admin request can succeed.
+  // Configure both in Cloudflare Pages env vars AND set up a Cloudflare
+  // Access application that protects /admin/* at the edge (the edge
+  // gate is what actually prevents the SPA from rendering for anons;
+  // this check is defense-in-depth for the API).
   if (!env.ACCESS_TEAM_DOMAIN || !env.ACCESS_AUD) {
-    // eslint-disable-next-line no-console
-    console.warn("Cloudflare Access not configured, allowing request in dev-mode.");
-    return { email: "dev@localhost", sub: "dev" };
+    console.error("Cloudflare Access env vars missing — refusing admin request.");
+    return null;
   }
 
   const header = request.headers.get("cf-access-jwt-assertion");

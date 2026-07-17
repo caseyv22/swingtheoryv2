@@ -105,7 +105,17 @@ export async function createCardOnFile(
 
 export async function createSubscription(
   env: Env,
-  args: { customerId: string; cardId: string; planVariationId: string },
+  args: {
+    customerId: string;
+    cardId: string;
+    planVariationId: string;
+    // Parent catalog item id for the plan. Optional — if omitted we
+    // chain-fetch it from the subscription plan's `eligible_item_ids[0]`
+    // (adds one extra Square call). Passing it explicitly is faster and
+    // is what /api/membership-checkout does since memberships.ts already
+    // stores the item id per plan.
+    itemId?: string;
+  },
 ): Promise<{ id: string; status: string }> {
   // Square requires an explicit `phases[]` array on subscription create AND
   // an `order_template_id` on each RELATIVE-priced phase. The order
@@ -119,84 +129,105 @@ export async function createSubscription(
   //   - Regular: 1 monthly RELATIVE phase (pulls $239 from linked item)
   //   - Promo:  phase 0 STATIC $119.50 + phase 1 RELATIVE ongoing
   //
-  // We do it in three round trips per checkout:
-  //   1. GET plan variation with related_objects → get phases + plan + item
-  //   2. POST /v2/orders                        → create the order template
-  //   3. POST /v2/subscriptions                 → with phases + template id
+  // Three round trips per checkout:
+  //   1. batchGet [planVariation, item] → phases + item variation id
+  //   2. POST /v2/orders                → order template
+  //   3. POST /v2/subscriptions         → subscription
   //
-  // STATIC phases (like the promo's phase 0) don't need an order template,
-  // so we conditionally attach it based on pricing.type.
+  // Note: `include_related_objects=true` on plan variations does NOT
+  // populate related_objects with the parent plan or eligible items,
+  // despite what the Square docs suggest. We batch the two known IDs
+  // (variation + item) directly instead.
+  // If the caller didn't pass itemId (e.g. program-checkout for a
+  // subscription-mode program which doesn't store the item id in D1),
+  // chain-fetch the plan → eligible items list → first item. Extra API
+  // hop but keeps the helper drop-in for both callers.
+  let itemId = args.itemId;
+  if (!itemId) {
+    const varOnly = await squareFetch<{
+      object: { subscription_plan_variation_data?: { subscription_plan_id?: string } };
+    }>(env, `/v2/catalog/object/${args.planVariationId}`, undefined, "GET");
+    const planId = varOnly.object?.subscription_plan_variation_data?.subscription_plan_id;
+    if (!planId) {
+      throw new SquareApiError(
+        "Plan variation has no parent subscription plan id.",
+        500,
+      );
+    }
+    const planOnly = await squareFetch<{
+      object: { subscription_plan_data?: { eligible_item_ids?: string[] } };
+    }>(env, `/v2/catalog/object/${planId}`, undefined, "GET");
+    itemId = planOnly.object?.subscription_plan_data?.eligible_item_ids?.[0];
+    if (!itemId) {
+      throw new SquareApiError(
+        "Subscription plan has no eligible item to bill against.",
+        500,
+      );
+    }
+  }
 
-  // ── 1. Fetch plan variation + related objects (plan + item) ────────────
-  type CatalogRes = {
-    object: {
-      subscription_plan_variation_data?: {
-        subscription_plan_id?: string;
-        phases?: Array<{ uid: string; ordinal: number; pricing?: { type: string } }>;
-      };
-    };
-    related_objects?: Array<{
+  // ── 1. Fetch plan variation phases + item variation in one batch ──────
+  type BatchRes = {
+    objects?: Array<{
       type: string;
       id: string;
-      subscription_plan_data?: { eligible_item_ids?: string[] };
-      item_data?: { variations?: Array<{ id: string; type: string }> };
+      subscription_plan_variation_data?: {
+        phases?: Array<{ uid: string; ordinal: number; pricing?: { type: string } }>;
+      };
+      item_data?: {
+        variations?: Array<{
+          id: string;
+          type: string;
+          item_variation_data?: { pricing_type?: string };
+        }>;
+      };
     }>;
   };
-  const varRes = await squareFetch<CatalogRes>(
-    env,
-    `/v2/catalog/object/${args.planVariationId}?include_related_objects=true`,
-    undefined,
-    "GET",
-  );
+  const batchRes = await squareFetch<BatchRes>(env, "/v2/catalog/batch-retrieve", {
+    object_ids: [args.planVariationId, itemId],
+  });
 
-  const varData = varRes.object?.subscription_plan_variation_data;
-  const planPhases = varData?.phases ?? [];
-  const planId = varData?.subscription_plan_id ?? "";
-  const relatedPlan = varRes.related_objects?.find(
-    (o) => o.type === "SUBSCRIPTION_PLAN" && o.id === planId,
-  );
-  const eligibleItemId =
-    relatedPlan?.subscription_plan_data?.eligible_item_ids?.[0] ?? "";
-  const relatedItem = varRes.related_objects?.find(
-    (o) => o.type === "ITEM" && o.id === eligibleItemId,
-  );
-  const itemVariationId = relatedItem?.item_data?.variations?.find(
-    (v) => v.type === "ITEM_VARIATION",
-  )?.id;
+  const variation = batchRes.objects?.find((o) => o.id === args.planVariationId);
+  const item = batchRes.objects?.find((o) => o.id === itemId);
+  const planPhases = variation?.subscription_plan_variation_data?.phases ?? [];
+  // Prefer a FIXED_PRICING variation — that's what Square bills per cycle.
+  // Fall back to first variation if none marked (single-variation items).
+  const variations = item?.item_data?.variations ?? [];
+  const itemVariation =
+    variations.find(
+      (v) => v.item_variation_data?.pricing_type === "FIXED_PRICING",
+    ) ?? variations[0];
+  const itemVariationId = itemVariation?.id;
 
+  if (planPhases.length === 0) {
+    throw new SquareApiError("Plan variation has no phases configured.", 500);
+  }
   if (!itemVariationId) {
     throw new SquareApiError(
-      "Could not resolve item variation for this subscription plan.",
+      "Catalog item has no variation to bill against.",
       500,
     );
   }
 
   // ── 2. Create the order template ──────────────────────────────────────
-  // Line items reference the item variation directly (Square pulls the
-  // FIXED_PRICING price from the variation record). One template per
-  // subscription — slightly wasteful but simplest correct behavior. If
-  // this becomes a lot of orphan draft orders in Square, refactor to
-  // share a single template across all subscriptions of the same plan.
-  const orderRes = await squareFetch<{ order: { id: string } }>(
-    env,
-    "/v2/orders",
-    {
-      idempotency_key: crypto.randomUUID(),
-      order: {
-        location_id: env.SQUARE_LOCATION_ID,
-        customer_id: args.customerId,
-        line_items: [
-          {
-            quantity: "1",
-            catalog_object_id: itemVariationId,
-          },
-        ],
-      },
+  // One template per subscription — slightly wasteful (orphan drafts in
+  // Square if a checkout fails after this step) but simplest correct
+  // behavior. If this becomes noisy, refactor to share a single template
+  // across all subscriptions of the same plan.
+  const orderRes = await squareFetch<{ order: { id: string } }>(env, "/v2/orders", {
+    idempotency_key: crypto.randomUUID(),
+    order: {
+      location_id: env.SQUARE_LOCATION_ID,
+      customer_id: args.customerId,
+      line_items: [{ quantity: "1", catalog_object_id: itemVariationId }],
     },
-  );
+  });
   const orderTemplateId = orderRes.order.id;
 
   // ── 3. Create the subscription ────────────────────────────────────────
+  // order_template_id only goes on RELATIVE phases. STATIC phases (like
+  // the promo's fixed $119.50 phase 0) get their price from the phase
+  // config itself and don't need a template.
   const phases = planPhases.map((p) => ({
     ordinal: p.ordinal,
     plan_phase_uid: p.uid,

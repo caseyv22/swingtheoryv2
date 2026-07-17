@@ -51,10 +51,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       cardholderName: `${data.firstName} ${data.lastName}`.trim(),
     });
 
+    // itemId is required by createSubscription now — it's used to build
+    // the order template Square needs on RELATIVE-priced phases. Fail
+    // fast here (not deep in the Square helper) if the membership plan
+    // isn't fully wired up in memberships.ts.
+    if (!plan.squareItemId) {
+      return json({ error: "That plan isn't fully configured yet." }, 400);
+    }
     const subscription = await createSubscription(env, {
       customerId,
       cardId,
       planVariationId,
+      itemId: plan.squareItemId,
     });
 
     // Staff notification, best-effort. The subscription already succeeded

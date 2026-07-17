@@ -217,6 +217,11 @@ export async function createSubscription(
   const orderRes = await squareFetch<{ order: { id: string } }>(env, "/v2/orders", {
     idempotency_key: crypto.randomUUID(),
     order: {
+      // Square subscription order templates must be created in DRAFT
+      // state — an OPEN order is treated as a real order and rejected as
+      // a template. Error surface without this:
+      //   400 "Order template State must be DRAFT, but was OPEN."
+      state: "DRAFT",
       location_id: env.SQUARE_LOCATION_ID,
       customer_id: args.customerId,
       line_items: [{ quantity: "1", catalog_object_id: itemVariationId }],

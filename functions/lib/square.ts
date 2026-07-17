@@ -225,12 +225,17 @@ export async function createSubscription(
   const orderTemplateId = orderRes.order.id;
 
   // ── 3. Create the subscription ────────────────────────────────────────
-  // order_template_id only goes on RELATIVE phases. STATIC phases (like
-  // the promo's fixed $119.50 phase 0) get their price from the phase
-  // config itself and don't need a template.
+  // Phase shape Square accepts on create:
+  //   - `ordinal` — required, maps to the plan variation's phase order
+  //   - `order_template_id` — only on RELATIVE phases; STATIC phases
+  //     get their price from the plan config itself
+  //
+  // Do NOT send `plan_phase_uid` on create — Square auto-generates it
+  // and errors out ("Phase should not have a plan phase uid at this
+  // time; it will be system generated and added later"). We DO fetch
+  // the plan phases above to detect RELATIVE vs STATIC by pricing type.
   const phases = planPhases.map((p) => ({
     ordinal: p.ordinal,
-    plan_phase_uid: p.uid,
     ...(p.pricing?.type === "RELATIVE" ? { order_template_id: orderTemplateId } : {}),
   }));
 

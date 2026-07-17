@@ -107,6 +107,31 @@ export async function createSubscription(
   env: Env,
   args: { customerId: string; cardId: string; planVariationId: string },
 ): Promise<{ id: string; status: string }> {
+  // Square requires an explicit phases[] array on subscription create when
+  // the plan variation uses RELATIVE pricing (both our Green Jacket Solo
+  // variations do — the regular one is 1 monthly relative phase, the
+  // 50%-first-month promo is a static phase 0 followed by a relative
+  // phase 1). Without it Square returns 400:
+  //   "Phases with RELATIVE pricing type must have phases on the subscription"
+  //
+  // One extra catalog GET per checkout (~50ms) to grab each phase's uid.
+  // We could cache these per-planVariationId inside the Worker instance
+  // but Cloudflare Pages Functions recycle frequently and the cost is
+  // trivial; keep it simple.
+  const varRes = await squareFetch<{
+    object: {
+      subscription_plan_variation_data?: {
+        phases?: { uid: string; ordinal: number }[];
+      };
+    };
+  }>(env, `/v2/catalog/object/${args.planVariationId}`, undefined, "GET");
+
+  const planPhases = varRes.object?.subscription_plan_variation_data?.phases ?? [];
+  const phases = planPhases.map((p) => ({
+    ordinal: p.ordinal,
+    plan_phase_uid: p.uid,
+  }));
+
   const result = await squareFetch<{ subscription: { id: string; status: string } }>(
     env,
     "/v2/subscriptions",
@@ -116,6 +141,7 @@ export async function createSubscription(
       plan_variation_id: args.planVariationId,
       customer_id: args.customerId,
       card_id: args.cardId,
+      phases,
     },
   );
   return result.subscription;

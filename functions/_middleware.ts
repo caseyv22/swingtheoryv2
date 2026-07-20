@@ -21,6 +21,22 @@
 
 import type { Env } from "./lib/db";
 
+// Minimal Cloudflare Workers HTMLRewriter type shims. The project's
+// tsconfig doesn't include @cloudflare/workers-types, so `HTMLRewriter`
+// and its `Element` API aren't in the default TS lib. Declare just what
+// we use here — no extra dependency, no tsconfig change.
+type CFElement = {
+  getAttribute(name: string): string | null;
+  setAttribute(name: string, value: string): void;
+  setInnerContent(content: string, options?: { html?: boolean }): void;
+};
+type CFHandler = { element(el: CFElement): void };
+type CFRewriter = {
+  on(selector: string, handler: CFHandler): CFRewriter;
+  transform(response: Response): Response;
+};
+declare const HTMLRewriter: new () => CFRewriter;
+
 type Meta = { title: string; description: string };
 
 // Match src/pages/*.tsx SEO calls one-to-one. If a page's SEO tags change,
@@ -105,7 +121,7 @@ function metaFor(path: string): Meta | null {
 // selector; this class only knows the value to set.
 class ContentSetter {
   constructor(private value: string) {}
-  element(el: Element) {
+  element(el: CFElement) {
     el.setAttribute("content", this.value);
   }
 }
@@ -115,7 +131,7 @@ class ContentSetter {
 // so brackets/apostrophes are treated as text, not markup.
 class TitleSetter {
   constructor(private value: string) {}
-  element(el: Element) {
+  element(el: CFElement) {
     el.setInnerContent(this.value, { html: false });
   }
 }

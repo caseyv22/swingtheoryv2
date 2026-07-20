@@ -302,7 +302,7 @@ function renderEmailShell(title: string, preheader: string, bodyHtml: string): s
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden">
   <tr>
     <td style="background:#064029;padding:24px 32px">
-      <img src="https://swingtheory.golf/wp-content/uploads/2025/03/Wide-Asset-3-copy.png" alt="Swing Theory" height="36" style="display:block;height:36px;">
+      <img src="https://media.swingtheory.golf/uploads/email-logo.png" alt="Swing Theory" height="36" style="display:block;height:36px;">
     </td>
   </tr>
   <tr>

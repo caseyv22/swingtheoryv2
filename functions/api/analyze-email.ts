@@ -195,7 +195,7 @@ function buildEmailHtml(args: {
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
           <td style="vertical-align:middle;">
-            <img src="https://swingtheory.golf/wp-content/uploads/2025/03/Wide-Asset-3-copy.png" alt="Swing Theory" height="36" style="display:block;height:36px;" />
+            <img src="https://media.swingtheory.golf/uploads/email-logo.png" alt="Swing Theory" height="36" style="display:block;height:36px;" />
           </td>
           <td style="text-align:right;vertical-align:middle;">
             <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);">Session Report</div>

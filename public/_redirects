@@ -44,4 +44,13 @@
 # prerendered homepage. Only non-prerendered routes reach this rule
 # (checkout flows, admin, program slugs created later in the admin panel);
 # prerendered routes are served as static assets before redirects apply.
-/*  /spa.html  200
+#
+# MUST stay "/spa/" (directory form, trailing slash) and NOT "/spa.html".
+# A bare top-level "/spa.html" target caused a live production outage
+# (2026-07-21): Cloudflare Pages auto-redirects a directly-resolved
+# top-level "name.html" to its extensionless "/name", which then
+# re-matches this same /* rule, gets rewritten back to "name.html", and
+# redirects again — infinite loop, Cloudflare returns 503. "/spa/" is
+# already the canonical URL for a directory index (same reason "/" +
+# root index.html never redirects), so there's nothing left to redirect.
+/*  /spa/  200

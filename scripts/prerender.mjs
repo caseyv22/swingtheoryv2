@@ -11,24 +11,38 @@
 // Runs as part of `npm run build`, after `vite build`:
 //   1. Builds src/entry-server.tsx with vite's SSR mode into dist-ssr/.
 //   2. Uses dist/index.html (the built SPA shell) as the template.
-//   3. Writes dist/spa.html — the untouched shell plus a noindex meta —
-//      which public/_redirects points the /* catch-all at. Non-prerendered
-//      routes (checkout flows, /admin, program slugs created later in the
-//      admin panel) load this clean shell and render client-side, instead
-//      of flashing prerendered homepage content.
+//   3. Writes dist/spa/index.html — the untouched shell plus a noindex
+//      meta — which public/_redirects points the /* catch-all at (as
+//      "/spa/", the directory form). Non-prerendered routes (checkout
+//      flows, /admin, program slugs created later in the admin panel)
+//      load this clean shell and render client-side, instead of flashing
+//      prerendered homepage content.
+//
+//      IMPORTANT: this must be a nested directory index (dist/spa/index.html
+//      served at "/spa/"), NOT a top-level file like dist/spa.html served
+//      at "/spa". Cloudflare Pages auto-redirects any directly-resolved
+//      top-level "name.html" to its extensionless "/name" — which then
+//      re-matches the /* catch-all, gets rewritten back to "name.html",
+//      and redirects again. That loop shipped to production once already
+//      (2026-07-21, swingtheory.golf/spa 503-looped for several minutes)
+//      and took the whole site down. "/spa/" is already a canonical
+//      directory-index URL (same reason root "/" → index.html never
+//      redirects), so there's nothing left to redirect. Do not rename
+//      this back to a bare top-level file.
 //   4. For each route in scripts/routes.mjs: renders the app, strips the
 //      shell's homepage-default title/description/OG tags, injects the
 //      route's Helmet-managed head tags, and writes the flat .html file.
 //   5. Removes dist-ssr/.
 //
-// Cloudflare Pages behavior this relies on (verified against the live
-// deployment): static assets are served in preference to the /* 200
-// rewrite in _redirects, and flat HTML files resolve to extensionless
-// clean URLs (simulators.html → /simulators).
+// Cloudflare Pages behavior this relies on: static assets are served in
+// preference to the /* 200 rewrite in _redirects, and flat HTML files
+// resolve to extensionless clean URLs (simulators.html → /simulators).
+// This part IS verified against the live deployment — the 503 loop above
+// was specifically the fallback shell's own filename, not this mechanism.
 //
 // The <meta name="prerender-path"> marker tells src/main.tsx whether the
 // served HTML matches the URL being viewed: match → hydrateRoot, no match
-// (spa.html fallback) → plain client render.
+// (spa/ fallback) → plain client render.
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -66,8 +80,12 @@ const template = readFileSync(resolve(DIST, "index.html"), "utf8");
 // 3. SPA fallback shell for everything that is NOT prerendered. noindex:
 // this file only ever backs client-rendered routes (checkout, admin,
 // admin-created program slugs); it must never compete in search results.
+// Written as a nested directory index (dist/spa/index.html, served at
+// "/spa/") on purpose — see the top-of-file note on why a bare top-level
+// "spa.html" caused a redirect loop in production.
+mkdirSync(resolve(DIST, "spa"), { recursive: true });
 writeFileSync(
-  resolve(DIST, "spa.html"),
+  resolve(DIST, "spa", "index.html"),
   template.replace(
     "</head>",
     '  <meta name="robots" content="noindex" />\n  </head>',
@@ -128,4 +146,4 @@ if (failed > 0) {
   console.error(`Prerender finished with ${failed} failed route(s).`);
   process.exit(1);
 }
-console.log(`Prerendered ${routes.length} routes + spa.html fallback.`);
+console.log(`Prerendered ${routes.length} routes + spa/index.html fallback.`);

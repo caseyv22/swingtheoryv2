@@ -39,18 +39,30 @@
 # Cloudflare Access sits in front of /admin/* and functions handle /api/*.
 # (The SPA fallback rule ignores requests that already match a Function.)
 
-# SPA fallback, must be last. Points at the clean noindexed shell that
-# scripts/prerender.mjs writes — NOT index.html, which is now the
-# prerendered homepage. Only non-prerendered routes reach this rule
-# (checkout flows, admin, program slugs created later in the admin panel);
-# prerendered routes are served as static assets before redirects apply.
+# INTENTIONALLY NO CUSTOM CATCH-ALL RULE HERE. Do not add one back without
+# testing it on a Cloudflare Pages preview deployment first.
 #
-# MUST stay "/spa/" (directory form, trailing slash) and NOT "/spa.html".
-# A bare top-level "/spa.html" target caused a live production outage
-# (2026-07-21): Cloudflare Pages auto-redirects a directly-resolved
-# top-level "name.html" to its extensionless "/name", which then
-# re-matches this same /* rule, gets rewritten back to "name.html", and
-# redirects again — infinite loop, Cloudflare returns 503. "/spa/" is
-# already the canonical URL for a directory index (same reason "/" +
-# root index.html never redirects), so there's nothing left to redirect.
-/*  /spa/  200
+# History (2026-07-21): a custom "/*  /some-target  200" catch-all rule
+# was added twice to route non-prerendered paths (checkout, admin,
+# admin-created program slugs) to a dedicated fallback shell. Both
+# attempts caused a live redirect loop and took swingtheory.golf down —
+# first with the target as a bare top-level file ("/spa.html", which
+# Cloudflare auto-redirects to its extensionless "/spa", which then
+# re-matched the same /* rule and looped), then again with the target as
+# a directory form ("/spa/"), which was assumed safe by analogy to how
+# root "/" + index.html behaves but turned out not to be — Cloudflare's
+# exact resolution order for _redirects rewrite targets vs. its own
+# automatic redirects is not something either attempt got right.
+#
+# Current behavior instead: no matching rule + no top-level 404.html file
+# means Cloudflare Pages' own default, documented SPA fallback serves
+# root dist/index.html (the prerendered homepage) for any unmatched path,
+# with zero custom rewrite logic in the loop. src/main.tsx already
+# handles a served page not matching the current URL (its
+# prerender-path marker won't equal e.g. "/memberships/checkout") by
+# clearing #root and doing a plain client render, so those routes still
+# end up correct once JS runs — the only cost is a brief flash of
+# homepage content/meta before that happens, which is a UX nit, not a
+# broken page. That trade is deliberate: it's the same "single generic
+# shell for everything" behavior the pre-prerender site always had for
+# these routes, just without the noindex nicety the custom shell added.

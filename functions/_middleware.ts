@@ -108,8 +108,11 @@ const ROUTE_META: Record<string, Meta> = {
 // already carry their exact per-route tags plus JSON-LD, so rewriting
 // them here would at best re-apply the same values and at worst clobber
 // them if SEO.tsx and ROUTE_META ever drift. Skip them entirely; this
-// middleware now only rewrites tags on spa/index.html fallback responses
-// (admin-created /programs/:slug pages and other uncatalogued routes).
+// middleware now only rewrites tags on responses for non-prerendered
+// routes (admin-created /programs/:slug pages and other uncatalogued
+// routes), which Cloudflare's default SPA fallback serves as the root
+// homepage HTML — see public/_redirects for why there's no dedicated
+// fallback file anymore.
 const PRERENDERED = new Set([
   "/",
   "/simulators",

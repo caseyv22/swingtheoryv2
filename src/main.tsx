@@ -19,7 +19,8 @@ const app = (
 // Prerendered pages (scripts/prerender.mjs) ship real HTML inside #root
 // plus a marker meta naming the route they were rendered for. Hydrate only
 // when that marker matches the URL actually being viewed. Everything else
-// — the spa/index.html fallback shell (empty #root), or a prerendered file
+// — non-prerendered routes served the root homepage HTML by Cloudflare's
+// default SPA fallback (see public/_redirects), or a prerendered file
 // somehow served for the wrong path — gets a plain client render instead
 // of a mismatched hydration.
 const marker = document

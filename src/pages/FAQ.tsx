@@ -13,7 +13,7 @@ export default function FAQ() {
         title="Swing Theory FAQ, Indoor Golf in Pasadena"
         description="Frequently asked questions about Swing Theory Indoor Golf in Old Town Pasadena: pricing, rentals, memberships, lessons, and events."
         path="/faq"
-        image={`${site.url}/images/home/home-sim-bays.webp`}
+        image={`${site.url}/images/home/home-sim-bays-og.jpg`}
       />
       <JsonLd data={faqPageSchema(faqs)} />
 

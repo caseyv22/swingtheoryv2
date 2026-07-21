@@ -17,7 +17,7 @@ export default function Simulators() {
         title="Golf Simulator Rental in Pasadena | Swing Theory Indoor Golf"
         description="Rent a golf simulator bay in Old Town Pasadena. Four wide bays running Uneekor launch monitors and GSPro simulation, 100+ world courses. Open 7 days a week."
         path="/simulators"
-        image={`${site.url}/images/simulators/bay.webp`}
+        image={`${site.url}/images/simulators/bay-og.jpg`}
       />
       <JsonLd
         data={[

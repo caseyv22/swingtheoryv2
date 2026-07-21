@@ -10,3 +10,4 @@ vite.config.js.timestamp-*.mjs
 *.log
 .vscode
 .idea
+dist-ssr

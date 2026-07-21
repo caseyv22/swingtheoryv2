@@ -18,15 +18,17 @@
     />
 
     <!--
-      Open Graph / Twitter tags rendered into the raw HTML so link
-      previewers (iMessage, Slack, Facebook, LinkedIn, Discord) see them
-      without executing JS. React Helmet in <SEO /> updates these
-      per-route for browsers that actually run the SPA, but non-JS
-      crawlers only ever see what's here. Every shared URL will therefore
-      preview as the homepage until we add SSR / prerendering — imperfect
-      but way better than an empty preview.
+      Open Graph / Twitter defaults for this shell. In production, every
+      public route is prerendered at build time (scripts/prerender.mjs):
+      the prerender strips this whole default head block and injects each
+      route's own Helmet-rendered tags, so what ships per page is the
+      exact <SEO /> output plus JSON-LD. These defaults still cover `vite
+      dev` and the spa.html fallback shell that non-prerendered routes
+      (checkout, admin, admin-created program slugs) boot from.
       Image is a 1200x630 JPG (Apple Messages doesn't reliably render
       WebP for link previews).
+      NOTE: prerender.mjs matches this comment by the words "Open Graph"
+      to remove the block — keep those words if you edit it.
     -->
     <meta property="og:title" content="Indoor Golf and Golf Simulators in Old Town Pasadena | Swing Theory" />
     <meta property="og:description" content="Swing Theory is an indoor golf studio in Old Town Pasadena with four wide simulator bays, tour-grade launch monitors, and 100+ world courses. Practice, lessons, leagues, and private events." />

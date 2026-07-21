@@ -23,9 +23,25 @@
 /tournaments          /league               301
 /wp-content/*         /:splat               301
 
+# Stale WordPress cruft still sitting in Google's index (the sample
+# /hello-world/ post was indexed as of the July 2026 audit) plus the
+# standard WP taxonomy/feed URLs bots keep requesting. 301 them home so
+# they consolidate instead of soft-404ing through the SPA fallback.
+/hello-world          /                     301
+/hello-world/         /                     301
+/feed                 /                     301
+/comments-feed        /                     301
+/category/*           /                     301
+/tag/*                /                     301
+/author/*             /                     301
+
 # Admin and API paths must NOT be caught by the SPA fallback below ,
 # Cloudflare Access sits in front of /admin/* and functions handle /api/*.
 # (The SPA fallback rule ignores requests that already match a Function.)
 
-# SPA fallback, must be last.
-/*  /index.html  200
+# SPA fallback, must be last. Points at the clean noindexed shell that
+# scripts/prerender.mjs writes — NOT index.html, which is now the
+# prerendered homepage. Only non-prerendered routes reach this rule
+# (checkout flows, admin, program slugs created later in the admin panel);
+# prerendered routes are served as static assets before redirects apply.
+/*  /spa.html  200

@@ -27,7 +27,7 @@ export default function League() {
         title="Swing Theory Golf League, Indoor Golf League in Pasadena"
         description="Weekly indoor golf league at Swing Theory in Old Town Pasadena. Match play with handicaps, live standings, season prizes. Open to individuals and teams."
         path="/league"
-        image={`${site.url}/images/programs/stgl-league-night.webp`}
+        image={`${site.url}/images/programs/stgl-league-night-og.jpg`}
       />
       <JsonLd
         data={serviceSchema({

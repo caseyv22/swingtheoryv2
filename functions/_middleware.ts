@@ -103,6 +103,29 @@ const ROUTE_META: Record<string, Meta> = {
   },
 };
 
+// Routes that scripts/prerender.mjs writes as static HTML at build time
+// (mirror of scripts/routes.mjs — update both together). Those files
+// already carry their exact per-route tags plus JSON-LD, so rewriting
+// them here would at best re-apply the same values and at worst clobber
+// them if SEO.tsx and ROUTE_META ever drift. Skip them entirely; this
+// middleware now only rewrites tags on spa.html fallback responses
+// (admin-created /programs/:slug pages and other uncatalogued routes).
+const PRERENDERED = new Set([
+  "/",
+  "/simulators",
+  "/lessons",
+  "/memberships",
+  "/programs",
+  "/league",
+  "/programs/mini-mulligans",
+  "/programs/summer-womens",
+  "/programs/summer-seniors",
+  "/events",
+  "/visit",
+  "/faq",
+  "/contact",
+]);
+
 // Generic fallbacks for known route prefixes. Program subpages have their
 // own admin-editable name/description in D1 (ProgramDetail.tsx uses those
 // at render time), but we don't want to fetch D1 in every middleware
@@ -152,6 +175,12 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     path.startsWith("/analyze") ||
     path.includes(".")
   ) {
+    return context.next();
+  }
+
+  // Prerendered static pages own their head tags — pass through untouched.
+  const normalizedPath = path.length > 1 ? path.replace(/\/+$/, "") : path;
+  if (PRERENDERED.has(normalizedPath)) {
     return context.next();
   }
 

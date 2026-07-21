@@ -21,7 +21,7 @@ export default function Memberships() {
         title="Indoor Golf Memberships in Pasadena | Swing Theory"
         description="Join the Swing Theory indoor golf membership program in Old Town Pasadena. Monthly bay hours, extended hours booking, member pricing, and league play options."
         path="/memberships"
-        image={`${site.url}/images/home/home-sim-bays.webp`}
+        image={`${site.url}/images/home/home-sim-bays-og.jpg`}
       />
       <JsonLd
         data={serviceSchema({

@@ -12,7 +12,7 @@ export default function Contact() {
         title="Contact Swing Theory Indoor Golf, Pasadena"
         description="Contact Swing Theory Indoor Golf in Old Town Pasadena. Call, email, or use the contact form and we'll follow up shortly."
         path="/contact"
-        image={`${site.url}/images/visit/delacey.webp`}
+        image={`${site.url}/images/visit/delacey-og.jpg`}
       />
 
       <Hero

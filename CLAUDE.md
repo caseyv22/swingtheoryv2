@@ -230,6 +230,20 @@ swapped in for the guideline's maroon accent per Casey's direction.
 - **Booking:** deep-link to registrygolf.com
 - **Analytics:** GA4 only
 
+### Prerendering (added July 2026)
+
+Every public route is prerendered to static HTML at build time —
+`scripts/prerender.mjs` renders `src/entry-server.tsx` per route from the
+shared list in `scripts/routes.mjs` and writes flat files
+(`dist/simulators.html` → served at `/simulators`). Non-JS crawlers
+(Bing, AI search, link previewers) get full body content, per-route
+meta/OG, and JSON-LD without executing JS. `src/main.tsx` hydrates when
+the served HTML matches the URL (via the `prerender-path` marker meta);
+the `/*` fallback in `_redirects` points at the noindexed `spa.html`
+shell for non-prerendered routes (checkout, admin, admin-created program
+slugs). **When adding a page:** update `scripts/routes.mjs` AND the
+mirrored `PRERENDERED` set in `functions/_middleware.ts`.
+
 ### Performance non-negotiables
 
 - Lighthouse mobile Performance ≥ 95

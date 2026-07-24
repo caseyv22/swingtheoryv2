@@ -1,3 +1,5 @@
+import { trackClick } from "@/lib/analytics";
+
 type Coach = {
   slug: string;
   name: string;
@@ -59,6 +61,7 @@ export default function CoachCard({ coach }: { coach: Coach }) {
         {telHref && (
           <a
             href={telHref}
+            onClick={() => trackClick(`coach_phone_${coach.slug}`, telHref)}
             className="mt-6 inline-flex items-center justify-center rounded-lg bg-green-700 text-white font-disp text-sm px-5 py-3 hover:bg-green-600 transition"
           >
             {coach.phone}

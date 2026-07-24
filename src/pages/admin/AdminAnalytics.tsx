@@ -31,6 +31,33 @@ type ReferrersResponse = {
   items: Array<{ host: string; pageviews: number }>;
 };
 
+type EventsResponse = {
+  range: Range;
+  items: Array<{
+    label: string;
+    clicks: number;
+    sessions: number;
+    delta: number | null;
+  }>;
+};
+
+// Human labels for the known event labels — the backend stores machine
+// names ("book_a_bay", "coach_phone_jae-lee"); we display something
+// readable. Coach labels fall through to a generic "Coach: <slug>"
+// display so admin never sees a raw `coach_phone_x` string.
+function humanLabel(machine: string): string {
+  if (machine === "book_a_bay") return "Book a Bay";
+  if (machine.startsWith("coach_phone_")) {
+    const slug = machine.slice("coach_phone_".length);
+    const name = slug
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+    return `Coach phone: ${name}`;
+  }
+  return machine;
+}
+
 const RANGE_LABEL: Record<Range, string> = {
   "7d": "Last 7 days",
   "30d": "Last 30 days",
@@ -83,6 +110,9 @@ export default function AdminAnalytics() {
   );
   const { data: referrers, loading: rLoading } = useApi<ReferrersResponse>(
     `/api/admin/analytics?view=referrers&range=${range}&limit=20`,
+  );
+  const { data: events, loading: eLoading } = useApi<EventsResponse>(
+    `/api/admin/analytics?view=events&range=${range}&limit=20`,
   );
 
   return (
@@ -206,6 +236,45 @@ export default function AdminAnalytics() {
           )}
         </Card>
       </div>
+
+      {/* Click events — Book a Bay + per-coach phone taps. Sessions
+          column is unique-sessions-that-fired-the-click (rough conversion
+          proxy: sessions with click / total sessions). Delta compares to
+          the same-length previous period; null → no data to compare. */}
+      <Card className="mt-6">
+        <Kicker>Click events</Kicker>
+        {eLoading && <p className="text-muted">Loading…</p>}
+        {events && events.items.length === 0 && (
+          <p className="text-muted text-sm">
+            No click events tracked in this range yet. Book-a-Bay buttons and
+            coach phone taps report to <code className="text-xs">/api/event</code>.
+          </p>
+        )}
+        {events && events.items.length > 0 && (
+          <Table>
+            <thead>
+              <tr>
+                <Th>Event</Th>
+                <Th className="text-right">Clicks</Th>
+                <Th className="text-right">Sessions</Th>
+                <Th className="text-right">vs. prev</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.items.map((row) => (
+                <tr key={row.label}>
+                  <Td>{humanLabel(row.label)}</Td>
+                  <Td className="text-right font-disp">{fmtInt(row.clicks)}</Td>
+                  <Td className="text-right text-muted">{fmtInt(row.sessions)}</Td>
+                  <Td className="text-right">
+                    <DeltaChip delta={row.delta} />
+                  </Td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </Card>
     </>
   );
 }

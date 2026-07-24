@@ -1,8 +1,21 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/cn";
+import { trackClick } from "@/lib/analytics";
+import { site } from "@/data/site-config";
 
 type Variant = "gold" | "ghost" | "ghost-gold" | "dk";
+
+// Auto-track clicks on any external link that points at the RegistryGolf
+// booking URL. Detected by href — no per-caller wiring needed. If a new
+// external CTA needs tracking, either give the Button a `trackLabel`
+// prop (below) or add another URL prefix match here.
+function autoLabelFor(href: string): string | null {
+  if (href === site.bookingUrl || href.startsWith(site.bookingUrl)) {
+    return "book_a_bay";
+  }
+  return null;
+}
 
 type Common = {
   children: ReactNode;
@@ -45,12 +58,15 @@ export default function Button(props: ButtonProps) {
     );
   }
   if ("href" in props && props.href) {
+    const href = props.href;
+    const label = autoLabelFor(href);
     return (
       <a
-        href={props.href}
+        href={href}
         className={classes}
         target={props.external ? "_blank" : undefined}
         rel={props.external ? "noopener noreferrer" : undefined}
+        onClick={label ? () => trackClick(label, href) : undefined}
       >
         {children}
       </a>

@@ -168,6 +168,50 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ range, items: results });
   }
 
+  if (view === "events") {
+    // Click events (Book-a-Bay, coach phone taps, etc.). Grouped by label.
+    // Returns total clicks, unique sessions that fired it (for a rough
+    // conversion-rate lens), and previous-period counts for delta.
+    const limit = Math.min(Number(url.searchParams.get("limit") ?? 20), 100);
+    const { results = [] } = await env.DB.prepare(
+      `SELECT label,
+              COUNT(*) AS clicks,
+              COUNT(DISTINCT session_id) AS sessions
+         FROM events
+        WHERE created_at >= ?
+        GROUP BY label
+        ORDER BY clicks DESC
+        LIMIT ?`,
+    )
+      .bind(curStart, limit)
+      .all<{ label: string; clicks: number; sessions: number }>();
+
+    let prev: Array<{ label: string; clicks: number }> = [];
+    if (range !== "all") {
+      const { results: prevResults = [] } = await env.DB.prepare(
+        `SELECT label, COUNT(*) AS clicks
+           FROM events
+          WHERE created_at >= ? AND created_at < ?
+          GROUP BY label`,
+      )
+        .bind(prevStart, prevEnd)
+        .all<{ label: string; clicks: number }>();
+      prev = prevResults;
+    }
+    const prevByLabel = new Map(prev.map((r) => [r.label, r.clicks]));
+
+    const items = results.map((r) => {
+      const prevClicks = prevByLabel.get(r.label) ?? 0;
+      return {
+        label: r.label,
+        clicks: r.clicks,
+        sessions: r.sessions,
+        delta: pctDelta(r.clicks, prevClicks),
+      };
+    });
+    return json({ range, items });
+  }
+
   if (view === "referrers") {
     const limit = Math.min(Number(url.searchParams.get("limit") ?? 20), 100);
     const { results = [] } = await env.DB.prepare(

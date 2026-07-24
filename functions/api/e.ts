@@ -42,8 +42,12 @@ function validLabel(s: unknown): s is string {
   return LABEL_PREFIXES.some((p) => s.startsWith(p) && s.length > p.length);
 }
 
-// POST /api/event
+// POST /api/e
 // Fired by trackClick() from src/lib/analytics.ts. Body:
+//
+// Endpoint name is intentionally short/opaque (`/api/e` not `/api/event`)
+// to slip past client-side ad-blocker lists that filter obvious tracking
+// paths — uBlock/Brave/Safari ITP heuristics match "event" but not "e".
 //   { event_name, label, target?, path, session_id, visitor_id }
 // Silent 200 on malformed input so a bad beacon can't produce console
 // noise on the visitor's browser.

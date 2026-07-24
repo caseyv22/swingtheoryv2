@@ -1,4 +1,4 @@
-// Client-side click tracking. Fires POST /api/event with sendBeacon so the
+// Client-side click tracking. Fires POST /api/e with sendBeacon so the
 // request survives the browser navigating away (which is what happens
 // immediately after a "Book a Bay" click or a coach phone tap on mobile).
 //
@@ -46,14 +46,14 @@ export function trackClick(label: string, target?: string): void {
       typeof navigator.sendBeacon === "function"
     ) {
       const blob = new Blob([payload], { type: "application/json" });
-      const ok = navigator.sendBeacon("/api/event", blob);
+      const ok = navigator.sendBeacon("/api/e", blob);
       if (ok) return;
     }
   } catch {
     // fall through to fetch
   }
 
-  fetch("/api/event", {
+  fetch("/api/e", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: payload,

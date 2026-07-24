@@ -247,7 +247,7 @@ export default function AdminAnalytics() {
         {events && events.items.length === 0 && (
           <p className="text-muted text-sm">
             No click events tracked in this range yet. Book-a-Bay buttons and
-            coach phone taps report to <code className="text-xs">/api/event</code>.
+            coach phone taps report to <code className="text-xs">/api/e</code>.
           </p>
         )}
         {events && events.items.length > 0 && (

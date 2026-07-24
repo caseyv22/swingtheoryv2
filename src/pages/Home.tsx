@@ -113,7 +113,7 @@ export default function Home() {
               tag="Host"
               title="Private events"
               body="Buyouts for birthdays, corporate nights, and team building."
-              image="/images/events/eventhero.jpg"
+              image="/images/events/eventhero.webp"
               alt="Private event bay at Swing Theory"
               to="/events"
             />
@@ -198,7 +198,7 @@ export default function Home() {
       {/* Private events */}
       <section className="py-24" id="events">
         <SplitBlock
-          imageSrc="/images/events/eventhero.jpg"
+          imageSrc="/images/events/eventhero.webp"
           imageAlt="Private event at Swing Theory Pasadena"
           imageSide="right"
         >

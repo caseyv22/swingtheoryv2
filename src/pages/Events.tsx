@@ -89,7 +89,7 @@ export default function Events() {
             </Button>
           </>
         }
-        poster="/images/events/eventhero.jpg"
+        poster="/images/events/eventhero.webp"
       />
 
       <section className="py-24">

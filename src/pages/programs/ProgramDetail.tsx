@@ -20,7 +20,7 @@ import { useRef } from "react";
 // uploading a new "About the program" image never touches the hero.
 const heroBySlug: Record<string, string> = {
   "league-night": "/images/programs/stgl-league-night.webp",
-  "mini-mulligans": "/images/programs/programs-mini-mulligans.jpg",
+  "mini-mulligans": "/images/programs/programs-mini-mulligans.webp",
 };
 const defaultProgramHero = "/images/home/home-sim-bays.webp";
 

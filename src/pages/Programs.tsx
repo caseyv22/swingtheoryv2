@@ -35,7 +35,7 @@ export default function Programs() {
             </Button>
           </>
         }
-        poster="/images/programs/programs-hero.jpg"
+        poster="/images/programs/programs-hero.webp"
       />
 
       <section className="py-24">

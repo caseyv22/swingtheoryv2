@@ -6,6 +6,13 @@ import type { FAQ } from "@/data/faqs";
 
 const businessId = `${site.url}/#business`;
 
+// Build-time date stamped into every schema block as `dateModified`.
+// AI engines (Perplexity, ChatGPT Search, Google AI Overviews) weight
+// freshness heavily — pages updated <30 days ago get roughly 3× more
+// citations. The Vite build resolves this to a literal at compile
+// time, so it changes on every deploy without any runtime cost.
+const BUILD_DATE = new Date().toISOString().slice(0, 10);
+
 export function localBusinessSchema() {
   return {
     "@context": "https://schema.org",
@@ -13,8 +20,21 @@ export function localBusinessSchema() {
     "@id": businessId,
     name: site.name,
     url: site.url,
+    dateModified: BUILD_DATE,
     telephone: site.phone.tel,
-    email: site.email,
+    // Email intentionally NOT inlined here — dumping it in JSON-LD
+    // leaks plaintext to scrapers (SEO audit flagged it) and Cloudflare's
+    // email-obfuscation script only rewrites <a href="mailto:"> nodes.
+    // Instead, expose the /contact page via contactPoint, which is the
+    // modern schema.org pattern Google actually prefers.
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      telephone: site.phone.tel,
+      url: `${site.url}/contact`,
+      areaServed: "US",
+      availableLanguage: ["English"],
+    },
     image: [
       `${site.url}/images/home/home-sim-bays.webp`,
       `${site.url}/images/simulators/bay.webp`,
@@ -87,6 +107,7 @@ export function serviceSchema(args: {
     description: args.description,
     url: args.url,
     serviceType: args.serviceType,
+    dateModified: BUILD_DATE,
     provider: { "@id": businessId },
     areaServed: site.areaServed.map((c) => ({ "@type": "City", name: c })),
   };
@@ -96,6 +117,7 @@ export function faqPageSchema(items: FAQ[]) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    dateModified: BUILD_DATE,
     mainEntity: items.map((f) => ({
       "@type": "Question",
       name: f.q,

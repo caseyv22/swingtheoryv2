@@ -1,0 +1,4 @@
+# Swing Theory does not sell or serve programmatic ads.
+# This file exists solely to serve a text/plain response for
+# /ads.txt so crawlers (and SEO scanners) don't fall through to
+# the SPA index.html and see an HTML Content-Type on this path.

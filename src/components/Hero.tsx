@@ -24,8 +24,19 @@ export default function Hero({
   return (
     <section className="relative min-h-[92vh] flex items-center overflow-hidden">
       {videoSrc ? (
+        // width/height HTML attributes give the browser the intrinsic
+        // aspect ratio BEFORE metadata loads. Combined with the
+        // absolute/inset-0/h-full CSS (which visually stretches the
+        // video to fill the section), this reserves a stable layout
+        // box up-front so the hero content below doesn't shift on
+        // metadata parse. Intentionally NO inline aspect-ratio style —
+        // that clashes with h-full in Safari and caused weird
+        // letterboxing during ad-hoc testing. Attributes alone are
+        // enough for the CLS-metric hint.
         <video
           className="absolute inset-0 w-full h-full object-cover z-0"
+          width={1920}
+          height={1080}
           autoPlay
           muted
           loop
@@ -39,6 +50,8 @@ export default function Hero({
         <img
           src={poster}
           alt=""
+          width={1920}
+          height={1080}
           className="absolute inset-0 w-full h-full object-cover z-0"
         />
       )}

@@ -5,6 +5,15 @@
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: interest-cohort=()
+  # HSTS — force HTTPS for a year, apply to subdomains. Fixes the SEO
+  # audit HSTS failure. `preload` marker is intentionally OMITTED: it
+  # only activates if the domain is submitted to hstspreload.org, and
+  # that submission is effectively irreversible (Chrome hard-codes the
+  # rule for years). Casey should submit deliberately if he wants that
+  # protection, not through a header commit. Verified before shipping:
+  # www, media, and mm subdomains all serve over HTTPS, so
+  # includeSubDomains will not lock anything out today.
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
@@ -17,3 +26,10 @@
 
 /*.png
   Cache-Control: public, max-age=604800
+
+# Force text/plain on ads.txt — Cloudflare Pages sometimes serves
+# .txt via the SPA fallback with text/html, which fails ads.txt
+# validation (the file itself only says "no ads served").
+/ads.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=86400

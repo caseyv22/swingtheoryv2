@@ -157,22 +157,17 @@ export default function MembershipCheckout() {
               Your {plan.name} membership is active. A confirmation is on its way to your email,
               and a team member will follow up to get you set up on your first visit.
             </p>
-            {/* Two CTAs: Sync is primary (they just paid — the natural
-                next action is to see their new account), Plan your first
-                visit is secondary for members who want directions. */}
-            <div className="flex flex-wrap gap-3 justify-center">
-              <a
-                href={site.syncUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-dk"
-              >
-                Sign in to Sync
-              </a>
-              <Button to="/visit" variant="ghost-gold">
-                Plan your first visit
-              </Button>
-            </div>
+            {/* Book a bay is the highest-intent next action after
+                joining — they want to actually USE the membership.
+                Directions/hours are on /visit if they need it, but
+                that's a low-value CTA for a returning-visit-required
+                member. Click auto-tracks via Button's autoLabelFor
+                helper (matches site.bookingUrl → "book_a_bay"), so
+                admin analytics captures post-signup booking clicks
+                broken down by path. */}
+            <Button href={site.bookingUrl} external variant="dk">
+              Book a bay
+            </Button>
           </div>
         </div>
       </section>

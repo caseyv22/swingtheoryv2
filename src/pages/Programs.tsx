@@ -27,8 +27,15 @@ export default function Programs() {
         sub="Weekly leagues, junior lessons, and seasonal series built around real coaching and real launch monitor data, all indoors, seven days a week."
         ctas={
           <>
-            <Button to="/programs/league-night" variant="gold">
-              League Night
+            {/* Primary CTA is Sync sign-in for returning program
+                members — highest-value action for this page's likely
+                repeat visitors. Mini Mulligans stays as the secondary
+                CTA because it's the highest-intent NEW-user signup on
+                this page (junior program has active demand). Removed
+                the "League Night" CTA — its detail is one card down
+                the page and doesn't need a hero button. */}
+            <Button href={site.syncUrl} external variant="gold">
+              Sign In
             </Button>
             <Button to="/programs/mini-mulligans" variant="ghost">
               Mini Mulligans

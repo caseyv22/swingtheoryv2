@@ -35,6 +35,18 @@ export default function Nav() {
           >
             {site.phone.display}
           </a>
+          {/* Member portal — Sync app, hosted separately on the sync
+              subdomain. Intentionally a small text link, not a button:
+              it's a returning-user surface, must NOT compete with the
+              primary "Book a bay" CTA for first-time visitors. */}
+          <a
+            href={site.syncUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#e8e5da] font-disp font-semibold text-[14px] hover:text-gold transition"
+          >
+            Sign in
+          </a>
           <Button to="/book" variant="gold">
             Book a bay
           </Button>
@@ -66,6 +78,15 @@ export default function Nav() {
               className="font-disp text-[#e8e5da]"
             >
               {site.phone.display}
+            </a>
+            <a
+              href={site.syncUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="font-disp text-[#e8e5da] hover:text-gold"
+            >
+              Sign in
             </a>
             <Button to="/book" variant="gold" className="self-start">
               Book a bay

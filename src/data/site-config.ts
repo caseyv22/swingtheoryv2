@@ -53,6 +53,12 @@ export const site = {
   },
   bookingUrl:
     "https://booking.registrygolf.com/?organizationId=639ff740-1b51-4959-99af-19ac2d069609",
+  // Sync = member portal for program bookings (STGL, Mini Mulligans,
+  // Summer Women's/Seniors). Hosted separately on its own subdomain.
+  // Kept out of the main nav's primary CTAs — it's a returning-user
+  // link, not a marketing surface. Externally hosted, so always
+  // render with target="_blank".
+  syncUrl: "https://sync.swingtheory.golf",
   // Google Maps "Share → Embed a map" URL for the Swing Theory Business
   // Profile. The `?pb=...` blob encodes the canonical place entity so
   // Google renders the actual business card (photo, rating, hours) inside

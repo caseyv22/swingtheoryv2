@@ -8,6 +8,12 @@ type Props = {
   submitLabel: string;
   successMessage: string;
   children: ReactNode;
+  // Optional slot rendered below successMessage on the success card.
+  // Used for program-related forms to surface a "Sign in to Sync" CTA
+  // once enrollment is confirmed — highest-intent moment for the member
+  // portal. Non-program forms (contact, events, generic interest) omit
+  // this and the success card stays clean.
+  successExtra?: ReactNode;
 };
 
 // Shared shell, handles submit state, success card, and error banner.
@@ -18,12 +24,14 @@ export default function FormShell({
   submitLabel,
   successMessage,
   children,
+  successExtra,
 }: Props) {
   if (status === "success") {
     return (
       <div className="rounded-2xl border border-green-700/20 bg-green-700/5 p-8 text-center">
         <div className="font-disp text-2xl text-green-700 mb-2">Thanks, got it.</div>
         <p className="text-muted">{successMessage}</p>
+        {successExtra && <div className="mt-6">{successExtra}</div>}
       </div>
     );
   }

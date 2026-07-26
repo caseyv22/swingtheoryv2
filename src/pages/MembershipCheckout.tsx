@@ -157,9 +157,22 @@ export default function MembershipCheckout() {
               Your {plan.name} membership is active. A confirmation is on its way to your email,
               and a team member will follow up to get you set up on your first visit.
             </p>
-            <Button to="/visit" variant="dk">
-              Plan your first visit
-            </Button>
+            {/* Two CTAs: Sync is primary (they just paid — the natural
+                next action is to see their new account), Plan your first
+                visit is secondary for members who want directions. */}
+            <div className="flex flex-wrap gap-3 justify-center">
+              <a
+                href={site.syncUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-dk"
+              >
+                Sign in to Sync
+              </a>
+              <Button to="/visit" variant="ghost-gold">
+                Plan your first visit
+              </Button>
+            </div>
           </div>
         </div>
       </section>

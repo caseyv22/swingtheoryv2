@@ -102,9 +102,25 @@ export default function ProgramCheckout() {
               Your spot in {program.name} is confirmed. A confirmation is on its way to your
               email, and a team member will follow up with schedule and next steps.
             </p>
-            <Button to="/visit" variant="dk">
-              Plan your first visit
-            </Button>
+            {/* Two CTAs: Sync is primary (they need it to see their
+                program schedule/sessions), Plan your first visit is
+                secondary for new members. Applies to every program
+                signup including Mini Mulligans (waitlist form is
+                separate and intentionally does NOT get this CTA
+                — those users aren't enrolled yet). */}
+            <div className="flex flex-wrap gap-3 justify-center">
+              <a
+                href={site.syncUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-dk"
+              >
+                Sign in to Sync
+              </a>
+              <Button to="/visit" variant="ghost-gold">
+                Plan your first visit
+              </Button>
+            </div>
           </div>
         </div>
       </section>

@@ -29,12 +29,6 @@ export default function Nav() {
           ))}
         </nav>
         <div className="hidden md:flex items-center gap-4">
-          <a
-            href={`tel:${site.phone.tel}`}
-            className="text-[#e8e5da] font-disp font-semibold text-[14px]"
-          >
-            {site.phone.display}
-          </a>
           {/* Member portal — Sync app, hosted separately on the sync
               subdomain. Intentionally a small text link, not a button:
               it's a returning-user surface, must NOT compete with the
@@ -73,12 +67,6 @@ export default function Nav() {
                 {item.label}
               </NavLink>
             ))}
-            <a
-              href={`tel:${site.phone.tel}`}
-              className="font-disp text-[#e8e5da]"
-            >
-              {site.phone.display}
-            </a>
             <a
               href={site.syncUrl}
               target="_blank"

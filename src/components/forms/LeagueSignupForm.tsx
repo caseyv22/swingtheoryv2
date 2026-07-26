@@ -3,7 +3,6 @@ import FormShell from "./FormShell";
 import { TextInput, TextArea, Select, Honeypot } from "./FormField";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { leagueSignupSchema } from "@/lib/validation";
-import { site } from "@/data/site-config";
 
 export default function LeagueSignupForm() {
   const { status, error, submit } = useFormSubmit<Record<string, unknown>>(
@@ -32,16 +31,6 @@ export default function LeagueSignupForm() {
       error={error}
       submitLabel="Sign up for the league"
       successMessage="You're on the list. We'll email league details before the next season kicks off."
-      successExtra={
-        <a
-          href={site.syncUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-dk inline-flex"
-        >
-          Sign in to Sync
-        </a>
-      }
     >
       <Honeypot />
       <div className="grid md:grid-cols-2 gap-4">

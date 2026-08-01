@@ -96,14 +96,18 @@ export default function MiniMulligansWaitlistForm() {
 
   return (
     <>
-      {state && (
-        <p className="text-sm text-muted mb-4">
-          <span className="font-semibold text-green-700">
-            {state.remaining} of {state.capacity}
-          </span>{" "}
-          early-access spots left.
-        </p>
-      )}
+      {/* Fixed urgency copy rather than a live count. A real number cuts
+          both ways: "2 of 18 left" pressures, but "15 of 18 left" reads as
+          nobody wants this, and the number moves in the wrong direction
+          early in a launch. The deadline does the work instead. Update the
+          date here when registration is extended — it is intentionally not
+          derived from the capacity state below. */}
+      <p className="text-sm text-muted mb-4">
+        <span className="font-semibold text-green-700">
+          Only limited slots left.
+        </span>{" "}
+        Book your spot now before it's gone! Registration ends 8/3
+      </p>
       <FormShell
         onSubmit={onSubmit}
         status={status}

@@ -1,6 +1,26 @@
 import type { Env } from "./db";
 import { escapeHtml } from "./http";
 
+// Display name shown in the inbox sender column. Without this, Gmail and
+// friends render the local part of the address — customers were seeing a
+// message from "noreply", which looks like a system alert rather than the
+// business they just paid.
+//
+// CONTACT_FROM_EMAIL stays a bare address in wrangler.toml because
+// weekly-analytics-email.ts wraps it with its own name ("Swing Theory
+// Analytics <...>"). Formatting here rather than in the env var keeps both
+// senders working off one address.
+const FROM_NAME = "Swing Theory Indoor Golf";
+
+function formatFrom(env: Env): string {
+  const raw = (env.CONTACT_FROM_EMAIL || "").trim();
+  if (!raw) return FROM_NAME;
+  // Already "Name <addr>" — respect it rather than double-wrapping, which
+  // Resend rejects outright.
+  if (raw.includes("<")) return raw;
+  return `${FROM_NAME} <${raw}>`;
+}
+
 export async function sendEmail(args: {
   env: Env;
   subject: string;
@@ -20,7 +40,7 @@ export async function sendEmail(args: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: env.CONTACT_FROM_EMAIL,
+      from: formatFrom(env),
       to: [to || env.CONTACT_TO_EMAIL],
       reply_to: replyTo ? [replyTo] : undefined,
       subject,

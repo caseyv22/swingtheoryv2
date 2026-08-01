@@ -83,7 +83,7 @@ function toForm(row: ProgramRow): FormState {
     cta_target: row.cta_target,
     // Preserve the row's published value; hardcoding true here would
     // silently re-publish any unpublished program on save.
-    published: Boolean((row as unknown as { published: unknown }).published),
+    published: Boolean(row.published),
     sort_order: row.sort_order,
     date_range: row.date_range,
     time_range: row.time_range,
@@ -158,6 +158,29 @@ export default function AdminPrograms() {
 
   const { confirm, dialog } = useConfirm();
 
+  // Flip a program between Active and Inactive without opening the drawer.
+  // Seasonal programs get switched on and off repeatedly, and making that a
+  // full edit-save round trip invites the stale-snapshot clobbering the Edit
+  // button guards against below.
+  //
+  // Deliberately a PARTIAL patch: the API only writes fields present in the
+  // body, so this touches `published` and nothing else. Even if the cached
+  // list row is stale, no other column can be overwritten by this call.
+  async function toggleActive(row: ProgramRow) {
+    setSaveError(null);
+    try {
+      await api.patch(`/api/admin/programs/${row.id}`, { published: !row.published });
+      invalidateCache("/api/admin/programs");
+      // Public list is edge-cached for 2 min (see functions/api/public/
+      // programs.ts) — the admin view updates instantly, the live site can
+      // lag by up to that long.
+      invalidateCache("/api/public/programs");
+      reload();
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Could not change status");
+    }
+  }
+
   async function remove(id: number) {
     if (!(await confirm("Delete this program?"))) return;
     await api.delete(`/api/admin/programs/${id}`);
@@ -205,7 +228,11 @@ export default function AdminPrograms() {
                 <Td className="font-mono text-xs">/programs/{row.slug}</Td>
                 <Td>{row.sort_order}</Td>
                 <Td>
-                  <Badge tone="success">Published</Badge>
+                  {row.published ? (
+                    <Badge tone="success">Active</Badge>
+                  ) : (
+                    <Badge tone="warn">Inactive</Badge>
+                  )}
                 </Td>
                 <Td>
                   <div className="flex gap-2">
@@ -238,6 +265,9 @@ export default function AdminPrograms() {
                       }}
                     >
                       Edit
+                    </Button>
+                    <Button variant="ghost" onClick={() => toggleActive(row)}>
+                      {row.published ? "Deactivate" : "Activate"}
                     </Button>
                     <Button variant="danger" onClick={() => remove(row.id)}>
                       Delete
@@ -398,7 +428,7 @@ export default function AdminPrograms() {
             onStatusChange={setUploadStatus}
           />
         </Field>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <Field label="CTA label">
             <Input
               value={drawer.form.cta_label}
@@ -421,6 +451,24 @@ export default function AdminPrograms() {
               <option value="interest">Interest form</option>
               <option value="league">League signup</option>
               <option value="checkout">Direct checkout (Square)</option>
+            </select>
+          </Field>
+          <Field
+            label="Status"
+            hint="Inactive hides it from /programs and blocks its checkout."
+          >
+            <select
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-ink focus:outline-none focus:border-green-700"
+              value={drawer.form.published ? "active" : "inactive"}
+              onChange={(e) =>
+                setDrawer((d) => ({
+                  ...d,
+                  form: { ...d.form, published: e.target.value === "active" },
+                }))
+              }
+            >
+              <option value="active">Active — shown on the website</option>
+              <option value="inactive">Inactive — hidden</option>
             </select>
           </Field>
           <Field label="Sort order">

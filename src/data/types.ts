@@ -25,6 +25,15 @@ export type ProgramRow = {
   // mistake, see functions/api/program-checkout.ts.
   square_catalog_id: string;
   checkout_mode: "none" | "one_time" | "subscription";
+  // Active/Inactive flag, admin-controlled. Optional because the PUBLIC
+  // endpoint (functions/api/public/programs.ts) never selects it — it
+  // already filters WHERE published = 1, so anything the website receives
+  // is active by definition. Only the admin list carries it.
+  //
+  // Typed as number too because D1 has no boolean: SELECT * hands back
+  // 0 or 1. Both are correctly falsy/truthy, so read it with Boolean() or
+  // a plain truthiness check rather than === true.
+  published?: boolean | number;
 };
 
 export type CoachRow = {

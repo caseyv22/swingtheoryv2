@@ -105,7 +105,23 @@ export const membershipPlans: MembershipPlan[] = [
       "Exclusive Member Hours",
       "Merchandise discounts",
     ],
-    ctaLabel: "Request membership info",
-    ctaTarget: "interest",
+    ctaLabel: "Become a member",
+    ctaTarget: "checkout",
+    // Production: "Green Jacket Group" subscription plan variation, created
+    // 2026-08-01. Same shape as Solo above — a single MONTHLY phase with
+    // RELATIVE pricing that pulls $349/mo from the linked "Green Jacket
+    // Group 2026" item, so a price change is a Square Dashboard edit on the
+    // item variation, no deploy needed.
+    squarePlanVariationId: "53TFSVLHTPC5MU4W5VIZASDM",
+    // Parent Square catalog item id. Powers the live Order Summary
+    // description via functions/api/membership-description.ts, same as Solo.
+    squareItemId: "34WV3C3DW5T6UPHEJXTOC7YO",
+    // No squarePromoPlanVariationId on purpose — the 50%-first-month promo
+    // is Solo-only. Leaving this unset means flipping
+    // MEMBERSHIP_PROMO_ENABLED on can never discount this plan.
+    //
+    // Billing note: Square charges this as ONE subscription against one
+    // customer + one card. The plan has no concept of the second member;
+    // granting that person access is handled outside Square.
   },
 ];

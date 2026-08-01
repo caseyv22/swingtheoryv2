@@ -65,8 +65,9 @@ export default function MembershipCheckout() {
 
   // Only offer the promo copy when BOTH the flag is on AND this plan has a
   // promo variation configured in memberships.ts. Prevents advertising a
-  // promo on plans (e.g. Green Jacket Group) that haven't been set up in
-  // Square yet.
+  // promo on plans that have no promo variation in Square — Green Jacket
+  // Group is checkout-enabled but intentionally has none, so it stays at
+  // full price even when the flag is on.
   const promoActive = PROMO_ENABLED && !!plan?.squarePromoPlanVariationId;
 
   // Live Square item description for the Order Summary. Fetched from

@@ -6,8 +6,13 @@ export async function sendEmail(args: {
   subject: string;
   html: string;
   replyTo?: string;
+  // Recipient override. Defaults to CONTACT_TO_EMAIL (staff) so every
+  // pre-existing call site keeps its exact behaviour. Customer-facing
+  // confirmations pass the submitter's address here — go through
+  // sendConfirmation() below rather than calling this directly.
+  to?: string;
 }) {
-  const { env, subject, html, replyTo } = args;
+  const { env, subject, html, replyTo, to } = args;
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -16,7 +21,7 @@ export async function sendEmail(args: {
     },
     body: JSON.stringify({
       from: env.CONTACT_FROM_EMAIL,
-      to: [env.CONTACT_TO_EMAIL],
+      to: [to || env.CONTACT_TO_EMAIL],
       reply_to: replyTo ? [replyTo] : undefined,
       subject,
       html,
@@ -24,6 +29,44 @@ export async function sendEmail(args: {
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
   return res.json();
+}
+
+/**
+ * Customer-facing confirmation. Deliberately different from sendEmail():
+ *
+ *  1. NEVER THROWS. By the time a confirmation is sent the submission has
+ *     already succeeded — the row is in D1, the card is charged. A Resend
+ *     outage must not surface to the customer as a failed signup, so this
+ *     swallows and logs instead of propagating.
+ *  2. reply_to is CONTACT_TO_EMAIL, not noreply. Mail goes out from
+ *     CONTACT_FROM_EMAIL (noreply@), and several of these templates
+ *     explicitly invite a reply ("reply with your second member's name").
+ *     Without this, those replies vanish.
+ *
+ * Returns true/false so callers can record the outcome in their staff
+ * notification without branching on exceptions.
+ */
+export async function sendConfirmation(args: {
+  env: Env;
+  to: string;
+  subject: string;
+  html: string;
+}): Promise<boolean> {
+  try {
+    await sendEmail({
+      env: args.env,
+      to: args.to,
+      subject: args.subject,
+      html: args.html,
+      replyTo: args.env.CONTACT_TO_EMAIL,
+    });
+    return true;
+  } catch (e) {
+    console.error(
+      `[confirmation] send failed: ${e instanceof Error ? e.message : String(e)}`,
+    );
+    return false;
+  }
 }
 
 export function renderKv(pairs: Record<string, unknown>): string {

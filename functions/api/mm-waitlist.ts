@@ -1,5 +1,6 @@
 import { json, readJson } from "../lib/http";
-import { sendEmail, renderKv, wrapBrandedEmail } from "../lib/email";
+import { sendEmail, sendConfirmation, renderKv, wrapBrandedEmail } from "../lib/email";
+import { mmWaitlistConfirmation, mmWaitlistAlreadyOnList } from "../lib/confirmations";
 import { logSubmission } from "../lib/submissions";
 import { miniMulligansWaitlistSchema } from "../../src/lib/validation";
 import type { Env } from "../lib/db";
@@ -53,7 +54,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
 //   2. Capacity — reject with 409 when count >= 18
 //   3. Uniqueness — UNIQUE(email) at DB level; race-safe fallback for
 //      concurrent inserts.
-// Emails staff and confirms to signer on success. Never returns 500
+// Emails staff AND sends the signer a confirmation. Never returns 500
 // unless something is genuinely broken.
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const body = await readJson(request);
@@ -107,7 +108,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     if (msg.includes("unique")) {
       // Repeat submission from the same email. Treat as success so the
       // signer sees a friendly state rather than an error — they're
-      // already on the list.
+      // already on the list. Re-send the "you're already on it" note so a
+      // second signup still produces an email — silence here reads as the
+      // form having failed, which is what made them resubmit.
+      await sendConfirmation({
+        env,
+        to: email,
+        ...mmWaitlistAlreadyOnList({ kidName: data.kidName }),
+      });
       return json({
         ok: true,
         alreadyOnList: true,
@@ -141,6 +149,24 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   } catch {
     // swallow, see comment above
   }
+
+  // Parent-facing confirmation. Same best-effort contract as the staff
+  // notification above: the row is already committed, so a send failure
+  // must not surface to the parent.
+  //
+  // Note we deliberately do NOT include the "#n of 18" position here. It's
+  // in the staff email because it's operationally useful, but telling a
+  // parent they're 17th of 18 reads as bad news, and telling them they're
+  // 2nd of 18 reads as "nobody wants this."
+  await sendConfirmation({
+    env,
+    to: email,
+    ...mmWaitlistConfirmation({
+      name: data.name,
+      kidName: data.kidName,
+      kidAge,
+    }),
+  });
 
   // Log to the shared submissions table so admin's existing Submissions
   // page surfaces waitlist signups too, no new admin route needed.

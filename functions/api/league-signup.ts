@@ -1,5 +1,6 @@
 import { json, readJson } from "../lib/http";
-import { sendEmail, renderKv, verifyTurnstile, wrapBrandedEmail } from "../lib/email";
+import { sendEmail, sendConfirmation, renderKv, verifyTurnstile, wrapBrandedEmail } from "../lib/email";
+import { leagueConfirmation } from "../lib/confirmations";
 import { logSubmission } from "../lib/submissions";
 import { leagueSignupSchema } from "../../src/lib/validation";
 import type { Env } from "../lib/db";
@@ -29,6 +30,19 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   } catch {
     return json({ error: "Send failed." }, 500);
   }
+
+  // Customer-facing confirmation. Best-effort by design: the staff email and
+  // the D1 log above are what actually matter, and the visitor has already
+  // seen a success state, so a Resend hiccup here must never turn a good
+  // submission into an error. sendConfirmation swallows and logs.
+  //
+  // Safe to send unconditionally at this point — the honeypot short-circuits
+  // above and Turnstile has passed, so `data.email` is a human-supplied
+  // address that cleared validation. Sending before those guards would turn
+  // this endpoint into an open mail relay.
+  const confirmation = leagueConfirmation(data);
+  await sendConfirmation({ env, to: data.email, ...confirmation });
+
   await logSubmission({
     env,
     formType: "league",

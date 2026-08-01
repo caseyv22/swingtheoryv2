@@ -1,5 +1,6 @@
 import { json, readJson } from "../lib/http";
-import { sendEmail, renderKv, wrapBrandedEmail } from "../lib/email";
+import { sendEmail, sendConfirmation, renderKv, wrapBrandedEmail } from "../lib/email";
+import { membershipConfirmation } from "../lib/confirmations";
 import { logSubmission } from "../lib/submissions";
 import { membershipCheckoutSchema } from "../../src/lib/validation";
 import { membershipPlans } from "../../src/data/memberships";
@@ -90,6 +91,29 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     } catch {
       // swallow, see comment above
     }
+
+    // New member's welcome email. This is the only thing the member gets
+    // from us — Square sends a payment receipt, but that's a transaction
+    // record, not a welcome. Best-effort: the subscription is already live
+    // and the card already charged, so a send failure must not fail the
+    // checkout.
+    //
+    // Perks come off the plan row so this email and the pricing card can
+    // never drift. isGroup drives the second-member block, which is the
+    // only place in the product that explains how to activate the second
+    // half of a Group plan — Square bills it as one subscription against
+    // one card and has no concept of the second person.
+    await sendConfirmation({
+      env,
+      to: data.email,
+      ...membershipConfirmation({
+        firstName: data.firstName,
+        planName: plan.name,
+        priceLabel: `${plan.priceLabel}${plan.priceSub ?? ""}`,
+        perks: plan.perks,
+        isGroup: plan.slug === "green-jacket-group",
+      }),
+    });
 
     await logSubmission({
       env,

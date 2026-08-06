@@ -2,6 +2,7 @@ import { json, readJson } from "../lib/http";
 import { sendEmail, sendConfirmation, renderKv, wrapBrandedEmail } from "../lib/email";
 import { mmWaitlistConfirmation, mmWaitlistAlreadyOnList } from "../lib/confirmations";
 import { logSubmission } from "../lib/submissions";
+import { findOrCreateCustomer, createCardOnFile, SquareApiError } from "../lib/square";
 import { miniMulligansWaitlistSchema } from "../../src/lib/validation";
 import type { Env } from "../lib/db";
 
@@ -89,11 +90,67 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   const ip = request.headers.get("cf-connecting-ip");
 
+  // Pre-check for an existing reservation by email BEFORE creating a Square
+  // card. Without this, a repeat submit would tokenize and save a second
+  // card on the customer and only then hit the UNIQUE(email) conflict,
+  // orphaning that card. If they're already reserved, just re-send the
+  // friendly note and stop.
+  const already = await env.DB.prepare(
+    "SELECT id FROM mini_mulligans_waitlist WHERE email = ?",
+  )
+    .bind(email)
+    .first<{ id: number }>();
+  if (already) {
+    await sendConfirmation({
+      env,
+      to: email,
+      ...mmWaitlistAlreadyOnList({ kidName: data.kidName }),
+    });
+    return json({ ok: true, alreadyOnList: true });
+  }
+
+  // Card on file. Required now: the reservation saves a card ($0 charged)
+  // so an admin can later activate the $400/mo subscription without the
+  // parent re-entering payment. A card failure here fails the reservation
+  // (unlike the best-effort emails below) — we never want a "reserved" row
+  // with no way to bill it. The parent form has a single "name" field;
+  // split it so Square gets a tidy given/family name.
+  const nameParts = data.name.trim().split(/\s+/);
+  const firstName = nameParts[0] || data.name;
+  const lastName = nameParts.slice(1).join(" ");
+  let squareCustomerId: string;
+  let squareCardId: string;
+  try {
+    squareCustomerId = await findOrCreateCustomer(env, {
+      firstName,
+      lastName,
+      email: data.email,
+      phone: data.phone || undefined,
+    });
+    squareCardId = await createCardOnFile(env, {
+      customerId: squareCustomerId,
+      sourceId: data.sourceId,
+      cardholderName: data.name,
+    });
+  } catch (e) {
+    if (e instanceof SquareApiError) {
+      return json({ error: e.message }, e.status >= 500 ? 502 : e.status);
+    }
+    console.error(
+      `[mm-waitlist] card on file failed: ${String((e as Error)?.message || e)}`,
+    );
+    return json(
+      { error: "We couldn't save your card. Please check your details and try again." },
+      400,
+    );
+  }
+
   try {
     await env.DB.prepare(
       `INSERT INTO mini_mulligans_waitlist
-        (parent_name, email, kid_name, kid_age, phone)
-       VALUES (?, ?, ?, ?, ?)`,
+        (parent_name, email, kid_name, kid_age, phone,
+         square_customer_id, square_card_id, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 'reserved')`,
     )
       .bind(
         data.name,
@@ -101,25 +158,22 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         data.kidName,
         kidAge,
         data.phone || null,
+        squareCustomerId,
+        squareCardId,
       )
       .run();
   } catch (e) {
     const msg = String((e as Error)?.message || e).toLowerCase();
     if (msg.includes("unique")) {
-      // Repeat submission from the same email. Treat as success so the
-      // signer sees a friendly state rather than an error — they're
-      // already on the list. Re-send the "you're already on it" note so a
-      // second signup still produces an email — silence here reads as the
-      // form having failed, which is what made them resubmit.
+      // Race: someone reserved this email between our pre-check and this
+      // insert. The card we just saved is a harmless orphan on the Square
+      // customer. Send the friendly "already reserved" note.
       await sendConfirmation({
         env,
         to: email,
         ...mmWaitlistAlreadyOnList({ kidName: data.kidName }),
       });
-      return json({
-        ok: true,
-        alreadyOnList: true,
-      });
+      return json({ ok: true, alreadyOnList: true });
     }
     // Anything else is a real DB error.
     console.error(`[mm-waitlist] insert failed: ${msg}`);

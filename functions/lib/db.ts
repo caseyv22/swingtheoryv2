@@ -15,6 +15,10 @@ export type Env = {
   SQUARE_ACCESS_TOKEN: string;
   SQUARE_LOCATION_ID: string;
   SQUARE_ENV: "sandbox" | "production";
+  // Mini Mulligans subscription plan variation id. Used by the admin
+  // activate endpoint to create the $400/mo subscription from a reserved
+  // parent's card on file. [vars] entry, not a secret.
+  MM_SUBSCRIPTION_PLAN_VARIATION_ID: string;
   // Handoff to mm-api after a successful program checkout. Base URL is a
   // [vars] entry (public origin). The shared secret is set via
   // `wrangler pages secret put INTERNAL_PROVISIONING_SECRET` and must

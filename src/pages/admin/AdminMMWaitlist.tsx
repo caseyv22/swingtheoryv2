@@ -22,6 +22,10 @@ type WaitlistRow = {
   phone: string | null;
   created_at: string;
   position: number;
+  status: string;
+  subscription_id: string | null;
+  activated_at: string | null;
+  hasCard: boolean;
 };
 
 type WaitlistResponse = {
@@ -45,6 +49,35 @@ export default function AdminMMWaitlist() {
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [activatingId, setActivatingId] = useState<number | null>(null);
+
+  // Activate a reserved parent on the $400/mo plan. This creates the Square
+  // subscription and charges the card on file NOW, so it's gated behind an
+  // explicit confirm that spells out the charge.
+  async function activateRow(row: WaitlistRow) {
+    setActionError(null);
+    if (
+      !(await confirm(
+        `Activate ${row.parent_name} (${row.kid_name}) on the $400/month plan? This creates the Square subscription and charges their card on file $400 now.`,
+      ))
+    )
+      return;
+    setActivatingId(row.id);
+    try {
+      await api.post(`/api/admin/mm-waitlist/${row.id}`, {});
+      invalidateCache("/api/admin/mm-waitlist");
+      reload();
+    } catch (err) {
+      setActionError(
+        err instanceof Error
+          ? `Couldn't activate ${row.parent_name}: ${err.message}`
+          : "Activation failed.",
+      );
+    } finally {
+      setActivatingId(null);
+    }
+  }
 
   async function removeRow(row: WaitlistRow) {
     if (
@@ -164,6 +197,12 @@ export default function AdminMMWaitlist() {
         </Card>
       )}
 
+      {actionError && (
+        <div className="mb-4 text-sm text-red-700 border border-red-200 bg-red-50 rounded-lg p-3">
+          {actionError}
+        </div>
+      )}
+
       {loading && <p className="text-muted">Loading…</p>}
       {data && (
         <Table>
@@ -173,6 +212,7 @@ export default function AdminMMWaitlist() {
               <Th>Parent</Th>
               <Th>Child</Th>
               <Th>Contact</Th>
+              <Th>Status</Th>
               <Th>Signed up</Th>
               <Th></Th>
             </tr>
@@ -194,11 +234,30 @@ export default function AdminMMWaitlist() {
                   <div className="text-ink">{row.email}</div>
                   {row.phone && <div className="text-muted text-xs">{row.phone}</div>}
                 </Td>
+                <Td>
+                  {row.status === "activated" ? (
+                    <Badge tone="success">Activated</Badge>
+                  ) : (
+                    <Badge tone={row.hasCard ? "info" : "warn"}>
+                      {row.hasCard ? "Reserved" : "No card"}
+                    </Badge>
+                  )}
+                </Td>
                 <Td className="text-xs text-muted whitespace-nowrap">{row.created_at}</Td>
                 <Td>
-                  <Button variant="danger" onClick={() => removeRow(row)}>
-                    Remove
-                  </Button>
+                  <div className="flex items-center gap-2 justify-end">
+                    {row.status !== "activated" && row.hasCard && (
+                      <Button
+                        onClick={() => activateRow(row)}
+                        disabled={activatingId === row.id}
+                      >
+                        {activatingId === row.id ? "Activating…" : "Activate $400/mo"}
+                      </Button>
+                    )}
+                    <Button variant="danger" onClick={() => removeRow(row)}>
+                      Remove
+                    </Button>
+                  </div>
                 </Td>
               </tr>
             ))}
@@ -207,6 +266,7 @@ export default function AdminMMWaitlist() {
                 <Td className="text-muted py-8">
                   Nobody on the waitlist yet.
                 </Td>
+                <Td></Td>
                 <Td></Td>
                 <Td></Td>
                 <Td></Td>

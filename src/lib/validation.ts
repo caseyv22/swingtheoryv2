@@ -115,6 +115,11 @@ export const miniMulligansWaitlistSchema = z.object({
     .max(3)
     .regex(/^\d+$/, "Age must be a number"),
   phone,
+  // Square Web Payments card nonce. Required: reservations now put a card
+  // on file at signup ($0 charged) so the $400/mo can be activated later
+  // without the parent re-entering payment. Tokenized in-browser, so the
+  // client omits it from its own parse and appends it after tokenize().
+  sourceId: z.string().trim().min(1, "Card details are required"),
   honeypot,
 });
 

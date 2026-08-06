@@ -43,6 +43,13 @@ ACCESS_AUD = "5d184a78afa8977cd8de9b379effd6bb11844b368b5b300652d4a5b3dbe530d0"
 SQUARE_LOCATION_ID = "LDTYCKQHBQH01"
 SQUARE_ENV = "production"
 
+# Mini Mulligans subscription plan variation (Square catalog). Not secret.
+# Used by the admin "Activate $400/mo" action to create the recurring
+# subscription from a reserved parent's card on file. This is the
+# SUBSCRIPTION_PLAN_VARIATION id, not the plan id. $400/month, billed off
+# the linked "Mini Mulligans" catalog item.
+MM_SUBSCRIPTION_PLAN_VARIATION_ID = "O6XHKIG5VG5TMYOMWC7PDDBL"
+
 # mm-api provisioning handoff. Called by /api/program-checkout after a
 # successful Square payment to create the corresponding user + paid
 # enrollment on the Sync side. Base URL is the mm-api-prod Worker; the

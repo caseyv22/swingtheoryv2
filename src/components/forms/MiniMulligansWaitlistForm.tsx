@@ -2,7 +2,13 @@ import { useEffect, useState, type FormEvent } from "react";
 import FormShell from "./FormShell";
 import { TextInput, Honeypot } from "./FormField";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
+import { useSquareCard } from "@/hooks/useSquareCard";
 import { miniMulligansWaitlistSchema } from "@/lib/validation";
+
+// The card nonce (sourceId) is produced in-browser by Square's SDK, not
+// typed into a field, so the client validates everything EXCEPT sourceId
+// and appends it after tokenize(). Mirrors ProgramCheckout.tsx.
+const clientFieldsSchema = miniMulligansWaitlistSchema.omit({ sourceId: true });
 
 type WaitlistState = {
   count: number;
@@ -24,6 +30,12 @@ export default function MiniMulligansWaitlistForm() {
     "/api/mm-waitlist",
   );
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
+  const [tokenizeError, setTokenizeError] = useState<string | null>(null);
+  const {
+    status: cardStatus,
+    error: cardError,
+    tokenize,
+  } = useSquareCard("mm-card-container");
 
   useEffect(() => {
     let cancelled = false;
@@ -46,8 +58,9 @@ export default function MiniMulligansWaitlistForm() {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setTokenizeError(null);
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    const parsed = miniMulligansWaitlistSchema.safeParse(data);
+    const parsed = clientFieldsSchema.safeParse(data);
     if (!parsed.success) {
       const errs: Record<string, string> = {};
       parsed.error.issues.forEach((i) => (errs[i.path.join(".")] = i.message));
@@ -55,7 +68,21 @@ export default function MiniMulligansWaitlistForm() {
       return;
     }
     setFieldError({});
-    await submit(parsed.data);
+
+    // Tokenize the card in-browser (Square hosts the field in its own
+    // iframe; the card number never touches our state or server). We only
+    // get a one-time nonce back, which the API turns into a card on file.
+    let sourceId: string;
+    try {
+      sourceId = await tokenize();
+    } catch (err) {
+      setTokenizeError(
+        err instanceof Error ? err.message : "Card details couldn't be verified.",
+      );
+      return;
+    }
+
+    await submit({ ...parsed.data, sourceId });
     // If the POST reports full (409), the useFormSubmit hook exposes that
     // as an error, refetch state so the closed-list message replaces the
     // form on the next render.
@@ -161,10 +188,25 @@ export default function MiniMulligansWaitlistForm() {
           />
         </div>
         <TextInput label="Phone (optional)" name="phone" type="tel" error={fieldError.phone} />
-        {/* Square card-on-file field slots in here once payment capture is
-            built. The note below is the reassurance copy that sits directly
-            with it. Do not deploy this copy without the card field above it,
-            or the page describes a card step that does not exist. */}
+        {/* Square Web Payments card element. Square hosts the actual input
+            in its own iframe; we only ever receive a one-time nonce from
+            tokenize(). The reassurance copy sits directly under it. */}
+        <div>
+          <label className="block text-sm font-semibold text-ink mb-1.5">
+            Card to hold your spot
+          </label>
+          <div
+            id="mm-card-container"
+            className="w-full rounded-lg border border-line bg-white px-4 py-3 min-h-[56px]"
+          />
+          {cardStatus === "loading" && (
+            <p className="text-sm text-muted mt-1.5">Loading secure card field…</p>
+          )}
+          {cardError && <p className="text-sm text-red-700 mt-1.5">{cardError}</p>}
+          {tokenizeError && (
+            <p className="text-sm text-red-700 mt-1.5">{tokenizeError}</p>
+          )}
+        </div>
         <p className="text-sm text-muted">
           Your card reserves your spot. You won't be charged today. The
           $400/month only begins if you choose to continue after your free

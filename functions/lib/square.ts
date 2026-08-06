@@ -81,7 +81,10 @@ export async function findOrCreateCustomer(env: Env, input: CustomerInput): Prom
   const created = await squareFetch<{ customer: SquareCustomer }>(env, "/v2/customers", {
     idempotency_key: crypto.randomUUID(),
     given_name: input.firstName,
-    family_name: input.lastName,
+    // Empty string when the caller only has a single "name" field (Mini
+    // Mulligans reservation). Send undefined rather than "" so Square keeps
+    // the customer record clean and doesn't reject an empty family_name.
+    family_name: input.lastName || undefined,
     email_address: input.email,
     phone_number: input.phone || undefined,
   });

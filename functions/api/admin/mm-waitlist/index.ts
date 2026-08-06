@@ -24,15 +24,28 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     kid_age: number;
     phone: string | null;
     created_at: string;
+    square_customer_id: string | null;
+    square_card_id: string | null;
+    status: string;
+    subscription_id: string | null;
+    activated_at: string | null;
   };
   const { results = [] } = await env.DB.prepare(
-    `SELECT id, parent_name, email, kid_name, kid_age, phone, created_at
+    `SELECT id, parent_name, email, kid_name, kid_age, phone, created_at,
+            square_customer_id, square_card_id, status, subscription_id, activated_at
        FROM mini_mulligans_waitlist
       ORDER BY created_at ASC`,
   ).all<Row>();
 
   return json({
-    items: results.map((row, i) => ({ ...row, position: i + 1 })),
+    items: results.map(({ square_customer_id, square_card_id, ...row }, i) => ({
+      ...row,
+      // Never leak the raw Square ids to the browser. The admin table only
+      // needs to know whether a card exists (drives the Activate button).
+      position: i + 1,
+      status: row.status || "reserved",
+      hasCard: Boolean(square_customer_id && square_card_id),
+    })),
     total: results.length,
     capacity: CAPACITY,
     remaining: Math.max(0, CAPACITY - results.length),

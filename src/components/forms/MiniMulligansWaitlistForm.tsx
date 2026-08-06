@@ -106,7 +106,7 @@ export default function MiniMulligansWaitlistForm() {
           and the program pills in the admin panel. */}
       <div className="rounded-2xl border border-line bg-cream/60 p-5 mb-6">
         <p className="font-disp text-green-700 font-semibold mb-2">
-          You're registering for Mini Mulligans
+          What you're signing up for
         </p>
         <ul className="text-sm text-ink/90 space-y-1.5">
           <li>

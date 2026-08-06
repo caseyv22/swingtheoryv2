@@ -163,7 +163,7 @@ export default function ProgramDetail({ program }: Props) {
               <SectionHead
                 kicker="Registration open"
                 title="Sign up for Mini Mulligans."
-                intro="This is a real registration, not a waitlist. Sign up to reserve your child's spot for the Mini Mulligans launch on Tuesday, September 8. The first session is free, sessions run Tuesdays and Thursdays 4:30–6:00 PM, and you'll get a confirmation email with everything you need for launch day."
+                intro="Signing up reserves your child's spot in the program. Fill out the form and you'll get a confirmation email with everything you need for launch day."
               />
               <MiniMulligansWaitlistForm />
             </>

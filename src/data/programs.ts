@@ -47,16 +47,24 @@ export const programs: Program[] = [
     kicker: "Junior program",
     shortDescription:
       "Junior golf lessons for kids ages 6–13 in Pasadena. Small-group indoor coaching twice a week, real coaches, and a low-pressure way to get started. Launches Tuesday, September 8.",
-    longDescription:
-      "Mini Mulligans is our junior golf program for kids ages 6–13 in Old Town Pasadena. Small-group indoor lessons on the simulators give junior golfers real launch monitor data and instant swing feedback, in a fun, low-pressure environment. Sessions run twice a week, Tuesdays and Thursdays. All clubs provided. The program launches Tuesday, September 8, and your child's first session is complimentary.",
+    longDescription: `
+      <p>Mini Mulligans is a structured junior golf program for kids ages 6–13 in Old Town Pasadena. Instead of open-ended lessons, kids move through a clear progression — earning points, leveling up, and unlocking rewards as they improve.</p>
+      <p>Every session rotates through three zones:</p>
+      <ul>
+        <li><strong>Short game</strong> — chipping, pitching, and bunker play, with scoring games around the green.</li>
+        <li><strong>Putting</strong> — green reading, distance control, and pressure putts under game formats.</li>
+        <li><strong>Full swing</strong> — setup, tempo, and contact, with real ball-flight feedback on the simulators.</li>
+      </ul>
+      <p>Every zone ends in a game, so the skills actually stick.</p>
+    `,
     audience: "Kids ages 6–13. All experience levels.",
-    season: "Launches Tuesday, September 8. Sessions run Tuesdays and Thursdays, 4:30–6:00 PM.",
+    season: "Launches Tuesday, September 8 — first session free.",
     keyDetails: [
-      "Twice-weekly small-group coaching, Tuesdays and Thursdays",
+      "Structured progression — kids earn points and level up",
+      "Small-group coaching, all experience levels welcome",
       "All clubs provided (right and left-handed)",
-      "Real launch monitor data on every swing",
-      "Focus on fundamentals, fitness, and fun",
-      "First session on launch day is free",
+      "Real launch monitor feedback on every swing",
+      "Fundamentals, fitness, and fun in every session",
     ],
     ctaLabel: "Sign up for Mini Mulligans",
     image: "/images/home/home-lessons.webp",

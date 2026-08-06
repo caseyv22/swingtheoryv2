@@ -87,7 +87,7 @@ export default function MiniMulligansWaitlistForm() {
           >
             info@swingtheory.golf
           </a>{" "}
-          to get on the list for the next session — we'll reach out the moment a
+          to get on the list for the next session. We'll reach out the moment a
           spot opens up.
         </p>
       </div>
@@ -122,7 +122,7 @@ export default function MiniMulligansWaitlistForm() {
           </li>
           <li>
             <span className="font-semibold">Your first session is free.</span>{" "}
-            $400/month after launch, only if you continue — nothing due today.
+            $400/month after launch, only if you continue. Nothing due today.
           </li>
         </ul>
       </div>
@@ -131,7 +131,7 @@ export default function MiniMulligansWaitlistForm() {
         status={status}
         error={error}
         submitLabel="Sign up for Mini Mulligans"
-        successMessage="You're registered for Mini Mulligans. Check your inbox — we've emailed your confirmation with launch-day details for Tuesday, September 8. We can't wait to see you."
+        successMessage="You're registered for Mini Mulligans. Check your inbox, we've emailed your confirmation with launch-day details for Tuesday, September 8. We can't wait to see you."
       >
         <Honeypot />
         <div className="grid md:grid-cols-2 gap-4">

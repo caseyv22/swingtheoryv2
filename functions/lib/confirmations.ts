@@ -129,7 +129,7 @@ export function leagueConfirmation(d: {
     html: wrapBrandedEmail({
       title: "You’re on the league list.",
       intro:
-        "We’ll email you league details — schedule, format, and team placement — before the next season kicks off.",
+        "We’ll email you league details (schedule, format, and team placement) before the next season kicks off.",
       preheader: "We’ll email league details before the next season kicks off.",
       bodyHtml:
         para("Here’s what we have for you:") +
@@ -157,16 +157,16 @@ export function mmWaitlistConfirmation(d: {
   kidAge: number;
 }): Built {
   return {
-    subject: `${d.kidName} is registered for Mini Mulligans — launch day is Tuesday, Sept 8`,
+    subject: `${d.kidName} is registered for Mini Mulligans. Launch day is Tuesday, Sept 8`,
     html: wrapBrandedEmail({
       title: `${escapeHtml(d.kidName)} is registered for Mini Mulligans.`,
       intro:
-        "You’re all set for launch day. Here’s everything you need for Tuesday, September 8 — your first session is on us.",
-      preheader: "Launch day is Tuesday, September 8 — your first session is free.",
+        "You’re all set for launch day. Here’s everything you need for Tuesday, September 8. Your first session is on us.",
+      preheader: "Launch day is Tuesday, September 8. Your first session is free.",
       bodyHtml:
         sectionHeading("Launch day") +
         para(
-          "<strong>Tuesday, September 8.</strong> Your first session is complimentary — come see if Mini Mulligans is the right fit for your golfer, no cost and no commitment.",
+          "<strong>Tuesday, September 8.</strong> Your first session is complimentary. Come see if Mini Mulligans is the right fit for your golfer, no cost and no commitment.",
         ) +
         sectionHeading("Schedule") +
         para(
@@ -178,7 +178,7 @@ export function mmWaitlistConfirmation(d: {
         ) +
         sectionHeading("After your free session") +
         para(
-          "Mini Mulligans is a monthly program at <strong>$400/month</strong>. Nothing is due today — you’ll only continue if it’s a great fit, and we’ll take care of that together on launch day.",
+          "Mini Mulligans is a monthly program at <strong>$400/month</strong>. Nothing is due today. You’ll only continue if it’s a great fit, and we’ll take care of that together on launch day.",
         ) +
         sectionHeading("Can’t make it?") +
         para(
@@ -205,8 +205,8 @@ export function mmWaitlistAlreadyOnList(d: { kidName: string }): Built {
     html: wrapBrandedEmail({
       title: `${escapeHtml(d.kidName)} is already registered.`,
       intro:
-        "You’re confirmed for launch day — no need to sign up again.",
-      preheader: "Launch day is Tuesday, September 8 — your first session is free.",
+        "You’re confirmed for launch day. No need to sign up again.",
+      preheader: "Launch day is Tuesday, September 8. Your first session is free.",
       bodyHtml:
         para(
           "Mini Mulligans launches <strong>Tuesday, September 8</strong>. Sessions run Tuesdays and Thursdays, 4:30–6:00 PM, and your first session is complimentary. Please show up 10–15 minutes early for check-in and team assignment.",

@@ -121,8 +121,9 @@ export default function MiniMulligansWaitlistForm() {
             <span className="font-semibold">Ages:</span> 6–13
           </li>
           <li>
-            <span className="font-semibold">Your first session is free.</span>{" "}
-            $400/month after launch, only if you continue. Nothing due today.
+            <span className="font-semibold">Your first session is free.</span> We
+            save a card to hold your spot but don't charge it today. $400/month
+            starts only if you continue after launch.
           </li>
         </ul>
       </div>
@@ -160,6 +161,15 @@ export default function MiniMulligansWaitlistForm() {
           />
         </div>
         <TextInput label="Phone (optional)" name="phone" type="tel" error={fieldError.phone} />
+        {/* Square card-on-file field slots in here once payment capture is
+            built. The note below is the reassurance copy that sits directly
+            with it. Do not deploy this copy without the card field above it,
+            or the page describes a card step that does not exist. */}
+        <p className="text-sm text-muted">
+          Your card reserves your spot. You won't be charged today. The
+          $400/month only begins if you choose to continue after your free
+          session on Tuesday, September 8.
+        </p>
       </FormShell>
     </>
   );

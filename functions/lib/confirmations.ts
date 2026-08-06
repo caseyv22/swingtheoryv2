@@ -178,7 +178,7 @@ export function mmWaitlistConfirmation(d: {
         ) +
         sectionHeading("After your free session") +
         para(
-          "Mini Mulligans is a monthly program at <strong>$400/month</strong>. Nothing is due today. You’ll only continue if it’s a great fit, and we’ll take care of that together on launch day.",
+          "Your card is on file, but you won’t be charged today. Mini Mulligans is <strong>$400/month</strong>, and your first payment only happens if you continue after your complimentary launch-day session. We’ll confirm with you before anything is charged.",
         ) +
         sectionHeading("Can’t make it?") +
         para(

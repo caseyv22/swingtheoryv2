@@ -123,37 +123,12 @@ export default function MiniMulligansWaitlistForm() {
 
   return (
     <>
-      {/* "What you're signing up for" recap sits directly above the fields so
-          the registration intent is unmistakable at the point of action —
-          this is the fix for signups who thought the old "early access"
-          button just meant "notify me." No live spot count on purpose: a
-          real number cuts both ways early in a launch, and Casey asked not to
-          display the cap. The date does the urgency work. Keep these details
-          in sync with the confirmation email (functions/lib/confirmations.ts)
-          and the program pills in the admin panel. */}
-      <div className="rounded-2xl border border-line bg-cream/60 p-5 mb-6">
-        <p className="font-disp text-green-700 font-semibold mb-2">
-          What you're signing up for
-        </p>
-        <ul className="text-sm text-ink/90 space-y-1.5">
-          <li>
-            <span className="font-semibold">Launch day:</span> Tuesday,
-            September 8
-          </li>
-          <li>
-            <span className="font-semibold">Schedule:</span> Tuesdays &amp;
-            Thursdays, 4:30–6:00 PM
-          </li>
-          <li>
-            <span className="font-semibold">Ages:</span> 6–13
-          </li>
-          <li>
-            <span className="font-semibold">Your first session is free.</span> We
-            save a card to hold your spot but don't charge it today. $400/month
-            starts only if you continue after launch.
-          </li>
-        </ul>
-      </div>
+      {/* The "what you're signing up for" recap and price now live in the
+          Order Summary panel rendered alongside this form in
+          ProgramDetail.tsx (waitlist branch), matching the other checkout
+          pages. Keep the launch date / schedule / $400 / free-first details
+          in sync across that panel, this form, the confirmation email
+          (functions/lib/confirmations.ts), and the program pills in admin. */}
       <FormShell
         onSubmit={onSubmit}
         status={status}

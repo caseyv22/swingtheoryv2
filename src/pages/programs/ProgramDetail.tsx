@@ -157,15 +157,66 @@ export default function ProgramDetail({ program }: Props) {
       </section>
 
       <section className="py-24 bg-paper" ref={formRef}>
-        <div className="wrap max-w-3xl">
+        <div className={useWaitlist ? "wrap" : "wrap max-w-3xl"}>
           {useWaitlist ? (
             <>
               <SectionHead
                 kicker="Registration open"
                 title="Sign up for Mini Mulligans."
-                intro="Signing up reserves your child's spot in the program. Fill out the form and you'll get a confirmation email with everything you need for launch day."
+                intro="Signing up reserves your child's spot in the program. Your first session on Tuesday, September 8 is free, and we save a card to hold your spot without charging it today."
               />
-              <MiniMulligansWaitlistForm />
+              <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] items-start mt-10">
+                <div className="order-2 md:order-1">
+                  <MiniMulligansWaitlistForm />
+                </div>
+
+                {/* Order Summary, mirrors the checkout pages. The struck-out
+                    $400 to $0 is honest here: a normal subscription would
+                    charge the first $400 today, and we're deferring that
+                    entirely. The "$400/month only if you continue" line
+                    directly under it keeps it from reading as a discount. */}
+                <aside className="order-1 md:order-2 rounded-2xl border border-gold bg-gradient-to-b from-gold/15 to-gold/[0.03] p-8 md:sticky md:top-24">
+                  <h2 className="font-disp text-xl text-green-700 tracking-wide uppercase mb-6">
+                    Order Summary
+                  </h2>
+                  <div className="border-t border-line pt-5">
+                    <span className="kicker">Registering for</span>
+                    <div className="font-disp text-2xl text-green-700 mt-2">
+                      Mini Mulligans
+                    </div>
+                    <p className="text-muted text-sm mt-2 leading-relaxed">
+                      Junior golf, ages 6–13. Launches Tuesday, September 8.
+                      Sessions Tuesdays &amp; Thursdays, 4:30–6:00 PM.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-5 border-t border-line flex items-baseline justify-between gap-3">
+                    <span className="font-disp font-semibold text-sm text-ink uppercase tracking-wide">
+                      Due today
+                    </span>
+                    <span className="flex items-baseline gap-2">
+                      <span className="font-disp text-lg text-muted line-through">
+                        $400
+                      </span>
+                      <span className="font-disp text-[1.8rem] font-extrabold text-gold-dk leading-none">
+                        $0
+                      </span>
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted mt-3 text-right">
+                    Your first session on Sept 8 is free.
+                  </p>
+                  <div className="mt-6 pt-4 border-t border-line">
+                    <p className="text-sm text-ink leading-relaxed">
+                      <span className="font-semibold">$400/month</span> starts
+                      only if you continue after your free session. We save a
+                      card to hold your spot, but nothing is charged today.
+                    </p>
+                  </div>
+                  <p className="text-xs text-muted mt-6 pt-4 border-t border-line">
+                    Questions? Email {site.email} or call {site.phone.display}.
+                  </p>
+                </aside>
+              </div>
             </>
           ) : useLeagueForm ? (
             <>

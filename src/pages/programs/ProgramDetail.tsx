@@ -163,7 +163,7 @@ export default function ProgramDetail({ program }: Props) {
               <SectionHead
                 kicker="Registration open"
                 title="Sign up for Mini Mulligans."
-                intro="Signing up reserves your child's spot in the program. Your first session on Tuesday, September 8 is free, and we save a card to hold your spot without charging it today."
+                intro="Reserve your child's spot for the Mini Mulligans launch on Tuesday, September 8. Your first session is free, and you'll get a confirmation email with everything you need for launch day."
               />
               <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] items-start mt-10">
                 <div className="order-2 md:order-1">
@@ -207,9 +207,8 @@ export default function ProgramDetail({ program }: Props) {
                   </p>
                   <div className="mt-6 pt-4 border-t border-line">
                     <p className="text-sm text-ink leading-relaxed">
-                      <span className="font-semibold">$400/month</span> starts
-                      only if you continue after your free session. We save a
-                      card to hold your spot, but nothing is charged today.
+                      <span className="font-semibold">$400/month</span> begins
+                      only if you continue after your free session.
                     </p>
                   </div>
                   <p className="text-xs text-muted mt-6 pt-4 border-t border-line">

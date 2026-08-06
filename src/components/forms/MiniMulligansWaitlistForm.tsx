@@ -183,9 +183,7 @@ export default function MiniMulligansWaitlistForm() {
           )}
         </div>
         <p className="text-sm text-muted">
-          Your card reserves your spot. You won't be charged today. The
-          $400/month only begins if you choose to continue after your free
-          session on Tuesday, September 8.
+          Your card holds your spot. You won't be charged today.
         </p>
       </FormShell>
     </>

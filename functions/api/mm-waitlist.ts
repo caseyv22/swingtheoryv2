@@ -65,8 +65,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   const email = data.email.trim().toLowerCase();
   const kidAge = parseInt(data.kidAge, 10);
-  if (!Number.isFinite(kidAge) || kidAge < 3 || kidAge > 18) {
-    return json({ error: "Please enter a valid age." }, 400);
+  if (!Number.isFinite(kidAge) || kidAge < 6 || kidAge > 13) {
+    return json({ error: "Mini Mulligans is for ages 6–13. Please enter a valid age." }, 400);
   }
 
   // Capacity gate. Do the read fresh, don't trust the browser's earlier
@@ -131,11 +131,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
     await sendEmail({
       env,
-      subject: `[MM-WAITLIST] ${data.name} · ${data.kidName} (age ${kidAge})`,
+      subject: `[MM-REGISTRATION] ${data.name} · ${data.kidName} (age ${kidAge})`,
       replyTo: data.email,
       html: wrapBrandedEmail({
-        title: "New Mini Mulligans waitlist signup",
-        intro: `${data.name} signed up for Mini Mulligans early access. They are #${current + 1} of ${CAPACITY} on the list.`,
+        title: "New Mini Mulligans registration",
+        intro: `${data.name} registered ${data.kidName} for Mini Mulligans. That's #${current + 1} of ${CAPACITY} spots filled.`,
         bodyHtml: renderKv({
           parent: data.name,
           email: data.email,
@@ -177,7 +177,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       name: data.name,
       email: data.email,
       phone: data.phone || "",
-      message: `Mini Mulligans waitlist: kid=${data.kidName}, age=${kidAge}, position=${current + 1}/${CAPACITY}`,
+      message: `Mini Mulligans registration: kid=${data.kidName}, age=${kidAge}, position=${current + 1}/${CAPACITY}`,
       kidName: data.kidName,
       kidAge,
       position: current + 1,

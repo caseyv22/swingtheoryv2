@@ -205,17 +205,34 @@
   .analyze-topbar a { color:#064029; font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; text-decoration:none; }
   .analyze-topbar a:hover { text-decoration:underline; }
   @media (max-width:480px) { .analyze-topbar { padding:16px 16px 0; } }
+
+  /* GSPro export instructions — collapsible so it doesn't push the
+     upload zone below the fold, but the content is real HTML (not
+     JS-generated) so search engines and AI crawlers can index it. */
+  .howto { max-width:720px; margin:24px auto 40px; padding:0 32px; }
+  .howto details { border:1px solid #e5e2d5; border-radius:12px; background:#fff; overflow:hidden; }
+  .howto summary { padding:18px 22px; cursor:pointer; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#064029; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .howto summary::-webkit-details-marker { display:none; }
+  .howto summary::after { content:"+"; font-size:20px; font-weight:400; color:#064029; transition:transform .15s ease; }
+  .howto details[open] summary::after { content:"−"; }
+  .howto details[open] summary { border-bottom:1px solid #e5e2d5; }
+  .howto-body { padding:8px 26px 26px; }
+  .howto-body h3 { font-size:14px; font-weight:700; color:#064029; margin:22px 0 8px; letter-spacing:.3px; }
+  .howto-body h3:first-child { margin-top:6px; }
+  .howto-body ol { margin:0 0 4px 22px; padding:0; }
+  .howto-body li { font-size:14px; line-height:1.55; color:#2b3a34; margin-bottom:6px; }
+  .howto-body li strong { color:#064029; }
+  .howto-body .note { margin-top:14px; padding:12px 14px; background:#f6f3ea; border-radius:8px; font-size:13px; color:#3d4a44; line-height:1.5; }
+  @media (max-width:480px) { .howto { padding:0 16px; } }
 </style>
 <div class="analyze-topbar">
   <a href="/">&larr; Swing Theory</a>
-  <a href="/lessons">Get a Lesson</a>
 </div>
 <div class="wrap">
   <div id="upload-state">
     <div class="hero">
-      <div class="hero-eyebrow">Powered by AI</div>
       <h1>ANALYZE YOUR<br><span>SWING DATA</span></h1>
-      <p>Upload your GSPro range session export and get personalized coaching insights — charts, stats, and AI-powered improvement tips.</p>
+      <p>Upload your GSPro range session export and get charts, stats, and coaching insights on every shot.</p>
     </div>
     <div class="upload-zone" id="dropZone">
       <input type="file" id="fileInput" accept=".csv" />
@@ -228,6 +245,47 @@
       <p>or click anywhere to browse files</p>
       <div class="upload-btn">Select File</div>
       <div class="upload-hint">GSPro Range Session Export &middot; .CSV format</div>
+    </div>
+
+    <!-- GSPro export walkthrough. Kept collapsed by default so returning
+         users go straight to upload, but the content is server-rendered
+         HTML so it indexes for "how to export GSPro csv" type queries. -->
+    <div class="howto">
+      <details>
+        <summary>How to export your session from GSPro</summary>
+        <div class="howto-body">
+          <h3>1. Open GSPro</h3>
+          <ol>
+            <li>Launch the GSPro app.</li>
+            <li>Confirm your launch monitor is connected and calibrated.</li>
+          </ol>
+
+          <h3>2. Start a Practice Range session</h3>
+          <ol>
+            <li>From the main menu pick <strong>Practice → Practice Range</strong>.</li>
+            <li>Choose <strong>Driving Range</strong> as the practice mode. (This is the only mode we support right now.)</li>
+            <li>Hit shots as normal. Each one is recorded automatically.</li>
+          </ol>
+
+          <h3>3. Export the CSV</h3>
+          <ol>
+            <li>Click the <strong>clipboard icon</strong> in the top-left of the screen to open the shot list.</li>
+            <li>Delete any mishits or accidental swings with the trash icon next to the shot.</li>
+            <li>Click <strong>Export CSV</strong>. The file lands on your desktop.</li>
+          </ol>
+
+          <h3>4. Clean the file (optional)</h3>
+          <ol>
+            <li>Open the CSV in Numbers, Excel, or Google Sheets.</li>
+            <li>Remove any obvious practice-swing rows or unrealistic outliers.</li>
+            <li>Save.</li>
+          </ol>
+
+          <div class="note">
+            <strong>Heads up:</strong> the CSV contains every metric your launch monitor tracked — ball speed, spin, launch, carry, club-face data. That's what powers the analysis on this page.
+          </div>
+        </div>
+      </details>
     </div>
   </div>
 

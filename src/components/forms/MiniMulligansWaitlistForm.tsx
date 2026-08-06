@@ -68,7 +68,7 @@ export default function MiniMulligansWaitlistForm() {
   if (stateLoading) {
     return (
       <div className="rounded-2xl border border-line bg-paper p-8 text-center">
-        <p className="text-muted">Loading waitlist…</p>
+        <p className="text-muted">Loading registration…</p>
       </div>
     );
   }
@@ -77,18 +77,18 @@ export default function MiniMulligansWaitlistForm() {
     return (
       <div className="rounded-2xl border border-green-700/20 bg-green-700/5 p-8 text-center">
         <div className="font-disp text-2xl text-green-700 mb-2">
-          Waitlist is full.
+          This session is full.
         </div>
         <p className="text-muted">
-          All {state.capacity} early-access spots are taken. Email{" "}
+          Every spot for the September 8 launch is taken. Email{" "}
           <a
             href="mailto:info@swingtheory.golf"
             className="text-green-700 underline hover:text-green-800"
           >
             info@swingtheory.golf
           </a>{" "}
-          to be added to the overflow list, we'll reach out if a spot opens up
-          or when we open the next cohort.
+          to get on the list for the next session — we'll reach out the moment a
+          spot opens up.
         </p>
       </div>
     );
@@ -96,24 +96,42 @@ export default function MiniMulligansWaitlistForm() {
 
   return (
     <>
-      {/* Fixed urgency copy rather than a live count. A real number cuts
-          both ways: "2 of 18 left" pressures, but "15 of 18 left" reads as
-          nobody wants this, and the number moves in the wrong direction
-          early in a launch. The deadline does the work instead. Update the
-          date here when registration is extended — it is intentionally not
-          derived from the capacity state below. */}
-      <p className="text-sm text-muted mb-4">
-        <span className="font-semibold text-green-700">
-          Only limited slots left.
-        </span>{" "}
-        Book your spot now before it's gone! Registration ends 8/3
-      </p>
+      {/* "What you're signing up for" recap sits directly above the fields so
+          the registration intent is unmistakable at the point of action —
+          this is the fix for signups who thought the old "early access"
+          button just meant "notify me." No live spot count on purpose: a
+          real number cuts both ways early in a launch, and Casey asked not to
+          display the cap. The date does the urgency work. Keep these details
+          in sync with the confirmation email (functions/lib/confirmations.ts)
+          and the program pills in the admin panel. */}
+      <div className="rounded-2xl border border-line bg-cream/60 p-5 mb-6">
+        <p className="font-disp text-green-700 font-semibold mb-2">
+          You're registering for Mini Mulligans
+        </p>
+        <ul className="text-sm text-ink/90 space-y-1.5">
+          <li>
+            <span className="font-semibold">Launch day:</span> Tuesday,
+            September 8
+          </li>
+          <li>
+            <span className="font-semibold">Schedule:</span> Tuesdays &amp;
+            Thursdays, 4:30–6:00 PM
+          </li>
+          <li>
+            <span className="font-semibold">Ages:</span> 6–13
+          </li>
+          <li>
+            <span className="font-semibold">Your first session is free.</span>{" "}
+            $400/month after launch, only if you continue — nothing due today.
+          </li>
+        </ul>
+      </div>
       <FormShell
         onSubmit={onSubmit}
         status={status}
         error={error}
-        submitLabel="Join the waitlist"
-        successMessage="You're on the Mini Mulligans early-access list. We'll email when we open bookings, first-come first-served."
+        submitLabel="Sign up for Mini Mulligans"
+        successMessage="You're registered for Mini Mulligans. Check your inbox — we've emailed your confirmation with launch-day details for Tuesday, September 8. We can't wait to see you."
       >
         <Honeypot />
         <div className="grid md:grid-cols-2 gap-4">

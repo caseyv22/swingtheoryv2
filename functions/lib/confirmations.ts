@@ -142,49 +142,79 @@ export function leagueConfirmation(d: {
   };
 }
 
-// ─── 5. Mini Mulligans waitlist ─────────────────────────────────────────────
+// ─── 5. Mini Mulligans registration ─────────────────────────────────────────
+// This is a real registration confirmation, not a "we'll be in touch" note.
+// The old early-access version is why signups didn't show: it read as
+// "notify me later." Every logistic a parent needs for launch day lives
+// here — date, schedule, arrive-early, the free-first / opt-in pricing, and
+// the reply-to-cancel ask. Keep these details in sync with the on-page
+// form (MiniMulligansWaitlistForm.tsx). NOTE: no card-on-file language yet —
+// payment capture isn't wired. When Square is added, update the "After your
+// free session" block to reflect the card being on file.
 export function mmWaitlistConfirmation(d: {
   name: string;
   kidName: string;
   kidAge: number;
 }): Built {
   return {
-    subject: `${d.kidName} is on the Mini Mulligans early-access list`,
+    subject: `${d.kidName} is registered for Mini Mulligans — launch day is Tuesday, Sept 8`,
     html: wrapBrandedEmail({
-      title: `${d.kidName} is on the list.`,
+      title: `${escapeHtml(d.kidName)} is registered for Mini Mulligans.`,
       intro:
-        "You’re on the Mini Mulligans early-access list. We’ll email you with more information soon.",
-      preheader: "We’ll email you with further details.",
+        "You’re all set for launch day. Here’s everything you need for Tuesday, September 8 — your first session is on us.",
+      preheader: "Launch day is Tuesday, September 8 — your first session is free.",
       bodyHtml:
-        para("Here’s what we have:") +
+        sectionHeading("Launch day") +
+        para(
+          "<strong>Tuesday, September 8.</strong> Your first session is complimentary — come see if Mini Mulligans is the right fit for your golfer, no cost and no commitment.",
+        ) +
+        sectionHeading("Schedule") +
+        para(
+          "Sessions run <strong>Tuesdays and Thursdays, 4:30–6:00 PM.</strong>",
+        ) +
+        sectionHeading("Before you arrive") +
+        para(
+          "Please show up <strong>10–15 minutes early</strong> for check-in and team assignment.",
+        ) +
+        sectionHeading("After your free session") +
+        para(
+          "Mini Mulligans is a monthly program at <strong>$400/month</strong>. Nothing is due today — you’ll only continue if it’s a great fit, and we’ll take care of that together on launch day.",
+        ) +
+        sectionHeading("Can’t make it?") +
+        para(
+          "Please reply to this email at least a day before so we can offer your spot to another family on our list.",
+          0,
+        ) +
+        `<div style="height:22px"></div>` +
+        para("<strong>We can’t wait to see you.</strong>") +
         renderKv({
           "child’s name": d.kidName,
           age: String(d.kidAge),
           parent: d.name,
-        }) +
-        `<div style="height:18px"></div>` +
-        para(
-          "We are looking forward to starting our Mini Mulligans program. We will reach out soon!",
-          0,
-        ),
+        }),
     }),
   };
 }
 
-// Repeat submission from an address already on the list. The endpoint
+// Repeat submission from an address already registered. The endpoint
 // returns 200 { alreadyOnList: true } rather than an error, so the sender
 // sees a friendly state — this is the matching email.
 export function mmWaitlistAlreadyOnList(d: { kidName: string }): Built {
   return {
-    subject: "You’re already on the Mini Mulligans list",
+    subject: `${d.kidName} is already registered for Mini Mulligans`,
     html: wrapBrandedEmail({
-      title: "You’re already on the list.",
-      intro: `${d.kidName} is on the Mini Mulligans early-access list — no need to sign up again.`,
-      preheader: "We’ll email you with further details.",
-      bodyHtml: para(
-        "We’ll email you when bookings open. If you need to change your child’s details, just reply to this email.",
-        0,
-      ),
+      title: `${escapeHtml(d.kidName)} is already registered.`,
+      intro:
+        "You’re confirmed for launch day — no need to sign up again.",
+      preheader: "Launch day is Tuesday, September 8 — your first session is free.",
+      bodyHtml:
+        para(
+          "Mini Mulligans launches <strong>Tuesday, September 8</strong>. Sessions run Tuesdays and Thursdays, 4:30–6:00 PM, and your first session is complimentary. Please show up 10–15 minutes early for check-in and team assignment.",
+        ) +
+        para(
+          "Need to change your child’s details, or can’t make it? Just reply to this email.",
+        ) +
+        para("<strong>We can’t wait to see you.</strong>", 0),
     }),
   };
 }

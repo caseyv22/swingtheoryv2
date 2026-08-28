@@ -2,17 +2,16 @@ import { json, readJson } from "../lib/http";
 import { sendEmail, sendConfirmation, renderKv, wrapBrandedEmail } from "../lib/email";
 import { mmWaitlistConfirmation, mmWaitlistAlreadyOnList } from "../lib/confirmations";
 import { logSubmission } from "../lib/submissions";
-import { findOrCreateCustomer, createCardOnFile, SquareApiError } from "../lib/square";
+import { getMmCapacity } from "../lib/mm-settings";
 import { miniMulligansWaitlistSchema } from "../../src/lib/validation";
 import type { Env } from "../lib/db";
 
-// Hard cap on total Mini Mulligans early-access signups. Program is a
-// small junior curriculum with limited instructor + bay coverage — 18
-// gets us roughly two full cohorts of 8 with a buffer for expected
-// no-shows / late drop-outs. If we ever change the number, update this
-// AND MiniMulligansWaitlistForm's copy in one commit — the frontend
-// displays the same cap to signers.
-const CAPACITY = 18;
+// Cap on total Mini Mulligans early-access signups is configurable from
+// the admin UI now (functions/lib/mm-settings.ts / migrations/0009), not
+// a hardcoded constant. Program is a small junior curriculum with
+// limited instructor + bay coverage, 18 was the original number (roughly
+// two full cohorts of 8 with a buffer for no-shows), but an admin can
+// raise or lower it at /admin/mm-waitlist without a deploy.
 
 // GET /api/mm-waitlist
 // Public read of the current waitlist state so the form can render either
@@ -25,16 +24,19 @@ const CAPACITY = 18;
 // POST re-checks under a fresh count anyway), a slightly stale count is
 // fine.
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
-  const row = await env.DB.prepare(
-    "SELECT COUNT(*) AS c FROM mini_mulligans_waitlist",
-  ).first<{ c: number }>();
+  const [row, capacity] = await Promise.all([
+    env.DB.prepare("SELECT COUNT(*) AS c FROM mini_mulligans_waitlist").first<{
+      c: number;
+    }>(),
+    getMmCapacity(env),
+  ]);
   const count = row?.c ?? 0;
   return new Response(
     JSON.stringify({
       count,
-      capacity: CAPACITY,
-      remaining: Math.max(0, CAPACITY - count),
-      isFull: count >= CAPACITY,
+      capacity,
+      remaining: Math.max(0, capacity - count),
+      isFull: count >= capacity,
     }),
     {
       status: 200,
@@ -52,7 +54,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
 // POST /api/mm-waitlist
 // Add a parent to the early-access waitlist. Enforces:
 //   1. Zod schema (fields + shapes + honeypot)
-//   2. Capacity — reject with 409 when count >= 18
+//   2. Capacity — reject with 409 when count >= the configurable cap
+//      (functions/lib/mm-settings.ts)
 //   3. Uniqueness — UNIQUE(email) at DB level; race-safe fallback for
 //      concurrent inserts.
 // Emails staff AND sends the signer a confirmation. Never returns 500
@@ -74,11 +77,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   // GET — someone could have submitted between the visitor's page load
   // and their click. If the cap is hit, tell the client with 409 so the
   // form UI can flip to the "full" state.
-  const countRow = await env.DB.prepare(
-    "SELECT COUNT(*) AS c FROM mini_mulligans_waitlist",
-  ).first<{ c: number }>();
+  const [countRow, capacity] = await Promise.all([
+    env.DB.prepare("SELECT COUNT(*) AS c FROM mini_mulligans_waitlist").first<{
+      c: number;
+    }>(),
+    getMmCapacity(env),
+  ]);
   const current = countRow?.c ?? 0;
-  if (current >= CAPACITY) {
+  if (current >= capacity) {
     return json(
       {
         error: "The Mini Mulligans early-access waitlist is full. Email info@swingtheory.golf to be added to the overflow list.",
@@ -90,11 +96,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   const ip = request.headers.get("cf-connecting-ip");
 
-  // Pre-check for an existing reservation by email BEFORE creating a Square
-  // card. Without this, a repeat submit would tokenize and save a second
-  // card on the customer and only then hit the UNIQUE(email) conflict,
-  // orphaning that card. If they're already reserved, just re-send the
-  // friendly note and stop.
+  // Pre-check for an existing reservation by email so a repeat submit
+  // gets the friendly "already reserved" note instead of a raw
+  // UNIQUE(email) conflict from the insert below.
   const already = await env.DB.prepare(
     "SELECT id FROM mini_mulligans_waitlist WHERE email = ?",
   )
@@ -109,48 +113,20 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: true, alreadyOnList: true });
   }
 
-  // Card on file. Required now: the reservation saves a card ($0 charged)
-  // so an admin can later activate the $400/mo subscription without the
-  // parent re-entering payment. A card failure here fails the reservation
-  // (unlike the best-effort emails below) — we never want a "reserved" row
-  // with no way to bill it. The parent form has a single "name" field;
-  // split it so Square gets a tidy given/family name.
-  const nameParts = data.name.trim().split(/\s+/);
-  const firstName = nameParts[0] || data.name;
-  const lastName = nameParts.slice(1).join(" ");
-  let squareCustomerId: string;
-  let squareCardId: string;
-  try {
-    squareCustomerId = await findOrCreateCustomer(env, {
-      firstName,
-      lastName,
-      email: data.email,
-      phone: data.phone || undefined,
-    });
-    squareCardId = await createCardOnFile(env, {
-      customerId: squareCustomerId,
-      sourceId: data.sourceId,
-      cardholderName: data.name,
-    });
-  } catch (e) {
-    if (e instanceof SquareApiError) {
-      return json({ error: e.message }, e.status >= 500 ? 502 : e.status);
-    }
-    console.error(
-      `[mm-waitlist] card on file failed: ${String((e as Error)?.message || e)}`,
-    );
-    return json(
-      { error: "We couldn't save your card. Please check your details and try again." },
-      400,
-    );
-  }
-
+  // No payment is collected here. Signups used to require a Square card
+  // on file before the reservation would go through, and testing showed
+  // that suppressed signups: people bailed at the card field even though
+  // the copy said "won't be charged." Now the reservation is just the
+  // form data below; a Swing Theory team member follows up to confirm the
+  // spot (and, if the family continues after the free first session,
+  // collects payment then — see functions/api/admin/mm-waitlist/[id].ts,
+  // which already falls back to "collect payment in Square directly" for
+  // rows with no card on file).
   try {
     await env.DB.prepare(
       `INSERT INTO mini_mulligans_waitlist
-        (parent_name, email, kid_name, kid_age, phone,
-         square_customer_id, square_card_id, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 'reserved')`,
+        (parent_name, email, kid_name, kid_age, phone, status)
+       VALUES (?, ?, ?, ?, ?, 'reserved')`,
     )
       .bind(
         data.name,
@@ -158,16 +134,13 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         data.kidName,
         kidAge,
         data.phone || null,
-        squareCustomerId,
-        squareCardId,
       )
       .run();
   } catch (e) {
     const msg = String((e as Error)?.message || e).toLowerCase();
     if (msg.includes("unique")) {
       // Race: someone reserved this email between our pre-check and this
-      // insert. The card we just saved is a harmless orphan on the Square
-      // customer. Send the friendly "already reserved" note.
+      // insert. Send the friendly "already reserved" note.
       await sendConfirmation({
         env,
         to: email,
@@ -189,14 +162,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       replyTo: data.email,
       html: wrapBrandedEmail({
         title: "New Mini Mulligans registration",
-        intro: `${data.name} registered ${data.kidName} for Mini Mulligans. That's #${current + 1} of ${CAPACITY} spots filled.`,
+        intro: `${data.name} registered ${data.kidName} for Mini Mulligans. That's #${current + 1} of ${capacity} spots filled.`,
         bodyHtml: renderKv({
           parent: data.name,
           email: data.email,
           phone: data.phone || "",
           child: data.kidName,
           childAge: String(kidAge),
-          position: `${current + 1} / ${CAPACITY}`,
+          position: `${current + 1} / ${capacity}`,
         }),
       }),
     });
@@ -231,7 +204,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       name: data.name,
       email: data.email,
       phone: data.phone || "",
-      message: `Mini Mulligans registration: kid=${data.kidName}, age=${kidAge}, position=${current + 1}/${CAPACITY}`,
+      message: `Mini Mulligans registration: kid=${data.kidName}, age=${kidAge}, position=${current + 1}/${capacity}`,
       kidName: data.kidName,
       kidAge,
       position: current + 1,
@@ -244,6 +217,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   return json({
     ok: true,
     position: current + 1,
-    capacity: CAPACITY,
+    capacity,
   });
 };

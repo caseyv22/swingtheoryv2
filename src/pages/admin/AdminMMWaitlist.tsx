@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   PageHead,
   Button,
@@ -8,6 +8,7 @@ import {
   Badge,
   Card,
   Field,
+  Input,
 } from "@/components/admin/AdminUI";
 import { useApi, invalidateCache } from "@/hooks/useApi";
 import { useConfirm } from "@/hooks/useConfirm";
@@ -37,10 +38,11 @@ type WaitlistResponse = {
 };
 
 // Manages the Mini Mulligans early-access waitlist. Public /api/mm-waitlist
-// handles self-serve signups (with the 18-cap enforced); this page lets an
-// admin see the ordered list, manually add someone who signed up offline,
-// or remove someone who dropped. Deletion frees up their slot so the next
-// public POST succeeds.
+// handles self-serve signups (capped at whatever "Signup cap" below is
+// set to); this page lets an admin see the ordered list, raise or lower
+// that cap, manually add someone who signed up offline, or remove
+// someone who dropped. Deletion frees up their slot so the next public
+// POST succeeds.
 export default function AdminMMWaitlist() {
   const { data, loading, reload } = useApi<WaitlistResponse>(
     "/api/admin/mm-waitlist",
@@ -51,10 +53,45 @@ export default function AdminMMWaitlist() {
   const [submitting, setSubmitting] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [activatingId, setActivatingId] = useState<number | null>(null);
+  const [capacityInput, setCapacityInput] = useState("");
+  const [savingCapacity, setSavingCapacity] = useState(false);
+  const [capacityError, setCapacityError] = useState<string | null>(null);
 
-  // Activate a reserved parent on the $400/mo plan. This creates the Square
-  // subscription and charges the card on file NOW, so it's gated behind an
-  // explicit confirm that spells out the charge.
+  // Keep the cap input in sync with whatever the server last reported —
+  // covers first load and any reload after a save (including from
+  // another admin tab/person).
+  useEffect(() => {
+    if (data) setCapacityInput(String(data.capacity));
+  }, [data?.capacity]);
+
+  async function saveCapacity() {
+    setCapacityError(null);
+    const n = Number.parseInt(capacityInput, 10);
+    if (!Number.isFinite(n) || n < 0 || n > 200) {
+      setCapacityError("Enter a number between 0 and 200.");
+      return;
+    }
+    setSavingCapacity(true);
+    try {
+      await api.patch("/api/admin/mm-waitlist/capacity", { capacity: n });
+      invalidateCache("/api/admin/mm-waitlist");
+      reload();
+    } catch (err) {
+      setCapacityError(
+        err instanceof Error ? err.message : "Couldn't update the cap.",
+      );
+    } finally {
+      setSavingCapacity(false);
+    }
+  }
+
+  // Activate a reserved parent on the $400/mo plan. Only works for rows
+  // that have a card on file with Square (legacy signups from when the
+  // form captured one). Sign-up no longer collects a card, so most rows
+  // won't show this button at all — the confirming team member collects
+  // payment directly in Square instead, per functions/api/admin/mm-waitlist/[id].ts.
+  // Creates the Square subscription and charges the card NOW, so it's
+  // gated behind an explicit confirm that spells out the charge.
   async function activateRow(row: WaitlistRow) {
     setActionError(null);
     if (
@@ -138,6 +175,29 @@ export default function AdminMMWaitlist() {
           </Button>
         }
       />
+
+      <Card className="mb-6 flex items-end gap-4 flex-wrap">
+        <Field
+          label="Signup cap"
+          hint="Public sign-ups close automatically (showing the 'session is full' message) once this many spots are filled."
+        >
+          <Input
+            type="number"
+            min={0}
+            max={200}
+            value={capacityInput}
+            onChange={(e) => setCapacityInput(e.target.value)}
+            className="w-28"
+          />
+        </Field>
+        <Button
+          onClick={saveCapacity}
+          disabled={savingCapacity || !data || capacityInput === String(data.capacity)}
+        >
+          {savingCapacity ? "Saving…" : "Save cap"}
+        </Button>
+        {capacityError && <span className="text-sm text-red-700">{capacityError}</span>}
+      </Card>
 
       {adding && (
         <Card className="mb-6">
@@ -238,9 +298,7 @@ export default function AdminMMWaitlist() {
                   {row.status === "activated" ? (
                     <Badge tone="success">Activated</Badge>
                   ) : (
-                    <Badge tone={row.hasCard ? "info" : "warn"}>
-                      {row.hasCard ? "Reserved" : "No card"}
-                    </Badge>
+                    <Badge tone="info">Reserved</Badge>
                   )}
                 </Td>
                 <Td className="text-xs text-muted whitespace-nowrap">{row.created_at}</Td>

@@ -163,18 +163,19 @@ export default function ProgramDetail({ program }: Props) {
               <SectionHead
                 kicker="Registration open"
                 title="Sign up for Mini Mulligans."
-                intro="Reserve your child's spot for the Mini Mulligans launch on Tuesday, September 8. Your first session is free, and you'll get a confirmation email with everything you need for launch day."
+                intro="Reserve your child's spot for the Mini Mulligans launch on Tuesday, September 8. No payment required today, a Swing Theory team member will reach out to confirm your sign-up and get you set for launch day."
               />
               <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] items-start mt-10">
                 <div className="order-2 md:order-1">
                   <MiniMulligansWaitlistForm />
                 </div>
 
-                {/* Order Summary, mirrors the checkout pages. The struck-out
-                    $400 to $0 is honest here: a normal subscription would
-                    charge the first $400 today, and we're deferring that
-                    entirely. The "$400/month only if you continue" line
-                    directly under it keeps it from reading as a discount. */}
+                {/* Order Summary, mirrors the checkout pages. No pricing-today
+                    line here on purpose: signing up doesn't charge or hold
+                    anything, it's a plain reservation. A Swing Theory team
+                    member reaches out afterward to confirm the spot, and the
+                    $400/month note keeps the eventual cost transparent
+                    without asking for payment info up front. */}
                 <aside className="order-1 md:order-2 rounded-2xl border border-gold bg-gradient-to-b from-gold/15 to-gold/[0.03] p-8 md:sticky md:top-24">
                   <h2 className="font-disp text-xl text-green-700 tracking-wide uppercase mb-6">
                     Order Summary
@@ -193,22 +194,19 @@ export default function ProgramDetail({ program }: Props) {
                     <span className="font-disp font-semibold text-sm text-ink uppercase tracking-wide">
                       Due today
                     </span>
-                    <span className="flex items-baseline gap-2">
-                      <span className="font-disp text-lg text-muted line-through">
-                        $400
-                      </span>
-                      <span className="font-disp text-[1.8rem] font-extrabold text-gold-dk leading-none">
-                        $0
-                      </span>
+                    <span className="font-disp text-[1.8rem] font-extrabold text-gold-dk leading-none">
+                      $0
                     </span>
                   </div>
                   <p className="text-xs text-muted mt-3 text-right">
-                    Your first session on Sept 8 is free.
+                    No payment required to sign up.
                   </p>
                   <div className="mt-6 pt-4 border-t border-line">
                     <p className="text-sm text-ink leading-relaxed">
-                      <span className="font-semibold">$400/month</span> begins
-                      only if you continue after your free session.
+                      A <span className="font-semibold">Swing Theory team member</span> will
+                      reach out to confirm your sign-up. Your first session on
+                      Sept 8 is free, and <span className="font-semibold">$400/month</span> begins
+                      only if you continue after that.
                     </p>
                   </div>
                   <p className="text-xs text-muted mt-6 pt-4 border-t border-line">

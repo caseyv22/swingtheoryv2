@@ -1,12 +1,13 @@
 import { json, readJson } from "../../../lib/http";
 import { requireAdmin } from "../../../lib/access";
+import { getMmCapacity } from "../../../lib/mm-settings";
 import type { Env } from "../../../lib/db";
 
-// Same capacity constant as the public /api/mm-waitlist endpoint. Kept in
-// sync manually — if the cap ever changes, update both. Not a config row
-// because the frontend already displays the number ("18 spots") in copy
-// too and we don't want copy drift.
-const CAPACITY = 18;
+// Capacity now lives in the mini_mulligans_settings table (see
+// functions/lib/mm-settings.ts and migrations/0009), shared with the
+// public /api/mm-waitlist endpoint, so raising or lowering the cap from
+// PATCH /api/admin/mm-waitlist/capacity below takes effect on both
+// immediately, no deploy needed.
 
 // GET /api/admin/mm-waitlist
 // Returns the full ordered waitlist with a computed position column so the
@@ -15,6 +16,8 @@ const CAPACITY = 18;
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const user = await requireAdmin(request, env);
   if (user instanceof Response) return user;
+
+  const CAPACITY = await getMmCapacity(env);
 
   type Row = {
     id: number;
@@ -85,12 +88,15 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!Number.isFinite(kidAge) || kidAge < 3 || kidAge > 18)
     return json({ error: "Kid age must be a number between 3 and 18" }, 400);
 
-  const countRow = await env.DB.prepare(
-    `SELECT COUNT(*) AS c FROM mini_mulligans_waitlist`,
-  ).first<{ c: number }>();
-  if ((countRow?.c ?? 0) >= CAPACITY) {
+  const [countRow, capacity] = await Promise.all([
+    env.DB.prepare(`SELECT COUNT(*) AS c FROM mini_mulligans_waitlist`).first<{
+      c: number;
+    }>(),
+    getMmCapacity(env),
+  ]);
+  if ((countRow?.c ?? 0) >= capacity) {
     return json(
-      { error: `Waitlist is full (${CAPACITY} of ${CAPACITY}).`, code: "waitlist_full" },
+      { error: `Waitlist is full (${capacity} of ${capacity}).`, code: "waitlist_full" },
       409,
     );
   }

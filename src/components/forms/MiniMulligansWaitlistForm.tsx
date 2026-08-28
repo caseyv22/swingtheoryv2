@@ -2,13 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import FormShell from "./FormShell";
 import { TextInput, Honeypot } from "./FormField";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
-import { useSquareCard } from "@/hooks/useSquareCard";
 import { miniMulligansWaitlistSchema } from "@/lib/validation";
-
-// The card nonce (sourceId) is produced in-browser by Square's SDK, not
-// typed into a field, so the client validates everything EXCEPT sourceId
-// and appends it after tokenize(). Mirrors ProgramCheckout.tsx.
-const clientFieldsSchema = miniMulligansWaitlistSchema.omit({ sourceId: true });
 
 type WaitlistState = {
   count: number;
@@ -23,6 +17,15 @@ type WaitlistState = {
 // hint) or a "Waitlist is full" message. The POST also re-checks the
 // cap, so a race between "page loaded when open" and "submit when full"
 // is handled gracefully.
+//
+// No payment is collected here. Sign-ups used to require a card on file
+// (Square) before the reservation would go through, and testing showed
+// that was suppressing signups: people bailed at the card field even
+// though the copy said "won't be charged." This is now a plain sign-up
+// form — name, email, and the child's info. A Swing Theory team member
+// reaches out afterward (see the success message + confirmation email
+// in functions/lib/confirmations.ts) to confirm the spot and, if the
+// family continues after the free first session, arrange payment then.
 export default function MiniMulligansWaitlistForm() {
   const [state, setState] = useState<WaitlistState>(null);
   const [stateLoading, setStateLoading] = useState(true);
@@ -30,12 +33,6 @@ export default function MiniMulligansWaitlistForm() {
     "/api/mm-waitlist",
   );
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
-  const [tokenizeError, setTokenizeError] = useState<string | null>(null);
-  const {
-    status: cardStatus,
-    error: cardError,
-    tokenize,
-  } = useSquareCard("mm-card-container");
 
   useEffect(() => {
     let cancelled = false;
@@ -58,9 +55,8 @@ export default function MiniMulligansWaitlistForm() {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setTokenizeError(null);
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    const parsed = clientFieldsSchema.safeParse(data);
+    const parsed = miniMulligansWaitlistSchema.safeParse(data);
     if (!parsed.success) {
       const errs: Record<string, string> = {};
       parsed.error.issues.forEach((i) => (errs[i.path.join(".")] = i.message));
@@ -69,20 +65,7 @@ export default function MiniMulligansWaitlistForm() {
     }
     setFieldError({});
 
-    // Tokenize the card in-browser (Square hosts the field in its own
-    // iframe; the card number never touches our state or server). We only
-    // get a one-time nonce back, which the API turns into a card on file.
-    let sourceId: string;
-    try {
-      sourceId = await tokenize();
-    } catch (err) {
-      setTokenizeError(
-        err instanceof Error ? err.message : "Card details couldn't be verified.",
-      );
-      return;
-    }
-
-    await submit({ ...parsed.data, sourceId });
+    await submit(parsed.data);
     // If the POST reports full (409), the useFormSubmit hook exposes that
     // as an error, refetch state so the closed-list message replaces the
     // form on the next render.
@@ -123,18 +106,18 @@ export default function MiniMulligansWaitlistForm() {
 
   return (
     <>
-      {/* The "what you're signing up for" recap and price now live in the
-          Order Summary panel rendered alongside this form in
-          ProgramDetail.tsx (waitlist branch), matching the other checkout
-          pages. Keep the launch date / schedule / $400 / free-first details
-          in sync across that panel, this form, the confirmation email
+      {/* The "what you're signing up for" recap now lives in the Order
+          Summary panel rendered alongside this form in ProgramDetail.tsx
+          (waitlist branch), matching the other checkout pages. Keep the
+          launch date / schedule / $400 / free-first details in sync across
+          that panel, this form's success message, the confirmation email
           (functions/lib/confirmations.ts), and the program pills in admin. */}
       <FormShell
         onSubmit={onSubmit}
         status={status}
         error={error}
         submitLabel="Sign up for Mini Mulligans"
-        successMessage="You're registered for Mini Mulligans. Check your inbox, we've emailed your confirmation with launch-day details for Tuesday, September 8. We can't wait to see you."
+        successMessage="You're signed up for Mini Mulligans. Check your inbox for your confirmation. A Swing Theory team member will reach out soon to confirm your spot and answer any questions before launch day, Tuesday, September 8."
       >
         <Honeypot />
         <div className="grid md:grid-cols-2 gap-4">
@@ -163,27 +146,9 @@ export default function MiniMulligansWaitlistForm() {
           />
         </div>
         <TextInput label="Phone (optional)" name="phone" type="tel" error={fieldError.phone} />
-        {/* Square Web Payments card element. Square hosts the actual input
-            in its own iframe; we only ever receive a one-time nonce from
-            tokenize(). The reassurance copy sits directly under it. */}
-        <div>
-          <label className="block text-sm font-semibold text-ink mb-1.5">
-            Card to hold your spot
-          </label>
-          <div
-            id="mm-card-container"
-            className="w-full rounded-lg border border-line bg-white px-4 py-3 min-h-[56px]"
-          />
-          {cardStatus === "loading" && (
-            <p className="text-sm text-muted mt-1.5">Loading secure card field…</p>
-          )}
-          {cardError && <p className="text-sm text-red-700 mt-1.5">{cardError}</p>}
-          {tokenizeError && (
-            <p className="text-sm text-red-700 mt-1.5">{tokenizeError}</p>
-          )}
-        </div>
         <p className="text-sm text-muted">
-          Your card holds your spot. You won't be charged today.
+          No payment today. A Swing Theory team member will reach out to
+          confirm your sign-up.
         </p>
       </FormShell>
     </>

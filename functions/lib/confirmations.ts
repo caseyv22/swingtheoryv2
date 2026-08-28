@@ -143,14 +143,12 @@ export function leagueConfirmation(d: {
 }
 
 // ─── 5. Mini Mulligans registration ─────────────────────────────────────────
-// This is a real registration confirmation, not a "we'll be in touch" note.
-// The old early-access version is why signups didn't show: it read as
-// "notify me later." Every logistic a parent needs for launch day lives
-// here — date, schedule, arrive-early, the free-first / opt-in pricing, and
-// the reply-to-cancel ask. Keep these details in sync with the on-page
-// form (MiniMulligansWaitlistForm.tsx). NOTE: no card-on-file language yet —
-// payment capture isn't wired. When Square is added, update the "After your
-// free session" block to reflect the card being on file.
+// Every logistic a parent needs for launch day lives here — date, schedule,
+// arrive-early, the free-first / opt-in pricing, and the reply-to-cancel
+// ask. Keep these details in sync with the on-page form
+// (MiniMulligansWaitlistForm.tsx). Sign-up no longer collects a card
+// (that was suppressing signups), so this leads with "a team member will
+// reach out to confirm" rather than any payment/card language.
 export function mmWaitlistConfirmation(d: {
   name: string;
   kidName: string;
@@ -164,6 +162,10 @@ export function mmWaitlistConfirmation(d: {
         "You’re all set for launch day. Here’s everything you need for Tuesday, September 8. Your first session is on us.",
       preheader: "Launch day is Tuesday, September 8. Your first session is free.",
       bodyHtml:
+        sectionHeading("We’ll be in touch") +
+        para(
+          "A Swing Theory team member will reach out soon to confirm your spot and answer any questions before launch day. No payment is due today.",
+        ) +
         sectionHeading("Launch day") +
         para(
           "<strong>Tuesday, September 8.</strong> Your first session is complimentary. Come see if Mini Mulligans is the right fit for your golfer, no cost and no commitment.",
@@ -176,9 +178,9 @@ export function mmWaitlistConfirmation(d: {
         para(
           "Please show up <strong>10–15 minutes early</strong> for check-in and team assignment.",
         ) +
-        sectionHeading("After your free session") +
+        sectionHeading("Pricing") +
         para(
-          "Your card is on file, but you won’t be charged today. Mini Mulligans is <strong>$400/month</strong>, and your first payment only happens if you continue after your complimentary launch-day session. We’ll confirm with you before anything is charged.",
+          "Mini Mulligans is <strong>$400/month</strong>. Nothing is charged until you decide to continue after your complimentary launch-day session, and we’ll confirm with you before anything is charged.",
         ) +
         sectionHeading("Can’t make it?") +
         para(

@@ -163,7 +163,7 @@ export default function ProgramDetail({ program }: Props) {
               <SectionHead
                 kicker="Registration open"
                 title="Sign up for Mini Mulligans."
-                intro="Reserve your child's spot for the Mini Mulligans launch on Tuesday, September 8. No payment required today, a Swing Theory team member will reach out to confirm your sign-up and get you set for launch day."
+                intro="Reserve your child's spot for the Mini Mulligans launch on Tuesday, September 22. No payment required today, a Swing Theory team member will reach out to confirm your sign-up and get you set for launch day."
               />
               <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] items-start mt-10">
                 <div className="order-2 md:order-1">
@@ -186,7 +186,7 @@ export default function ProgramDetail({ program }: Props) {
                       Mini Mulligans
                     </div>
                     <p className="text-muted text-sm mt-2 leading-relaxed">
-                      Junior golf, ages 6–13. Launches Tuesday, September 8.
+                      Junior golf, ages 6–13. Launches Tuesday, September 22.
                       Sessions Tuesdays &amp; Thursdays, 4:30–6:00 PM.
                     </p>
                   </div>
@@ -205,7 +205,7 @@ export default function ProgramDetail({ program }: Props) {
                     <p className="text-sm text-ink leading-relaxed">
                       A <span className="font-semibold">Swing Theory team member</span> will
                       reach out to confirm your sign-up. Your first session on
-                      Sept 8 is free, and <span className="font-semibold">$400/month</span> begins
+                      Sept 22 is free, and <span className="font-semibold">$400/month</span> begins
                       only if you continue after that.
                     </p>
                   </div>

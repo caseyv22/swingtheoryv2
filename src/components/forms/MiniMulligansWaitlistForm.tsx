@@ -90,7 +90,7 @@ export default function MiniMulligansWaitlistForm() {
           This session is full.
         </div>
         <p className="text-muted">
-          Every spot for the September 8 launch is taken. Email{" "}
+          Every spot for the September 22 launch is taken. Email{" "}
           <a
             href="mailto:info@swingtheory.golf"
             className="text-green-700 underline hover:text-green-800"
@@ -117,7 +117,7 @@ export default function MiniMulligansWaitlistForm() {
         status={status}
         error={error}
         submitLabel="Sign up for Mini Mulligans"
-        successMessage="You're signed up for Mini Mulligans. Check your inbox for your confirmation. A Swing Theory team member will reach out soon to confirm your spot and answer any questions before launch day, Tuesday, September 8."
+        successMessage="You're signed up for Mini Mulligans. Check your inbox for your confirmation. A Swing Theory team member will reach out soon to confirm your spot and answer any questions before launch day, Tuesday, September 22."
       >
         <Honeypot />
         <div className="grid md:grid-cols-2 gap-4">

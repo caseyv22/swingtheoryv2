@@ -46,7 +46,7 @@ export const programs: Program[] = [
     h1: "Junior golf lessons in Pasadena: Mini Mulligans",
     kicker: "Junior program",
     shortDescription:
-      "Junior golf lessons for kids ages 6–13 in Pasadena. Small-group indoor coaching twice a week, real coaches, and a low-pressure way to get started. Launches Tuesday, September 8.",
+      "Junior golf lessons for kids ages 6–13 in Pasadena. Small-group indoor coaching twice a week, real coaches, and a low-pressure way to get started. Launches Tuesday, September 22.",
     longDescription: `
       <p>Mini Mulligans is a structured junior golf program for kids ages 6–13 in Old Town Pasadena. Instead of open-ended lessons, kids move through a clear progression: earning points, leveling up, and unlocking rewards as they improve.</p>
       <p>Every session rotates through three zones:</p>
@@ -58,7 +58,7 @@ export const programs: Program[] = [
       <p>Every zone ends in a game, so the skills actually stick.</p>
     `,
     audience: "Kids ages 6–13. All experience levels.",
-    season: "Launches Tuesday, September 8. First session free.",
+    season: "Launches Tuesday, September 22. First session free.",
     keyDetails: [
       "Structured progression: kids earn points and level up",
       "Small-group coaching, all experience levels welcome",
@@ -71,7 +71,7 @@ export const programs: Program[] = [
     dateRange: "Tuesdays & Thursdays",
     timeRange: "4:30–6:00 PM",
     price: "$400/month",
-    startsOn: "2026-09-08",
+    startsOn: "2026-09-22",
   },
   {
     slug: "summer-womens",

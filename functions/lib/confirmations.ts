@@ -155,12 +155,12 @@ export function mmWaitlistConfirmation(d: {
   kidAge: number;
 }): Built {
   return {
-    subject: `${d.kidName} is registered for Mini Mulligans. Launch day is Tuesday, Sept 8`,
+    subject: `${d.kidName} is registered for Mini Mulligans. Launch day is Tuesday, Sept 22`,
     html: wrapBrandedEmail({
       title: `${escapeHtml(d.kidName)} is registered for Mini Mulligans.`,
       intro:
-        "You’re all set for launch day. Here’s everything you need for Tuesday, September 8. Your first session is on us.",
-      preheader: "Launch day is Tuesday, September 8. Your first session is free.",
+        "You’re all set for launch day. Here’s everything you need for Tuesday, September 22. Your first session is on us.",
+      preheader: "Launch day is Tuesday, September 22. Your first session is free.",
       bodyHtml:
         sectionHeading("We’ll be in touch") +
         para(
@@ -168,7 +168,7 @@ export function mmWaitlistConfirmation(d: {
         ) +
         sectionHeading("Launch day") +
         para(
-          "<strong>Tuesday, September 8.</strong> Your first session is complimentary. Come see if Mini Mulligans is the right fit for your golfer, no cost and no commitment.",
+          "<strong>Tuesday, September 22.</strong> Your first session is complimentary. Come see if Mini Mulligans is the right fit for your golfer, no cost and no commitment.",
         ) +
         sectionHeading("Schedule") +
         para(
@@ -208,10 +208,10 @@ export function mmWaitlistAlreadyOnList(d: { kidName: string }): Built {
       title: `${escapeHtml(d.kidName)} is already registered.`,
       intro:
         "You’re confirmed for launch day. No need to sign up again.",
-      preheader: "Launch day is Tuesday, September 8. Your first session is free.",
+      preheader: "Launch day is Tuesday, September 22. Your first session is free.",
       bodyHtml:
         para(
-          "Mini Mulligans launches <strong>Tuesday, September 8</strong>. Sessions run Tuesdays and Thursdays, 4:30–6:00 PM, and your first session is complimentary. Please show up 10–15 minutes early for check-in and team assignment.",
+          "Mini Mulligans launches <strong>Tuesday, September 22</strong>. Sessions run Tuesdays and Thursdays, 4:30–6:00 PM, and your first session is complimentary. Please show up 10–15 minutes early for check-in and team assignment.",
         ) +
         para(
           "Need to change your child’s details, or can’t make it? Just reply to this email.",

@@ -29,12 +29,12 @@ export default function Nav() {
           ))}
         </nav>
         <div className="hidden md:flex items-center gap-4">
-          {/* Member portal — Sync app, hosted separately on the sync
-              subdomain. Intentionally a small text link, not a button:
+          {/* Member portal on res.swingtheory.golf, hosted separately.
+              Intentionally a small text link, not a button:
               it's a returning-user surface, must NOT compete with the
               primary "Book a bay" CTA for first-time visitors. */}
           <a
-            href={site.syncUrl}
+            href={site.portalUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#e8e5da] font-disp font-semibold text-[14px] hover:text-gold transition"
@@ -68,7 +68,7 @@ export default function Nav() {
               </NavLink>
             ))}
             <a
-              href={site.syncUrl}
+              href={site.portalUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}

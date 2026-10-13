@@ -59,6 +59,10 @@ export const site = {
   // link, not a marketing surface. Externally hosted, so always
   // render with target="_blank".
   syncUrl: "https://sync.swingtheory.golf",
+  // Member portal on the reservations platform. Target of the nav
+  // "Sign in" link (desktop + mobile). Externally hosted, so always
+  // render with target="_blank".
+  portalUrl: "https://res.swingtheory.golf/portal",
   // Google Maps "Share → Embed a map" URL for the Swing Theory Business
   // Profile. The `?pb=...` blob encodes the canonical place entity so
   // Google renders the actual business card (photo, rating, hours) inside

@@ -10,7 +10,7 @@ Source of truth for positioning, SEO strategy, brand, and technical decisions: [
 - **Hosting:** Cloudflare Pages
 - **Form endpoints:** Cloudflare Pages Functions (`/functions/api/*`)
 - **Email:** Resend
-- **Booking:** deep-link to registrygolf.com
+- **Booking:** deep-link to res.swingtheory.golf/book
 
 ## Getting started
 

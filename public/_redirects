@@ -1,7 +1,7 @@
 # Server-side redirects. Evaluated before the SPA loads.
 
 # Booking handoff
-/book  https://booking.registrygolf.com/?organizationId=639ff740-1b51-4959-99af-19ac2d069609  302
+/book  https://res.swingtheory.golf/book  302
 
 # Theory AI /analyze — static HTML at public/analyze/index.html, served
 # outside the React SPA. Rewrites (200) rather than redirects so the URL

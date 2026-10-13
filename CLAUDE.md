@@ -133,7 +133,7 @@ gets 3.2× more citations), and expose author + dateModified in schema.
 | `/visit` | Location, hours, parking |
 | `/faq` | FAQ |
 | `/contact` | Contact form |
-| `/book` | 302 to registrygolf.com |
+| `/book` | 302 to res.swingtheory.golf/book |
 
 Each service page: unique local copy, FAQ block with schema, CTA to
 booking (or interest form for membership/programs), real photos from the
@@ -227,7 +227,7 @@ swapped in for the guideline's maroon accent per Casey's direction.
 - **Hosting:** Cloudflare Pages
 - **API:** Cloudflare Pages Functions (`/functions/api/*`)
 - **Email:** Resend
-- **Booking:** deep-link to registrygolf.com
+- **Booking:** deep-link to res.swingtheory.golf/book
 - **Analytics:** GA4 only
 
 ### Prerendering (added July 2026)
@@ -299,7 +299,7 @@ Nothing hardcodes NAP anywhere else. Import from `src/data/site-config.ts`.
 - [ ] `sitemap.xml` + `robots.txt` live
 - [ ] Google Search Console + Bing Webmaster Tools verified
 - [ ] Lighthouse mobile ≥ 95 across all pages
-- [ ] Booking CTAs deep-link correctly to registrygolf.com
+- [ ] Booking CTAs deep-link correctly to res.swingtheory.golf/book
 - [ ] All five forms live and delivering to info@swingtheory.golf
 - [ ] Resend + Turnstile keys set in Cloudflare Pages
 - [ ] GA4 installed (single script)

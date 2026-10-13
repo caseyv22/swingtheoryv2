@@ -267,7 +267,7 @@ function buildEmailHtml(args: {
   </tr>
   <tr>
     <td style="padding:0 32px 32px;text-align:center;">
-      <a href="https://booking.registrygolf.com?organizationId=639ff740-1b51-4959-99af-19ac2d069609" style="display:inline-block;background:#064029;color:#ffffff;font-size:14px;font-weight:700;padding:14px 32px;border-radius:8px;text-decoration:none;letter-spacing:0.5px;">Book Your Next Session</a>
+      <a href="https://res.swingtheory.golf/book" style="display:inline-block;background:#064029;color:#ffffff;font-size:14px;font-weight:700;padding:14px 32px;border-radius:8px;text-decoration:none;letter-spacing:0.5px;">Book Your Next Session</a>
     </td>
   </tr>
   <tr>

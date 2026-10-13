@@ -52,7 +52,7 @@ export const site = {
     ],
   },
   bookingUrl:
-    "https://booking.registrygolf.com/?organizationId=639ff740-1b51-4959-99af-19ac2d069609",
+    "https://res.swingtheory.golf/book",
   // Sync = member portal for program bookings (STGL, Mini Mulligans,
   // Summer Women's/Seniors). Hosted separately on its own subdomain.
   // Kept out of the main nav's primary CTAs — it's a returning-user

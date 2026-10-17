@@ -56,6 +56,14 @@ MM_SUBSCRIPTION_PLAN_VARIATION_ID = "O6XHKIG5VG5TMYOMWC7PDDBL"
 # shared secret is INTERNAL_PROVISIONING_SECRET, set separately.
 MM_API_BASE_URL = "https://mm-api-prod.swingtheoryla.workers.dev"
 
+# SwingRes signed-agreement checkout (Green Jacket Solo). The flow is ON only when all three of
+# these are set, so it stays OFF until the secret SWINGRES_API_SECRET exists (set it last, it is
+# the on switch; it must equal INTERNAL_PROVISIONING_SECRET on swingres-api-prod). Remove the
+# secret to switch the flow back off.
+#   wrangler pages secret put SWINGRES_API_SECRET
+SWINGRES_API_URL = "https://api.swingtheory.golf"
+SWINGRES_PLAN_ID_GREEN_JACKET_SOLO = "9a880e99-6be2-4cbf-a7f1-f1c92669de08"
+
 # 50%-first-month membership promo toggle. Set to "true" to route
 # checkout at the promo Square plan variation (STATIC $ for month 1,
 # RELATIVE ongoing after) and show the promo copy on membership cards.

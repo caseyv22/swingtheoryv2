@@ -74,6 +74,18 @@ export const membershipCheckoutSchema = z.object({
   email,
   phone,
   sourceId: z.string().trim().min(1, "Missing payment details"),
+  // Signed membership agreement (Green Jacket Solo, when the SwingRes agreement flow is on). The
+  // schema keeps it optional so the old checkout and Group still validate; the function decides
+  // whether a plan requires it. signedAt is NOT accepted from the browser, the server stamps it.
+  agreement: z
+    .object({
+      agreementContentId: z.string().trim().min(1).max(100),
+      typedSignature: z.string().trim().min(2, "Please type your full name to sign").max(121),
+      openedAt: z.string().max(40).nullable().optional(),
+      scrollCompletedAt: z.string().max(40).nullable().optional(),
+      agreed: z.literal(true),
+    })
+    .optional(),
 });
 
 // One-time program checkout (season fees, camps). Same no-honeypot

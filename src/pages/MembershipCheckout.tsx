@@ -8,6 +8,8 @@ import { useSquareCard } from "@/hooks/useSquareCard";
 import { site } from "@/data/site-config";
 import { membershipPlans } from "@/data/memberships";
 import { membershipCheckoutSchema } from "@/lib/validation";
+import { signatureMatchesName } from "@/lib/agreement-signature";
+import AgreementPanel, { type AgreementData, type AgreementState } from "@/components/AgreementPanel";
 
 // Public toggle: mirrors backend MEMBERSHIP_PROMO_ENABLED. Both must be
 // "true" for the promo to be live end-to-end (Order Summary + Pay button
@@ -18,7 +20,19 @@ const PROMO_ENABLED = import.meta.env.VITE_MEMBERSHIP_PROMO_ENABLED === "true";
 
 // Fields the person types in; planSlug + sourceId get added right before
 // the API call (sourceId only exists once the card is tokenized).
-const clientFieldsSchema = membershipCheckoutSchema.omit({ sourceId: true, planSlug: true });
+// The agreement is collected by AgreementPanel (not a plain form field) and added separately.
+const clientFieldsSchema = membershipCheckoutSchema.omit({
+  sourceId: true,
+  planSlug: true,
+  agreement: true,
+});
+
+const EMPTY_AGREEMENT_STATE: AgreementState = {
+  typedSignature: "",
+  agreed: false,
+  openedAt: null,
+  scrollCompletedAt: null,
+};
 
 function ordinal(n: number): string {
   const v = n % 100;
@@ -92,6 +106,49 @@ export default function MembershipCheckout() {
     };
   }, [plan?.slug]);
 
+  // Signed-agreement flow. The server decides whether it's on for this plan ({ enabled }); when
+  // it's off (or the plan isn't Solo) this stays null and the page behaves as it always has.
+  const [agreement, setAgreement] = useState<AgreementData | null>(null);
+  const [agreementLoading, setAgreementLoading] = useState(false);
+  const [agreementLoadError, setAgreementLoadError] = useState<string | null>(null);
+  const [agreementState, setAgreementState] = useState<AgreementState>(EMPTY_AGREEMENT_STATE);
+  const [names, setNames] = useState({ firstName: "", lastName: "" });
+  useEffect(() => {
+    if (!plan?.slug) return;
+    let cancelled = false;
+    setAgreementLoading(true);
+    fetch(`/api/membership-agreement?plan=${encodeURIComponent(plan.slug)}`)
+      .then(async (r) => {
+        const data = (await r.json().catch(() => null)) as
+          | (Partial<AgreementData> & { enabled?: boolean; error?: string })
+          | null;
+        if (cancelled) return;
+        if (!data?.enabled) return;
+        if (!r.ok || !data.contentId || !data.bodyText) {
+          setAgreementLoadError(
+            data.error ?? "The membership agreement couldn't be loaded. Please reload the page.",
+          );
+          return;
+        }
+        setAgreement({
+          contentId: data.contentId,
+          versionNumber: data.versionNumber ?? 0,
+          bodyText: data.bodyText,
+          monthlyFee: data.monthlyFee ?? "",
+          firstMonthTerms: data.firstMonthTerms ?? "",
+        });
+      })
+      .catch(() => {
+        // Flow state is unknown; leave it off. The server still enforces the agreement if it is on.
+      })
+      .finally(() => {
+        if (!cancelled) setAgreementLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [plan?.slug]);
+
   const { status, error, submit } = useFormSubmit<Record<string, unknown>>(
     "/api/membership-checkout",
   );
@@ -114,13 +171,45 @@ export default function MembershipCheckout() {
       setFieldError(errs);
       return;
     }
+    // Agreement comes first: nothing is tokenized or charged until it is signed.
+    if (agreementLoadError) {
+      setTokenizeError(agreementLoadError);
+      return;
+    }
+    if (agreement) {
+      const errs: Record<string, string> = {};
+      if (!signatureMatchesName(agreementState.typedSignature, parsed.data.firstName, parsed.data.lastName)) {
+        errs.agreement = "Type your first and last name exactly as entered above to sign.";
+      } else if (!agreementState.agreed) {
+        errs.agreement = "Please tick the box to agree to the membership agreement.";
+      }
+      if (errs.agreement) {
+        setFieldError(errs);
+        return;
+      }
+    }
     setFieldError({});
     setTokenizeError(null);
 
     setTokenizing(true);
     try {
       const sourceId = await tokenize();
-      await submit({ ...parsed.data, planSlug: plan.slug, sourceId });
+      await submit({
+        ...parsed.data,
+        planSlug: plan.slug,
+        sourceId,
+        ...(agreement
+          ? {
+              agreement: {
+                agreementContentId: agreement.contentId,
+                typedSignature: agreementState.typedSignature.trim(),
+                openedAt: agreementState.openedAt,
+                scrollCompletedAt: agreementState.scrollCompletedAt,
+                agreed: true,
+              },
+            }
+          : {}),
+      });
     } catch (err) {
       setTokenizeError(err instanceof Error ? err.message : "Card details couldn't be verified.");
     } finally {
@@ -155,8 +244,11 @@ export default function MembershipCheckout() {
           <div className="rounded-2xl border border-green-700/20 bg-green-700/5 p-10">
             <div className="font-disp text-2xl text-green-700 mb-2">Welcome to the club.</div>
             <p className="text-muted mb-6">
-              Your {plan.name} membership is active. A confirmation is on its way to your email,
-              and a team member will follow up to get you set up on your first visit.
+              Your {plan.name} membership is active. A confirmation
+              {agreement ? " with your signed agreement" : ""} is on its way to your email
+              {agreement
+                ? ", along with a separate email to set up your online account so you can book your bays."
+                : ", and a team member will follow up to get you set up on your first visit."}
             </p>
             {/* Book a bay is the highest-intent next action after
                 joining — they want to actually USE the membership.
@@ -200,7 +292,17 @@ export default function MembershipCheckout() {
       <section className="py-16">
         <div className="wrap grid gap-10 md:grid-cols-[1.2fr_1fr] items-start">
           <div className="reveal order-2 md:order-1">
-            <form onSubmit={onSubmit} className="flex flex-col gap-4">
+            <form
+              onSubmit={onSubmit}
+              onInput={(e) => {
+                // Track the typed name so the agreement can show it and check the signature.
+                const t = e.target as HTMLInputElement;
+                if (t.name === "firstName" || t.name === "lastName") {
+                  setNames((n) => ({ ...n, [t.name]: t.value }));
+                }
+              }}
+              className="flex flex-col gap-4"
+            >
               <div className="grid md:grid-cols-2 gap-4">
                 <TextInput
                   label="First name"
@@ -220,6 +322,23 @@ export default function MembershipCheckout() {
                 />
                 <TextInput label="Phone" name="phone" type="tel" error={fieldError.phone} />
               </div>
+
+              {agreementLoading && <p className="text-sm text-muted">Loading membership agreement…</p>}
+              {agreementLoadError && (
+                <div className="text-sm text-red-700 border border-red-200 bg-red-50 rounded-lg p-3">
+                  {agreementLoadError}
+                </div>
+              )}
+              {agreement && (
+                <AgreementPanel
+                  agreement={agreement}
+                  firstName={names.firstName}
+                  lastName={names.lastName}
+                  state={agreementState}
+                  onChange={setAgreementState}
+                  error={fieldError.agreement}
+                />
+              )}
 
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between gap-2">
@@ -274,6 +393,7 @@ export default function MembershipCheckout() {
                 </Button>
               </div>
               <p className="text-xs text-muted">
+                {agreement ? "Your card is charged only after you sign the agreement above. " : ""}
                 By joining you agree to recurring monthly billing until you cancel. Payments are
                 processed securely by Square, we never see or store your card number.
               </p>

@@ -232,6 +232,9 @@ export function membershipConfirmation(d: {
   priceLabel: string;
   perks: string[];
   isGroup: boolean;
+  // True when the signed membership agreement is attached to this email (the signed-agreement
+  // checkout). The booking paragraph then says so instead of promising the contract separately.
+  signedAgreementAttached?: boolean;
 }): Built {
   const perkRows = d.perks
     .map(
@@ -286,7 +289,9 @@ export function membershipConfirmation(d: {
         secondMemberBlock +
         sectionHeading("Booking your bay") +
         para(
-          "You will receive a separate email to setup your online account as well as your membership contract. After, you will be able to book your time in our bays.",
+          d.signedAgreementAttached
+            ? "Your signed membership agreement is attached to this email for your records. You will receive a separate email to set up your online account. After that, you will be able to book your time in our bays."
+            : "You will receive a separate email to setup your online account as well as your membership contract. After, you will be able to book your time in our bays.",
         ) +
         para(
           "Your card is on file and bills monthly. Square will send a separate payment receipt for your records.",

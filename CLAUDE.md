@@ -153,8 +153,21 @@ separate `mm.swingtheory.golf` subdomain — one domain, one authority pool.
 
 ## 4. Forms
 
-Membership onboarding is human. There is no "buy now" button — every
-membership CTA opens the interest form and a team member follows up.
+Membership CTAs open the interest form and a team member follows up,
+except where paid checkout is wired (`/memberships/checkout`, served by
+`POST /api/membership-checkout`).
+
+**Green Jacket Solo signed-agreement checkout** (only when `SWINGRES_API_URL`,
+`SWINGRES_API_SECRET` and `SWINGRES_PLAN_ID_GREEN_JACKET_SOLO` are all set;
+otherwise checkout behaves exactly as before, and Group never uses it):
+agreement text comes from SwingRes (`GET /api/membership-agreement`), the
+member types their name (cursive signature) and ticks "I agree", the signature
+is recorded in D1 (`membership_signups`, migration 0010), THEN the card is
+charged via Square, THEN SwingRes creates the membership, stores the signed PDF
+under the customer's Documents and sends the login invite. Anything that fails
+before the charge stops the checkout ("You haven't been charged"); a SwingRes
+failure after the charge marks the row `provision_failed` and emails staff
+`[ACTION NEEDED]`. Cancel memberships in Square, not SwingRes.
 
 Endpoints (Cloudflare Pages Functions):
 

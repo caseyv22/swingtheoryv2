@@ -37,6 +37,19 @@ export type Env = {
   // Actions repo secret and passed by the weekly cron workflow. Rotating
   // it requires updating both places or the cron will start 401ing.
   WEEKLY_ANALYTICS_SECRET: string;
+  // SwingRes handoff for the signed-agreement membership checkout. ALL THREE of
+  // SWINGRES_API_URL, SWINGRES_API_SECRET and SWINGRES_PLAN_ID_GREEN_JACKET_SOLO must be set for
+  // the agreement flow to switch on; with any missing, /memberships/checkout behaves exactly as
+  // it did before. The secret is sent as X-Internal-Secret and must equal SwingRes's
+  // INTERNAL_PROVISIONING_SECRET (a different secret from the mm-api one above). The plan id is
+  // the SwingRes membership_plan.id for Green Jacket Solo in that SwingRes environment.
+  SWINGRES_API_URL?: string;
+  SWINGRES_API_SECRET?: string;
+  SWINGRES_PLAN_ID_GREEN_JACKET_SOLO?: string;
+  // Testing only: point Green Jacket Solo at a different Square plan variation (e.g. one in the
+  // Square sandbox) without touching memberships.ts. Unset in production. The parent item is
+  // looked up from the plan when this is set.
+  SQUARE_SOLO_PLAN_VARIATION_ID?: string;
 };
 
 // Cloudflare types (minimal subset)

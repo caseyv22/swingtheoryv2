@@ -31,8 +31,10 @@ export async function sendEmail(args: {
   // confirmations pass the submitter's address here — go through
   // sendConfirmation() below rather than calling this directly.
   to?: string;
+  // Optional attachments (base64 content), e.g. the signed membership agreement PDF.
+  attachments?: { filename: string; content: string }[];
 }) {
-  const { env, subject, html, replyTo, to } = args;
+  const { env, subject, html, replyTo, to, attachments } = args;
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -45,6 +47,7 @@ export async function sendEmail(args: {
       reply_to: replyTo ? [replyTo] : undefined,
       subject,
       html,
+      attachments: attachments?.length ? attachments : undefined,
     }),
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
@@ -71,6 +74,7 @@ export async function sendConfirmation(args: {
   to: string;
   subject: string;
   html: string;
+  attachments?: { filename: string; content: string }[];
 }): Promise<boolean> {
   try {
     await sendEmail({
@@ -78,6 +82,7 @@ export async function sendConfirmation(args: {
       to: args.to,
       subject: args.subject,
       html: args.html,
+      attachments: args.attachments,
       replyTo: args.env.CONTACT_TO_EMAIL,
     });
     return true;

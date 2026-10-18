@@ -1,0 +1,11 @@
+# Local testing of the signed-agreement checkout against SwingRes dev + Square SANDBOX.
+# Copy to .dev.vars, then run:  npm run build && npx wrangler pages dev dist
+# (D1: run `npx wrangler d1 migrations apply <db> --local` first so migration 0010 exists.)
+# Also set the VITE_SQUARE_* sandbox values from .env.example in .env.local before building.
+SQUARE_ACCESS_TOKEN=<sandbox access token>
+SQUARE_ENV=sandbox
+SQUARE_LOCATION_ID=<sandbox location id>
+SWINGRES_API_URL=https://<swingres-dev-worker>.workers.dev
+SWINGRES_API_SECRET=<same as INTERNAL_PROVISIONING_SECRET on SwingRes dev>
+SWINGRES_PLAN_ID_GREEN_JACKET_SOLO=<dev Green Jacket Solo plan id>
+SQUARE_SOLO_PLAN_VARIATION_ID=<sandbox plan variation id, e.g. for "Green Jacket 2026">

@@ -11,3 +11,6 @@ vite.config.js.timestamp-*.mjs
 .vscode
 .idea
 dist-ssr
+
+# local Pages Functions secrets
+.dev.vars

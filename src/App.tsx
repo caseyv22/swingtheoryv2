@@ -11,6 +11,7 @@ import ProgramCheckout from "@/pages/ProgramCheckout";
 import Events from "@/pages/Events";
 import Visit from "@/pages/Visit";
 import FAQ from "@/pages/FAQ";
+import Privacy from "@/pages/Privacy";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
 import MiniMulligans from "@/pages/programs/MiniMulligans";
@@ -72,6 +73,7 @@ export default function App() {
                 <Route path="/events" element={<Events />} />
                 <Route path="/visit" element={<Visit />} />
                 <Route path="/faq" element={<FAQ />} />
+                <Route path="/privacy" element={<Privacy />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/book" element={<Book />} />
                 <Route path="*" element={<NotFound />} />

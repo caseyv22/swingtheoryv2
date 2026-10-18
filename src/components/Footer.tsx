@@ -80,7 +80,13 @@ export default function Footer() {
         </div>
         <div className="pt-6 flex flex-wrap justify-between gap-3 text-[0.85rem] text-[#7f8377]">
           <span>© {new Date().getFullYear()} {site.legalName}. All rights reserved.</span>
-          <span>Old Town Pasadena · Indoor Golf &amp; Simulators</span>
+          <span>
+            <Link to="/privacy" className="hover:text-gold transition">
+              Privacy Policy
+            </Link>
+            <span aria-hidden="true"> · </span>
+            Old Town Pasadena · Indoor Golf &amp; Simulators
+          </span>
         </div>
       </div>
     </footer>

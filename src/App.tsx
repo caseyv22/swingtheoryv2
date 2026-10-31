@@ -6,6 +6,7 @@ import Simulators from "@/pages/Simulators";
 import Lessons from "@/pages/Lessons";
 import Memberships from "@/pages/Memberships";
 import MembershipCheckout from "@/pages/MembershipCheckout";
+import RangeKeyCheckout from "@/pages/RangeKeyCheckout";
 import Programs from "@/pages/Programs";
 import ProgramCheckout from "@/pages/ProgramCheckout";
 import Events from "@/pages/Events";
@@ -63,6 +64,7 @@ export default function App() {
                 <Route path="/lessons" element={<Lessons />} />
                 <Route path="/memberships" element={<Memberships />} />
                 <Route path="/memberships/checkout" element={<MembershipCheckout />} />
+                <Route path="/memberships/rangekey" element={<RangeKeyCheckout />} />
                 <Route path="/programs" element={<Programs />} />
                 <Route path="/programs/checkout" element={<ProgramCheckout />} />
                 <Route path="/programs/mini-mulligans" element={<MiniMulligans />} />

@@ -4,6 +4,14 @@ export type MembershipPlan = {
   headline: string;
   priceLabel: string;
   priceSub?: string;
+  // Optional list of priced options shown in one card (e.g. RangeKey and
+  // RangeKey+). When set, PlanCard renders one price row per option instead
+  // of the single priceLabel/priceSub, and priceLabel is only a fallback.
+  priceOptions?: { name: string; priceLabel: string; priceSub?: string }[];
+  // Hidden plans are not rendered on /memberships or the homepage, but stay
+  // in this list so /memberships/checkout and /api/membership-* keep
+  // resolving them (direct links, existing signed-agreement flow).
+  hidden?: boolean;
   featured?: boolean;
   perks: string[];
   ctaLabel: string;
@@ -56,12 +64,33 @@ export const membershipPlans: MembershipPlan[] = [
     ctaTarget: "book",
   },
   {
+    slug: "rangekey",
+    name: "RangeKey & RangeKey+",
+    headline: "Prepaid bay hours. Use them your way.",
+    priceLabel: "$150 - $250",
+    priceOptions: [
+      { name: "RangeKey", priceLabel: "$150", priceSub: "one time" },
+      { name: "RangeKey+", priceLabel: "$250", priceSub: "one time" },
+    ],
+    featured: true,
+    perks: [
+      "A set number of bay hours, prepaid",
+      "Hours never expire",
+      "Use as much as you want per day or per week",
+      "Pay once, no monthly fee",
+    ],
+    ctaLabel: "Ask about RangeKey",
+    ctaTarget: "interest",
+  },
+  {
     slug: "green-jacket-solo",
     name: "Green Jacket Solo",
     headline: "Individual membership",
     priceLabel: "$239",
     priceSub: "/ month",
-    featured: true,
+    // Replaced on the site by the combined RangeKey card. Hidden, not
+    // deleted: the checkout route and API still resolve this plan.
+    hidden: true,
     perks: [
       "Unlimited days at Swing Theory",
       "1 hour per day of bay time",
@@ -118,7 +147,7 @@ export const membershipPlans: MembershipPlan[] = [
     squareItemId: "34WV3C3DW5T6UPHEJXTOC7YO",
     // No squarePromoPlanVariationId on purpose — the 50%-first-month promo
     // is Solo-only. Leaving this unset means flipping
-    // MEMBERSHIP_PROMO_ENABLED on can never discount this plan.
+    // MEMBERSHIP_PROMO_ENABLED can never discount this plan.
     //
     // Billing note: Square charges this as ONE subscription against one
     // customer + one card. The plan has no concept of the second member;

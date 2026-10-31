@@ -4,6 +4,26 @@ export type MembershipPlan = {
   headline: string;
   priceLabel: string;
   priceSub?: string;
+  // Optional list of priced options shown in one card (e.g. RangeKey and
+  // RangeKey+). When set, PlanCard renders one price row per option instead
+  // of the single priceLabel/priceSub, and priceLabel is only a fallback.
+  // Options with a squareVariationId are also purchasable through the
+  // RangeKey checkout (/memberships/rangekey, POST /api/rangekey-checkout)
+  // once that flow is configured; the server reads hours and price from here,
+  // never from the browser.
+  priceOptions?: {
+    slug?: string;
+    name: string;
+    priceLabel: string;
+    priceSub?: string;
+    hours?: number;
+    priceCents?: number;
+    squareVariationId?: string;
+  }[];
+  // Hidden plans are not rendered on /memberships or the homepage, but stay
+  // in this list so /memberships/checkout and /api/membership-* keep
+  // resolving them (direct links, existing signed-agreement flow).
+  hidden?: boolean;
   featured?: boolean;
   perks: string[];
   ctaLabel: string;
@@ -56,12 +76,51 @@ export const membershipPlans: MembershipPlan[] = [
     ctaTarget: "book",
   },
   {
+    slug: "rangekey",
+    name: "RangeKey & RangeKey+",
+    headline: "Prepaid bay hours. Use them your way.",
+    priceLabel: "$150 - $250",
+    priceOptions: [
+      {
+        slug: "rangekey",
+        name: "RangeKey",
+        priceLabel: "$150",
+        priceSub: "one time",
+        hours: 4,
+        priceCents: 15000,
+        // Square catalog ITEM_VARIATION "Regular" under the RangeKey item (created 2026-10-31).
+        squareVariationId: "DGV7TOSWGNRD5DHIE5225FVW",
+      },
+      {
+        slug: "rangekey-plus",
+        name: "RangeKey+",
+        priceLabel: "$250",
+        priceSub: "one time",
+        hours: 8,
+        priceCents: 25000,
+        // Square catalog ITEM_VARIATION "Regular" under the RangeKey+ item (created 2026-10-31).
+        squareVariationId: "K262FANYPQVSYNLHJWGTOG6T",
+      },
+    ],
+    featured: true,
+    perks: [
+      "RangeKey is 4 hours, RangeKey+ is 8 hours of bay time",
+      "Hours never expire",
+      "Use as much as you want per day or per week",
+      "Pay once, no monthly fee",
+    ],
+    ctaLabel: "Ask about RangeKey",
+    ctaTarget: "interest",
+  },
+  {
     slug: "green-jacket-solo",
     name: "Green Jacket Solo",
     headline: "Individual membership",
     priceLabel: "$239",
     priceSub: "/ month",
-    featured: true,
+    // Replaced on the site by the combined RangeKey card. Hidden, not
+    // deleted: the checkout route and API still resolve this plan.
+    hidden: true,
     perks: [
       "Unlimited days at Swing Theory",
       "1 hour per day of bay time",
@@ -125,3 +184,18 @@ export const membershipPlans: MembershipPlan[] = [
     // granting that person access is handled outside Square.
   },
 ];
+
+export type RangeKeyOption = NonNullable<MembershipPlan["priceOptions"]>[number] & {
+  slug: string;
+  hours: number;
+  priceCents: number;
+  squareVariationId: string;
+};
+
+/** The purchasable RangeKey / RangeKey+ options, in card order. */
+export const rangeKeyOptions: RangeKeyOption[] = (
+  membershipPlans.find((p) => p.slug === "rangekey")?.priceOptions ?? []
+).filter(
+  (o): o is RangeKeyOption =>
+    !!o.slug && !!o.hours && !!o.priceCents && !!o.squareVariationId,
+);

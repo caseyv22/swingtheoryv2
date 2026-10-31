@@ -68,7 +68,7 @@ export default function Memberships() {
       <section className="py-24" ref={formRef} id="interest">
         <div className="wrap max-w-3xl">
           <SectionHead kicker="Membership Interest" title="Questions?" intro="Send us a message!" />
-          <InterestForm defaultTopic="Green Jacket Group" extraOptions={["Green Jacket Group"]} />
+          <InterestForm defaultTopic="Green Jacket Group" extraOptions={["Green Jacket Group", "RangeKey"]} />
         </div>
       </section>
     </>

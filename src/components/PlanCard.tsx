@@ -2,6 +2,7 @@ import { site } from "@/data/site-config";
 import type { MembershipPlan } from "@/data/memberships";
 import Button from "./Button";
 import { cn } from "@/lib/cn";
+import { useRangeKeyEnabled } from "@/hooks/useRangeKeyEnabled";
 
 type Props = {
   plan: MembershipPlan;
@@ -17,6 +18,15 @@ type Props = {
 const PROMO_ENABLED = import.meta.env.VITE_MEMBERSHIP_PROMO_ENABLED === "true";
 
 export default function PlanCard({ plan, onInterest, onLeague }: Props) {
+  // Online RangeKey checkout is live only when the server says so (SwingRes configured).
+  const rangeKeyLive = useRangeKeyEnabled() === true;
+  // Hidden plans stay checkout-resolvable but are not shown as cards.
+  if (plan.hidden) return null;
+
+  const buyOptions = rangeKeyLive
+    ? (plan.priceOptions ?? []).filter((o) => o.slug && o.squareVariationId)
+    : [];
+
   const featured = plan.featured;
   const showPromo =
     PROMO_ENABLED &&
@@ -46,14 +56,30 @@ export default function PlanCard({ plan, onInterest, onLeague }: Props) {
       )}
       <h3 className="text-2xl">{plan.name}</h3>
       <p className="text-[#b9bdb0] text-sm mt-1">{plan.headline}</p>
-      <div className="font-disp text-[2.6rem] font-extrabold text-gold mt-3 leading-none">
-        {displayPriceLabel}
-        {displayPriceSub && (
-          <small className="text-sm text-[#b9bdb0] font-normal ml-1">
-            {displayPriceSub}
-          </small>
-        )}
-      </div>
+      {plan.priceOptions ? (
+        <div className="mt-3 space-y-3">
+          {plan.priceOptions.map((o) => (
+            <div key={o.name} className="flex items-baseline justify-between gap-3">
+              <span className="font-disp text-lg text-white">{o.name}</span>
+              <span className="font-disp text-[2.2rem] font-extrabold text-gold leading-none">
+                {o.priceLabel}
+                {o.priceSub && (
+                  <small className="text-sm text-[#b9bdb0] font-normal ml-1">{o.priceSub}</small>
+                )}
+              </span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="font-disp text-[2.6rem] font-extrabold text-gold mt-3 leading-none">
+          {displayPriceLabel}
+          {displayPriceSub && (
+            <small className="text-sm text-[#b9bdb0] font-normal ml-1">
+              {displayPriceSub}
+            </small>
+          )}
+        </div>
+      )}
       <ul className="list-none my-6 space-y-2">
         {plan.perks.map((p, i) => (
           <li
@@ -70,7 +96,16 @@ export default function PlanCard({ plan, onInterest, onLeague }: Props) {
           {plan.ctaLabel}
         </Button>
       )}
-      {plan.ctaTarget === "interest" && (
+      {plan.ctaTarget === "interest" && buyOptions.length > 0 && (
+        <div className="flex flex-wrap gap-3">
+          {buyOptions.map((o) => (
+            <Button key={o.slug} to={`/memberships/rangekey?option=${o.slug}`} variant="gold">
+              Get {o.name}
+            </Button>
+          ))}
+        </div>
+      )}
+      {plan.ctaTarget === "interest" && buyOptions.length === 0 && (
         <Button onClick={onInterest} variant="gold">
           {plan.ctaLabel}
         </Button>

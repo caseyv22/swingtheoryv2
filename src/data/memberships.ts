@@ -22,7 +22,7 @@ export type MembershipPlan = {
   }[];
   // Hidden plans are not rendered on /memberships or the homepage, but stay
   // in this list so /memberships/checkout and /api/membership-* keep
-  // resolving them (direct links, existing signed-agreement flow).
+  // resolving them (direct links, existing checkout flows).
   hidden?: boolean;
   featured?: boolean;
   perks: string[];
@@ -76,51 +76,12 @@ export const membershipPlans: MembershipPlan[] = [
     ctaTarget: "book",
   },
   {
-    slug: "rangekey",
-    name: "RangeKey & RangeKey+",
-    headline: "Prepaid bay hours. Use them your way.",
-    priceLabel: "$150 - $250",
-    priceOptions: [
-      {
-        slug: "rangekey",
-        name: "RangeKey",
-        priceLabel: "$150",
-        priceSub: "one time",
-        hours: 4,
-        priceCents: 15000,
-        // Square catalog ITEM_VARIATION "Regular" under the RangeKey item (created 2026-10-31).
-        squareVariationId: "DGV7TOSWGNRD5DHIE5225FVW",
-      },
-      {
-        slug: "rangekey-plus",
-        name: "RangeKey+",
-        priceLabel: "$250",
-        priceSub: "one time",
-        hours: 8,
-        priceCents: 25000,
-        // Square catalog ITEM_VARIATION "Regular" under the RangeKey+ item (created 2026-10-31).
-        squareVariationId: "K262FANYPQVSYNLHJWGTOG6T",
-      },
-    ],
-    featured: true,
-    perks: [
-      "RangeKey is 4 hours, RangeKey+ is 8 hours of bay time",
-      "Hours never expire",
-      "Use as much as you want per day or per week",
-      "Pay once, no monthly fee",
-    ],
-    ctaLabel: "Ask about RangeKey",
-    ctaTarget: "interest",
-  },
-  {
     slug: "green-jacket-solo",
     name: "Green Jacket Solo",
     headline: "Individual membership",
     priceLabel: "$239",
     priceSub: "/ month",
-    // Replaced on the site by the combined RangeKey card. Hidden, not
-    // deleted: the checkout route and API still resolve this plan.
-    hidden: true,
+    featured: true,
     perks: [
       "Unlimited days at Swing Theory",
       "1 hour per day of bay time",
@@ -151,6 +112,42 @@ export const membershipPlans: MembershipPlan[] = [
     promoPriceSub: " first month, then $239 / month",
   },
   {
+    slug: "rangekey",
+    name: "RangeKey & RangeKey+",
+    headline: "Prepaid bay hours. Use them your way.",
+    priceLabel: "$150 - $250",
+    priceOptions: [
+      {
+        slug: "rangekey",
+        name: "RangeKey",
+        priceLabel: "$150",
+        priceSub: "one time",
+        hours: 4,
+        priceCents: 15000,
+        // Square catalog ITEM_VARIATION "Regular" under the RangeKey item (created 2026-10-31).
+        squareVariationId: "DGV7TOSWGNRD5DHIE5225FVW",
+      },
+      {
+        slug: "rangekey-plus",
+        name: "RangeKey+",
+        priceLabel: "$250",
+        priceSub: "one time",
+        hours: 8,
+        priceCents: 25000,
+        // Square catalog ITEM_VARIATION "Regular" under the RangeKey+ item (created 2026-10-31).
+        squareVariationId: "K262FANYPQVSYNLHJWGTOG6T",
+      },
+    ],
+    perks: [
+      "RangeKey is 4 hours, RangeKey+ is 8 hours of bay time",
+      "Hours never expire",
+      "Use as much as you want per day or per week",
+      "Pay once, no monthly fee",
+    ],
+    ctaLabel: "Ask about RangeKey",
+    ctaTarget: "interest",
+  },
+  {
     slug: "green-jacket-group",
     name: "Green Jacket Group",
     headline: "Two-member household or partner plan",
@@ -164,6 +161,9 @@ export const membershipPlans: MembershipPlan[] = [
       "Exclusive Member Hours",
       "Merchandise discounts",
     ],
+    // Replaced on the site by the RangeKey card. Hidden, not deleted: the
+    // checkout route and API still resolve this plan.
+    hidden: true,
     ctaLabel: "Become a member",
     ctaTarget: "checkout",
     // Production: "Green Jacket Group" subscription plan variation, created

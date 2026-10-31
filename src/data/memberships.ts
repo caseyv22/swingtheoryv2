@@ -74,7 +74,7 @@ export const membershipPlans: MembershipPlan[] = [
     ],
     featured: true,
     perks: [
-      "A set number of bay hours, prepaid",
+      "RangeKey is 4 hours, RangeKey+ is 8 hours of bay time",
       "Hours never expire",
       "Use as much as you want per day or per week",
       "Pay once, no monthly fee",

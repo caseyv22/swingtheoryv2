@@ -188,7 +188,7 @@ export default function Home() {
               <h3 className="font-disp text-2xl text-white mb-2">Questions?</h3>
               <p className="text-[#b9bdb0] mb-6 text-[0.98rem]">Send us a message!</p>
               <div className="bg-white rounded-xl p-6">
-                <InterestForm defaultTopic="Green Jacket Group" extraOptions={["Green Jacket Group"]} />
+                <InterestForm defaultTopic="Green Jacket Group" extraOptions={["Green Jacket Group", "RangeKey"]} />
               </div>
             </div>
           </div>

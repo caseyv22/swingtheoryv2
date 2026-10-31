@@ -2,6 +2,7 @@ import { site } from "@/data/site-config";
 import type { MembershipPlan } from "@/data/memberships";
 import Button from "./Button";
 import { cn } from "@/lib/cn";
+import { useRangeKeyEnabled } from "@/hooks/useRangeKeyEnabled";
 
 type Props = {
   plan: MembershipPlan;
@@ -17,8 +18,14 @@ type Props = {
 const PROMO_ENABLED = import.meta.env.VITE_MEMBERSHIP_PROMO_ENABLED === "true";
 
 export default function PlanCard({ plan, onInterest, onLeague }: Props) {
+  // Online RangeKey checkout is live only when the server says so (SwingRes configured).
+  const rangeKeyLive = useRangeKeyEnabled() === true;
   // Hidden plans stay checkout-resolvable but are not shown as cards.
   if (plan.hidden) return null;
+
+  const buyOptions = rangeKeyLive
+    ? (plan.priceOptions ?? []).filter((o) => o.slug && o.squareVariationId)
+    : [];
 
   const featured = plan.featured;
   const showPromo =
@@ -89,7 +96,16 @@ export default function PlanCard({ plan, onInterest, onLeague }: Props) {
           {plan.ctaLabel}
         </Button>
       )}
-      {plan.ctaTarget === "interest" && (
+      {plan.ctaTarget === "interest" && buyOptions.length > 0 && (
+        <div className="flex flex-wrap gap-3">
+          {buyOptions.map((o) => (
+            <Button key={o.slug} to={`/memberships/rangekey?option=${o.slug}`} variant="gold">
+              Get {o.name}
+            </Button>
+          ))}
+        </div>
+      )}
+      {plan.ctaTarget === "interest" && buyOptions.length === 0 && (
         <Button onClick={onInterest} variant="gold">
           {plan.ctaLabel}
         </Button>

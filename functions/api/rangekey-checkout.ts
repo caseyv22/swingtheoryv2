@@ -5,6 +5,7 @@ import { rangeKeyCheckoutSchema } from "../../src/lib/rangekey";
 import { rangeKeyOptions } from "../../src/data/memberships";
 import { retrieveCatalogItemVariation, createOneTimePayment, SquareApiError } from "../lib/square";
 import {
+  fetchCurrentWaiver,
   provisionRangeKey,
   rangeKeyEligibility,
   rangeKeyPlanId,
@@ -15,7 +16,7 @@ import { rangeKeyConfirmation } from "../lib/rangekey-confirmation";
 
 // RangeKey / RangeKey+ purchase: charge the Square item once, then create the prepaid-hours
 // membership + account in SwingRes. Order matters:
-//   1. option, SwingRes config and email eligibility are checked BEFORE any charge
+//   1. option, SwingRes config, email eligibility and the accepted waiver are checked BEFORE any charge
 //      (anything failing here => "You haven't been charged")
 //   2. price is read fresh from Square and must equal the price on the site
 //   3. one-time card charge (Payments API)
@@ -58,6 +59,22 @@ export const onRequestPost: PagesFunction<RangeKeyEnv> = async ({ request, env }
       409,
     );
   }
+
+  // Waiver: the version the buyer scrolled through and ticked must still be the current one.
+  const currentWaiver = await fetchCurrentWaiver(env);
+  if (!currentWaiver) {
+    return json(
+      { error: "The waiver couldn't be loaded, so we haven't charged your card. Please try again in a moment." },
+      503,
+    );
+  }
+  if (currentWaiver.id !== data.waiver.waiverContentId) {
+    return json(
+      { error: "The waiver was just updated. Please reload this page and review it again. You haven't been charged." },
+      409,
+    );
+  }
+  const waiverAcceptedAt = new Date().toISOString(); // our clock, never the browser's
 
   try {
     const item = await retrieveCatalogItemVariation(env, option.squareVariationId);
@@ -104,6 +121,14 @@ export const onRequestPost: PagesFunction<RangeKeyEnv> = async ({ request, env }
       squareVariationId: option.squareVariationId,
       amountCents: option.priceCents,
       paidAt: new Date().toISOString(),
+      waiver: {
+        waiverContentId: data.waiver.waiverContentId,
+        openedAt: data.waiver.openedAt ?? null,
+        scrollCompletedAt: data.waiver.scrollCompletedAt ?? null,
+        acceptedAt: waiverAcceptedAt,
+        ipAddress: ip,
+        userAgent,
+      },
     };
     for (let attempt = 0; attempt < 2 && !provision.ok; attempt++) {
       provision = await provisionRangeKey(env, args); // idempotent on squarePaymentId

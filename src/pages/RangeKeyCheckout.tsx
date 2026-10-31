@@ -1,8 +1,9 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import SEO from "@/components/SEO";
 import Button from "@/components/Button";
 import { TextInput } from "@/components/forms/FormField";
+import WaiverBox, { EMPTY_WAIVER_STATE, type WaiverData, type WaiverState } from "@/components/WaiverBox";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import { useSquareCard } from "@/hooks/useSquareCard";
 import { useRangeKeyEnabled } from "@/hooks/useRangeKeyEnabled";
@@ -12,12 +13,39 @@ import { rangeKeyCheckoutSchema } from "@/lib/rangekey";
 
 // Fields the person types in; optionSlug + sourceId are added right before the API call
 // (sourceId only exists once the card is tokenized).
-const clientFieldsSchema = rangeKeyCheckoutSchema.omit({ sourceId: true, optionSlug: true });
+const clientFieldsSchema = rangeKeyCheckoutSchema.omit({ sourceId: true, optionSlug: true, waiver: true });
 
 export default function RangeKeyCheckout() {
   const [params] = useSearchParams();
   const option = rangeKeyOptions.find((o) => o.slug === (params.get("option") ?? ""));
   const enabled = useRangeKeyEnabled();
+
+  // Liability waiver, loaded from SwingRes through our own API (same flow as /book).
+  const [waiver, setWaiver] = useState<WaiverData | null>(null);
+  const [waiverLoadError, setWaiverLoadError] = useState<string | null>(null);
+  const [waiverState, setWaiverState] = useState<WaiverState>(EMPTY_WAIVER_STATE);
+  useEffect(() => {
+    if (enabled !== true) return;
+    let cancelled = false;
+    fetch("/api/rangekey-waiver")
+      .then(async (r) => {
+        const d = (await r.json().catch(() => null)) as
+          | (Partial<WaiverData> & { enabled?: boolean; error?: string })
+          | null;
+        if (cancelled) return;
+        if (!r.ok || !d?.contentId || !d.bodyText) {
+          setWaiverLoadError(d?.error ?? "The waiver couldn't be loaded. Please reload the page.");
+          return;
+        }
+        setWaiver({ contentId: d.contentId, versionNumber: d.versionNumber ?? 0, bodyText: d.bodyText });
+      })
+      .catch(() => {
+        if (!cancelled) setWaiverLoadError("The waiver couldn't be loaded. Please reload the page.");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled]);
 
   const { status, error, submit } = useFormSubmit<Record<string, unknown>>("/api/rangekey-checkout");
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
@@ -39,13 +67,32 @@ export default function RangeKeyCheckout() {
       setFieldError(errs);
       return;
     }
+    // The waiver comes first: nothing is tokenized or charged until it is read and ticked.
+    if (!waiver) {
+      setTokenizeError(waiverLoadError ?? "The waiver is still loading. Please try again in a moment.");
+      return;
+    }
+    if (!waiverState.agreed) {
+      setFieldError({ waiver: "Please read the waiver to the end and tick the box to continue." });
+      return;
+    }
     setFieldError({});
     setTokenizeError(null);
 
     setTokenizing(true);
     try {
       const sourceId = await tokenize();
-      await submit({ ...parsed.data, optionSlug: option.slug, sourceId });
+      await submit({
+        ...parsed.data,
+        optionSlug: option.slug,
+        sourceId,
+        waiver: {
+          waiverContentId: waiver.contentId,
+          openedAt: waiverState.openedAt,
+          scrollCompletedAt: waiverState.scrollCompletedAt,
+          agreed: true,
+        },
+      });
     } catch (err) {
       setTokenizeError(err instanceof Error ? err.message : "Card details couldn't be verified.");
     } finally {
@@ -129,6 +176,20 @@ export default function RangeKeyCheckout() {
                 <TextInput label="Email" name="email" type="email" required error={fieldError.email} />
                 <TextInput label="Phone" name="phone" type="tel" error={fieldError.phone} />
               </div>
+
+              {waiverLoadError && (
+                <div className="text-sm text-red-700 border border-red-200 bg-red-50 rounded-lg p-3">
+                  {waiverLoadError}
+                </div>
+              )}
+              {waiver && (
+                <WaiverBox
+                  waiver={waiver}
+                  state={waiverState}
+                  onChange={setWaiverState}
+                  error={fieldError.waiver}
+                />
+              )}
 
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between gap-2">

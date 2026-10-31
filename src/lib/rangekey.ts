@@ -16,6 +16,14 @@ export const rangeKeyCheckoutSchema = z.object({
     .optional()
     .or(z.literal("")),
   sourceId: z.string().trim().min(1, "Missing payment details"),
+  // Liability waiver, same flow as the /book checkout: read to the end, tick the box. Required.
+  // acceptedAt is NOT accepted from the browser, the server stamps it.
+  waiver: z.object({
+    waiverContentId: z.string().trim().min(1).max(100),
+    openedAt: z.string().max(40).nullable().optional(),
+    scrollCompletedAt: z.string().max(40).nullable().optional(),
+    agreed: z.literal(true),
+  }),
 });
 
 export type RangeKeyCheckoutInput = z.infer<typeof rangeKeyCheckoutSchema>;

@@ -9,7 +9,8 @@ import type { Env } from "./db";
 //
 //   POST {SWINGRES_API_URL}/internal/rangekey-purchases        (X-Internal-Secret)
 //     { membershipPlanId, firstName, lastName, email, phone?, squarePaymentId,
-//       squareVariationId, amountCents, paidAt }
+//       squareVariationId, amountCents, paidAt,
+//       waiver: { waiverContentId, openedAt?, scrollCompletedAt?, acceptedAt, ipAddress?, userAgent? } }
 //   -> 201/200 { duplicate, customerId, subscriptionId, hoursGranted, inviteSent }
 //   Idempotent on squarePaymentId.
 //
@@ -56,6 +57,16 @@ export type RangeKeyProvisionArgs = {
   squareVariationId: string;
   amountCents: number;
   paidAt: string;
+  // The liability waiver the buyer accepted at checkout (same record /book keeps). acceptedAt is
+  // stamped by this server, never taken from the browser.
+  waiver: {
+    waiverContentId: string;
+    openedAt?: string | null;
+    scrollCompletedAt?: string | null;
+    acceptedAt: string;
+    ipAddress?: string | null;
+    userAgent?: string | null;
+  };
 };
 
 export type RangeKeyProvisionResult =
@@ -131,5 +142,23 @@ export async function rangeKeyEligibility(
     return { ok: true, eligible: data.eligible };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : "SwingRes eligibility call failed" };
+  }
+}
+
+export type CurrentWaiver = { id: string; versionNumber: number; bodyText: string };
+
+/** The current liability waiver from SwingRes (public GET /waiver), or null when unreadable. */
+export async function fetchCurrentWaiver(env: Env): Promise<CurrentWaiver | null> {
+  try {
+    const res = await fetch(`${baseUrl(env)}/waiver`, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+    if (!res.ok) return null;
+    const data = (await res.json()) as {
+      content?: { id?: string; version_number?: number; body_text?: string } | null;
+    };
+    const c = data.content;
+    if (!c?.id || typeof c.version_number !== "number" || !c.body_text) return null;
+    return { id: c.id, versionNumber: c.version_number, bodyText: c.body_text };
+  } catch {
+    return null;
   }
 }

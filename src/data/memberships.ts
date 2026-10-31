@@ -147,7 +147,7 @@ export const membershipPlans: MembershipPlan[] = [
     squareItemId: "34WV3C3DW5T6UPHEJXTOC7YO",
     // No squarePromoPlanVariationId on purpose — the 50%-first-month promo
     // is Solo-only. Leaving this unset means flipping
-    // MEMBERSHIP_PROMO_ENABLED can never discount this plan.
+    // MEMBERSHIP_PROMO_ENABLED on can never discount this plan.
     //
     // Billing note: Square charges this as ONE subscription against one
     // customer + one card. The plan has no concept of the second member;

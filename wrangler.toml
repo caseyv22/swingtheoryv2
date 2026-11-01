@@ -64,6 +64,13 @@ MM_API_BASE_URL = "https://mm-api-prod.swingtheoryla.workers.dev"
 SWINGRES_API_URL = "https://api.swingtheory.golf"
 SWINGRES_PLAN_ID_GREEN_JACKET_SOLO = "9a880e99-6be2-4cbf-a7f1-f1c92669de08"
 
+# RangeKey / RangeKey+ online checkout (/memberships/rangekey, POST /api/rangekey-checkout). The
+# Get RangeKey buttons appear only when BOTH ids below are set (plus SWINGRES_API_URL and the
+# SWINGRES_API_SECRET secret). They are the production SwingRes membership_plan ids of the two
+# prepaid-hours plans (hours played, 4 and 8 hours). Remove either line to switch the buttons off.
+SWINGRES_PLAN_ID_RANGEKEY = "0b9fdcf6-e531-4e69-9f24-32600582e615"
+SWINGRES_PLAN_ID_RANGEKEY_PLUS = "2ea8b441-4c05-4389-b83d-947fdbba1c2f"
+
 # 50%-first-month membership promo toggle. Set to "true" to route
 # checkout at the promo Square plan variation (STATIC $ for month 1,
 # RELATIVE ongoing after) and show the promo copy on membership cards.

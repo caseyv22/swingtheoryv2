@@ -51,12 +51,17 @@ type Status = "loading" | "ready" | "error";
 // and exposes tokenize() for the checkout form to call on submit. The card
 // number/CVV never touch our state or our server, Square hosts that field
 // in its own iframe and hands back a one-time nonce we forward to our API.
-export function useSquareCard(containerId: string) {
+//
+// `active` must be true only while the container element is actually in the
+// DOM. Pages that render the container conditionally (e.g. after a status
+// check) pass false until then, otherwise Square throws "element not found".
+export function useSquareCard(containerId: string, active = true) {
   const [status, setStatus] = useState<Status>("loading");
   const [error, setError] = useState<string | null>(null);
   const cardRef = useRef<SquareCardInstance | null>(null);
 
   useEffect(() => {
+    if (!active) return;
     let cancelled = false;
     const appId = import.meta.env.VITE_SQUARE_APP_ID;
     const locationId = import.meta.env.VITE_SQUARE_LOCATION_ID;
@@ -91,7 +96,7 @@ export function useSquareCard(containerId: string) {
       cardRef.current?.destroy().catch(() => {});
       cardRef.current = null;
     };
-  }, [containerId]);
+  }, [containerId, active]);
 
   async function tokenize(): Promise<string> {
     if (!cardRef.current) throw new Error("Payment form isn't ready yet.");

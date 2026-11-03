@@ -65,7 +65,7 @@ export const membershipPlans: MembershipPlan[] = [
     slug: "hourly",
     name: "Hourly",
     headline: "Book individual bays",
-    priceLabel: "$40 - $70",
+    priceLabel: "$45 - $70",
     priceSub: "/ per hour",
     perks: [
       "Book any open bay",

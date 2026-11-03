@@ -51,7 +51,13 @@ export default function RangeKeyCheckout() {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [tokenizeError, setTokenizeError] = useState<string | null>(null);
   const [tokenizing, setTokenizing] = useState(false);
-  const { status: cardStatus, error: cardError, tokenize } = useSquareCard("sq-card-container");
+  // The #sq-card-container div only renders once the status check says checkout is on (and the
+  // option is valid), so the card must not attach before then -- Square throws "element not
+  // found" otherwise. It also unmounts on success, which tears the card down.
+  const { status: cardStatus, error: cardError, tokenize } = useSquareCard(
+    "sq-card-container",
+    enabled === true && !!option && status !== "success",
+  );
 
   const busy = tokenizing || status === "submitting";
 

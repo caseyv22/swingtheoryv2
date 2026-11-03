@@ -43,11 +43,11 @@ export default function Memberships() {
         sub="Extended hours booking, monthly bay hours, and member perks, built for regulars who want their swing sharp all year, indoors, no matter the weather."
         ctas={
           <>
-            <Button onClick={scrollToForm} variant="gold">
-              Request membership info
+            <Button to="/memberships/rangekey?option=rangekey" variant="gold">
+              Get RangeKey
             </Button>
-            <Button href={site.bookingUrl} external variant="ghost">
-              Just book a bay
+            <Button to="/memberships/checkout?plan=green-jacket-solo" variant="ghost">
+              Become a Member
             </Button>
           </>
         }

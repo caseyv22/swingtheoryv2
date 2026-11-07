@@ -30,11 +30,39 @@ import AdminSubmissions from "@/pages/admin/AdminSubmissions";
 import AdminMMWaitlist from "@/pages/admin/AdminMMWaitlist";
 import AdminAnalytics from "@/pages/admin/AdminAnalytics";
 
+// A new page opens at the top. A link with a #anchor (like /#rangekey) scrolls to that element instead.
+// The browser's own jump to the anchor can race with this reset, so do the jump here. The target can
+// land a moment after load (hydration), so look for it for a couple of seconds, and jump once more
+// after the page has settled in case images pushed the layout down.
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, [pathname]);
+    if (!hash || hash.length < 2) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
+
+    let id = hash.slice(1);
+    try {
+      id = decodeURIComponent(id);
+    } catch {
+      // keep the raw text
+    }
+
+    const timers: number[] = [];
+    let tries = 0;
+    const jump = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "auto", block: "start" });
+        timers.push(window.setTimeout(() => el.scrollIntoView({ behavior: "auto", block: "start" }), 700));
+        return;
+      }
+      if (tries++ < 20) timers.push(window.setTimeout(jump, 100));
+    };
+    timers.push(window.setTimeout(jump, 0));
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, [pathname, hash]);
   return null;
 }
 

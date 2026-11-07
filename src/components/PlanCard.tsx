@@ -42,8 +42,10 @@ export default function PlanCard({ plan, onInterest, onLeague }: Props) {
 
   return (
     <div
+      // The slug doubles as an anchor, so /#rangekey scrolls straight to this card.
+      id={plan.slug}
       className={cn(
-        "reveal rounded-2xl p-8 text-white transition duration-300 border",
+        "reveal scroll-mt-28 rounded-2xl p-8 text-white transition duration-300 border",
         featured
           ? "border-gold bg-gradient-to-b from-gold/15 to-gold/[0.03]"
           : "border-white/12 bg-white/[0.04] hover:-translate-y-1 hover:border-gold/50",

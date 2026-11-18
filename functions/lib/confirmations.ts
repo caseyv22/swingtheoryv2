@@ -38,7 +38,7 @@ function sectionHeading(text: string): string {
 }
 
 const HOURS_LINE =
-  'If it’s time-sensitive, please call us at <a href="tel:+16268795513" style="color:#064029;font-weight:700;text-decoration:none">626-879-5513</a>. We’re open Monday through Saturday 10am–8pm, and Sunday 10am–7pm.';
+  'If it’s time-sensitive, please call us at <a href="tel:+16262405525" style="color:#064029;font-weight:700;text-decoration:none">626-240-5525</a>. We’re open Monday through Saturday 10am–8pm, and Sunday 10am–7pm.';
 
 // ─── 1. Contact form ────────────────────────────────────────────────────────
 export function contactConfirmation(d: {

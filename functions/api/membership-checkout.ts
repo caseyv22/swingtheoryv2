@@ -89,7 +89,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       return json(
         {
           error:
-            "We couldn't verify your membership status right now, so we haven't charged your card. Please try again in a few minutes, or call us at 626-879-5513.",
+            "We couldn't verify your membership status right now, so we haven't charged your card. Please try again in a few minutes, or call us at 626-240-5525.",
         },
         503,
       );
@@ -98,7 +98,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       return json(
         {
           error:
-            "This email already has an active Swing Theory membership, so we haven't charged your card. If that's you, sign in at res.swingtheory.golf. Otherwise, call us at 626-879-5513 and we'll sort it out.",
+            "This email already has an active Swing Theory membership, so we haven't charged your card. If that's you, sign in at res.swingtheory.golf. Otherwise, call us at 626-240-5525 and we'll sort it out.",
         },
         409,
       );
@@ -146,7 +146,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       // No record of the signature means no charge.
       console.error(`[membership-checkout] couldn't record signature: ${e instanceof Error ? e.message : String(e)}`);
       return json(
-        { error: "Something went wrong, and your card has not been charged. Please try again, or call us at 626-879-5513." },
+        { error: "Something went wrong, and your card has not been charged. Please try again, or call us at 626-240-5525." },
         500,
       );
     }

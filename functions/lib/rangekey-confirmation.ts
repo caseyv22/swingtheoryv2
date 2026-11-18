@@ -21,7 +21,7 @@ export function rangeKeyConfirmation(d: {
     ? d.inviteSent
       ? "You’ll get a separate email to set up your online account. Sign in there to see your hours balance and book your bays."
       : "Your account is set up. Sign in at res.swingtheory.golf with this email to see your hours balance and book your bays."
-    : "We’re finishing setting up your account and will email you shortly. If you don’t hear from us within a few minutes, call 626-879-5513.";
+    : "We’re finishing setting up your account and will email you shortly. If you don’t hear from us within a few minutes, call 626-240-5525.";
 
   return {
     subject: `Your ${d.optionName} is ready, ${d.firstName}`,

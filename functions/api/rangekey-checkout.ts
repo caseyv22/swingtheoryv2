@@ -45,7 +45,7 @@ export const onRequestPost: PagesFunction<RangeKeyEnv> = async ({ request, env }
     return json(
       {
         error:
-          "We couldn't verify your account right now, so we haven't charged your card. Please try again in a few minutes, or call us at 626-879-5513.",
+          "We couldn't verify your account right now, so we haven't charged your card. Please try again in a few minutes, or call us at 626-240-5525.",
       },
       503,
     );
@@ -54,7 +54,7 @@ export const onRequestPost: PagesFunction<RangeKeyEnv> = async ({ request, env }
     return json(
       {
         error:
-          "This email already has an active Swing Theory membership, so we haven't charged your card. Call us at 626-879-5513 and we'll help you add hours.",
+          "This email already has an active Swing Theory membership, so we haven't charged your card. Call us at 626-240-5525 and we'll help you add hours.",
       },
       409,
     );
@@ -104,7 +104,7 @@ export const onRequestPost: PagesFunction<RangeKeyEnv> = async ({ request, env }
         replyTo: data.email,
       });
       return json(
-        { error: "We couldn't confirm your payment. Please call us at 626-879-5513 before trying again." },
+        { error: "We couldn't confirm your payment. Please call us at 626-240-5525 before trying again." },
         502,
       );
     }

@@ -26,8 +26,8 @@ export const site = {
     lng: -118.151999,
   },
   phone: {
-    display: "(626) 879-5513",
-    tel: "+16268795513",
+    display: "(626) 240-5525",
+    tel: "+16262405525",
   },
   email: "info@swingtheory.golf",
   hours: {

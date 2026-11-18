@@ -281,7 +281,7 @@ FAQ page adds `FAQPage`. All builders live in `src/schema/index.ts`.
 
 - **Name:** Swing Theory Indoor Golf
 - **Address:** 50 S De Lacey Ave #200, Pasadena, CA 91105
-- **Phone:** (626) 879-5513
+- **Phone:** (626) 240-5525
 - **Email:** info@swingtheory.golf
 - **Instagram:** @swingtheory.golf
 - **Hours:** Mon–Sat 10:00 AM – 8:00 PM, Sun 10:00 AM – 7:00 PM
